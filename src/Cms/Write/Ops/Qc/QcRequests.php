@@ -21,8 +21,13 @@ final class QcRequests
     /**
      * TestsDataSet.SaveChanges — results for tests of one sample container.
      *
-     * @param list<array{id:int,version:int,result:?string,passed:bool,testedTime:\DateTimeInterface}> $tests
-     *        result null/'' = pass/fail-only test: the Result attribute is left out
+     * A row gets one of two shapes, as the client sends them:
+     *  - first entry (testedTime given): Result unless empty, Passed, TestedBy, TestedTime
+     *  - correction of a row that already has a result (testedTime null): only the
+     *    columns that changed. Result null = not changed, '' = cleared; passed null =
+     *    not changed. TestedBy and TestedTime are not sent, so CMS keeps the original.
+     *
+     * @param list<array{id:int,version:int,result?:?string,passed?:?bool,testedTime?:?\DateTimeInterface}> $tests
      */
     public static function saveResults(
         int $sampleSet,
@@ -39,13 +44,31 @@ final class QcRequests
         $r->add(Step::updateVersion('SampleSet')->keys(['SampleSet' => $sampleSet, 'Version' => $sampleSetVersion]));
         $r->add(Step::checkVersion('Location')->keys(['Location' => $location, 'Version' => $locationVersion]));
         foreach ($tests as $t) {
-            $data = [];
-            if ($t['result'] !== null && $t['result'] !== '') {
-                $data['Result'] = $t['result'];
+            $result = $t['result'] ?? null;
+            $passed = $t['passed'] ?? null;
+            $time   = $t['testedTime'] ?? null;
+            $data   = [];
+            if ($time !== null) {
+                if ($passed === null) {
+                    throw new \InvalidArgumentException('A first result needs Pass or Fail.');
+                }
+                if ($result !== null && $result !== '') {
+                    $data['Result'] = $result;
+                }
+                $data['Passed']     = $passed;
+                $data['TestedBy']   = $testedBy;
+                $data['TestedTime'] = Fmt::dateTime($time);
+            } else {
+                if ($result !== null) {
+                    $data['Result'] = $result;
+                }
+                if ($passed !== null) {
+                    $data['Passed'] = $passed;
+                }
+                if ($data === []) {
+                    throw new \InvalidArgumentException('A correction needs a changed result or a changed Pass/Fail.');
+                }
             }
-            $data['Passed']     = $t['passed'];
-            $data['TestedBy']   = $testedBy;
-            $data['TestedTime'] = Fmt::dateTime($t['testedTime']);
             $r->add(Step::update('LocationSampleTest')
                 ->keys(['LocationSampleTest' => $t['id'], 'Version' => $t['version']])
                 ->data($data));

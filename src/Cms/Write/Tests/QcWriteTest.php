@@ -24,8 +24,8 @@ foreach (cms_fixture_ids('TestsDataSet.SaveChanges') as $log) {
             'id'         => (int) $s['keys']['LocationSampleTest'],
             'version'    => (int) $s['keys']['Version'],
             'result'     => $s['data']['Result'] ?? null,
-            'passed'     => $s['data']['Passed'] === 'true',
-            'testedTime' => new DateTimeImmutable($s['data']['TestedTime']),
+            'passed'     => isset($s['data']['Passed']) ? $s['data']['Passed'] === 'true' : null,
+            'testedTime' => isset($s['data']['TestedTime']) ? new DateTimeImmutable($s['data']['TestedTime']) : null,
         ];
     }
     $req = QcRequests::saveResults(
@@ -117,6 +117,82 @@ foreach ($refusals as $name => [$cms, $in, $needle]) {
     $e = t_throws(WriteRefused::class, fn () => $writer($cms, new FakeTransport(), $all)->preview('qc.save_results', $in, $now));
     t_check($e !== null && str_contains($e->getMessage(), $needle), "refused: {$name}");
 }
+
+t_section('QC flow: correcting a result that is already there');
+/** One test row as QcState reads it; $over changes what CMS holds. */
+$row = static fn (int $id, int $location, string $type, array $over = []): array => $over + [
+    'LocationSampleTest' => $id, 'Location' => $location, 'Test' => 'T' . $id, 'Version' => 1, 'Result' => null,
+    'Passed' => null, 'TestedTime' => null, 'TestedBy' => null, 'TestName' => 'Test ' . $id, 'TestUnit' => null,
+    'TestResultType' => $type, 'LocationVersion' => 1, 'SpecMin' => null, 'SpecTarget' => null, 'SpecMax' => null,
+];
+$done = static fn (?string $result, int $passed, int $version = 2): array => [
+    'Version' => $version, 'Result' => $result, 'Passed' => $passed,
+    'TestedTime' => '2024-01-01T10:00:00', 'TestedBy' => 'pic\\user2',
+];
+// [log, sample set, its version, rows CMS held just before, what the user submits]
+$corrections = [
+    'result and verdict changed' => [804783, 26226, 2,
+        [$row(69997, 109639, 'BOOL', $done(null, 1)), $row(69998, 109639, 'NUM', $done('5', 0))],
+        [69997 => ['result' => '', 'passed' => '1'], 69998 => ['result' => '2', 'passed' => '1']]],
+    'verdict only' => [782795, 25358, 2,
+        [$row(67581, 106119, 'BOOL', $done(null, 0))],
+        [67581 => ['result' => '', 'passed' => '1']]],
+    'result only' => [334822, 8417, 2,
+        [$row(20290, 37305, 'BOOL', $done(null, 1)), $row(20291, 37305, 'NUM', $done('2', 1))],
+        [20290 => ['result' => '', 'passed' => '1'], 20291 => ['result' => '1', 'passed' => '1']]],
+    'correction and first entry together' => [579957, 17445, 2,
+        [$row(45411, 74684, 'BOOL', $done(null, 1)), $row(45412, 74684, 'NUM', $done('217', 0)), $row(45413, 74684, 'NUM')],
+        [45411 => ['result' => '', 'passed' => '1'], 45412 => ['result' => '2', 'passed' => '1'],
+         45413 => ['result' => '17', 'passed' => '1']]],
+    'cleared row entered again is stamped' => [262510, 5667, 3,
+        [$row(13063, 26719, 'BOOL', ['Version' => 3])],
+        [13063 => ['result' => '', 'passed' => '1']]],
+];
+foreach ($corrections as $name => [$log, $set, $setVersion, $held, $results]) {
+    $fake = new FakeTransport();
+    $at   = cms_fixture_parse(cms_fixture('TestsDataSet.SaveChanges', $log))['env']->transDate;
+    $res  = $writer($cmsFor(['SampleSet' => $set, 'SampleSetVersion' => $setVersion], $held), $fake, $all)
+        ->execute('qc.save_results', ['sample_set' => $set, 'results' => $results], $at);
+    t_check($res->ok(), "{$name}: committed");
+    t_xml_same(
+        preg_replace('/AppVersion="[^"]+"/', 'AppVersion="7.15.0.680"', $normalise(cms_fixture('TestsDataSet.SaveChanges', $log))),
+        $normalise($fake->sent[0]),
+        "{$name}: flow matches log {$log}",
+    );
+}
+$fake = new FakeTransport();
+$writer($cmsFor(['SampleSet' => 26226, 'SampleSetVersion' => 2], $corrections['result and verdict changed'][3]), $fake, $all)
+    ->execute('qc.save_results', ['sample_set' => 26226, 'results' => $corrections['result and verdict changed'][4]], $now);
+t_check(!str_contains($fake->sent[0], 'TestedBy') && !str_contains($fake->sent[0], 'TestedTime'), 'a correction does not send a tester or a test time');
+$fake = new FakeTransport();
+$writer($cmsFor([], [$row(77081, 119590, 'BOOL', $done('va', 1))]), $fake, $all)
+    ->execute('qc.save_results', ['sample_set' => 28751, 'results' => [77081 => ['result' => '', 'passed' => '0']]], $now);
+t_check(str_contains($fake->sent[0], '<data Passed="false"/>'), 'a pass/fail test keeps the text CMS holds for it');
+// Log 554076: row 42638 is a pass/fail test that had 31.2 typed on it in CMS (Log 554075).
+// The client cleared it with Result="" in its step 4. Insights leaves that text alone,
+// so from the same state it sends the log's other two test steps and not that one.
+$fake = new FakeTransport();
+$at   = cms_fixture_parse(cms_fixture('TestsDataSet.SaveChanges', 554076))['env']->transDate;
+$writer($cmsFor(['SampleSet' => 16502, 'SampleSetVersion' => 2], [
+    $row(42636, 70647, 'BOOL', $done(null, 0)), $row(42637, 70647, 'NUM', $done('2', 1)),
+    $row(42638, 70647, 'BOOL', $done('31.2', 1)), $row(42639, 70647, 'NUM'),
+]), $fake, $all)->execute('qc.save_results', ['sample_set' => 16502, 'results' => [
+    42636 => ['result' => '', 'passed' => '1'], 42637 => ['result' => '2', 'passed' => '1'],
+    42638 => ['result' => '', 'passed' => '1'], 42639 => ['result' => '31.2', 'passed' => '1']]], $at);
+$without4 = preg_replace(
+    ['/<action Object="LocationSampleTest" Step="4".*?<\/action>/', '/Step="5"/', '/AppVersion="[^"]+"/'],
+    ['', 'Step="4"', 'AppVersion="7.15.0.680"'],
+    $normalise(cms_fixture('TestsDataSet.SaveChanges', 554076)));
+t_xml_same($without4, $normalise($fake->sent[0]), 'log 554076 without its step 4: stray text on a pass/fail test is left to CMS');
+t_check(!str_contains($fake->sent[0], '42638') && !str_contains($fake->sent[0], 'Result=""'), 'a pass/fail row with stray text is not sent');
+$e = t_throws(WriteRefused::class, fn () => $writer($cmsFor([], [$row(77081, 119590, 'TEXT')]), new FakeTransport(), $all)
+    ->preview('qc.save_results', ['sample_set' => 28751, 'results' => [77081 => ['result' => 'clear', 'passed' => '1']]], $now));
+t_check($e !== null && str_contains($e->getMessage(), 'in CMS'), 'refused: a test that is neither pass/fail nor numeric');
+$e = t_throws(WriteRefused::class, fn () => $writer($cmsFor([], [$row(77082, 119590, 'NUM', $done('2', 1))]), new FakeTransport(), $all)
+    ->preview('qc.save_results', ['sample_set' => 28751, 'results' => [77082 => ['result' => '2.0', 'passed' => '1']]], $now));
+t_check($e !== null && str_contains($e->getMessage(), 'Nothing to save'), 'an unchanged tested row is not sent');
+$e = t_throws(InvalidArgumentException::class, fn () => QcRequests::saveResults(1, 1, 1, 1, [['id' => 1, 'version' => 2]], 'pic\\user1'));
+t_check($e !== null, 'template refuses a correction that changes nothing');
 
 t_section('QC flow: approve / reject');
 $after = ['SampleSetVersion' => 2];   // the save above bumped it

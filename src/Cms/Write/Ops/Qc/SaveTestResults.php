@@ -17,6 +17,10 @@ use PII\Cms\Write\WriteRefused;
  * Input: sample_set (int), results[<LocationSampleTest id>] = {result, passed}
  * where passed is '1', '0' or '' (not entered). Only rows that differ from
  * what CMS holds are sent, as the CMS client does.
+ *
+ * A row with no result yet is stamped with the user and the confirm time.
+ * A row that already has a result is a correction: only the changed columns
+ * are sent and CMS keeps the original tester and test time.
  */
 final class SaveTestResults implements Flow
 {
@@ -58,7 +62,9 @@ final class SaveTestResults implements Flow
             $passed = $passedIn === '1';
 
             if ($t['boolean']) {
-                $result = '';
+                // Pass/fail-only test: the result text is never changed from here.
+                // The client can type or clear text on such a row; that is done in CMS.
+                $result = $t['tested'] ? $t['result'] : '';
             } elseif ($t['numeric']) {
                 if ($result === '') {
                     throw new WriteRefused("Enter a value for \"{$t['name']}\".");
@@ -67,8 +73,9 @@ final class SaveTestResults implements Flow
                     throw new WriteRefused("\"{$t['name']}\" needs a number; \"{$result}\" is not one.");
                 }
                 $result = Fmt::num($result);
-            } elseif (mb_strlen($result) > 400) {
-                throw new WriteRefused("The result for \"{$t['name']}\" is too long.");
+            } else {
+                // CMS only has pass/fail and numeric tests; no other kind was ever saved.
+                throw new WriteRefused("\"{$t['name']}\" is not a pass/fail or a numeric test. Enter its result in CMS.");
             }
 
             if ($t['tested'] && $t['passed'] === $passed && $t['result'] === $result) {
@@ -108,13 +115,22 @@ final class SaveTestResults implements Flow
             $state['SampleSetVersion'],
             $first['location'],
             $first['locationVersion'],
-            array_map(static fn ($c) => [
-                'id'         => $c['test']['id'],
-                'version'    => $c['test']['version'],
-                'result'     => $c['result'],
-                'passed'     => $c['passed'],
-                'testedTime' => $now,
-            ], $changed),
+            array_map(static fn ($c) => $c['test']['tested']
+                ? [
+                    // Correction: only what changed, and no new tester or time.
+                    'id'         => $c['test']['id'],
+                    'version'    => $c['test']['version'],
+                    'result'     => $c['result'] !== $c['test']['result'] ? $c['result'] : null,
+                    'passed'     => $c['passed'] !== $c['test']['passed'] ? $c['passed'] : null,
+                    'testedTime' => null,
+                ]
+                : [
+                    'id'         => $c['test']['id'],
+                    'version'    => $c['test']['version'],
+                    'result'     => $c['result'],
+                    'passed'     => $c['passed'],
+                    'testedTime' => $now,
+                ], $changed),
             $user,
         );
 
