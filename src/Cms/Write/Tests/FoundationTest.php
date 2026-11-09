@@ -62,6 +62,11 @@ $rt = '<Result Level="16" State="1" Procedure="ProcessXMLRequest" Line="171" Mes
 t_same('Order 186936 is currently locked by pic\x at CS-PC', ErrorMapper::message($rt), 'message extracted');
 t_check(str_contains(ErrorMapper::fromResultText($rt), 'open for editing by pic\x on CS-PC'), 'lock explained');
 t_check(str_contains(ErrorMapper::explain("Quantity of the item 'E1234' is negative"), 'Not enough stock'), 'negative stock explained');
+t_check(str_contains(ErrorMapper::explain("Ordr ([Ordr] = '115517') has changed since last read"), 'Someone else saved'), 'stale version explained');
+t_check(str_contains(ErrorMapper::explain("Ordr ([Ordr] = '0') does not exist"), 'Ordr 0 no longer exists'), 'missing row explained');
+t_check(str_contains(ErrorMapper::explain('ChangeSet 20878 already billed'), 'supplier bill'), 'billed receipt explained');
+t_check(str_contains(ErrorMapper::explain("Insufficient inventory for item(s) 'A,B'"), 'Not enough stock to commit: A,B'), 'insufficient inventory explained');
+t_check(str_contains(ErrorMapper::explain("Cannot insert duplicate key row in object 'dbo.Item' with unique index 'IX_Item_ItemCode'. The duplicate key value is (X1)."), 'Item code X1 is already in use'), 'duplicate item code explained');
 t_check(str_contains(ErrorMapper::explain('Something new'), 'Something new'), 'unknown message passed through');
 t_check(ErrorMapper::explain('') !== '', 'blank message still says something');
 

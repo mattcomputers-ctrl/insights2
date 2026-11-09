@@ -409,3 +409,58 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
 18. **Local test execution via Docker** (`php:cli` container) on Matt's Windows box — the
     box has no PHP but has Docker, so the Margin Watchdog fixture regression runs locally
     before every push instead of only on the server.
+
+## 2026-11-09 — Insights 2: writing to CMS (decided while Matt was away)
+
+52. **Insights writes only by calling CMS's own `ProcessXMLRequest`**, with the same
+    request documents the CMS client sends. No table is ever written directly. The
+    request shapes were learned from the CMS request log only.
+53. **Typed templates only.** Every request Insights can send is built by a named PHP
+    template (`src/Cms/Write/Ops/…`) from typed values. There is no "send this XML"
+    path, and an operation that is not in `OperationRegistry` cannot be sent.
+54. **Three transports.** `dry-run` (default) builds and validates everything and
+    sends nothing; `fake` is for tests; `live` calls CMS. Live needs BOTH an untracked
+    `config/cms.write.local.php` holding a separate write login AND the admin setting
+    `cms_write.live_enabled`. The everyday read connection is never used to write.
+    The kill switch and backup blackout stop writes exactly as they stop reads.
+55. **Every write is propose → preview → confirm.** The user sees the exact requests
+    before anything is sent. On confirm the plan is rebuilt from fresh CMS reads; if it
+    differs from what was previewed (someone else changed the record) the write is
+    refused and the user is sent back to look again.
+56. **One permission per operation**, named `write.<module>.<verb>` and labelled
+    "Write to CMS: …". Off for everyone until an admin grants it. The module's page
+    permission is still needed to reach the screen.
+57. **Each Insights user is mapped to a CMS user** (`users.cms_user`, set on the user's
+    admin page). Requests carry that name so CMS history shows the real person. A user
+    with no mapping cannot write.
+58. **Workstation is `INSIGHTS`** (setting `cms_write.workstation`), so Insights-made
+    changes are easy to pick out in the CMS log.
+59. **Program name**: by default Insights sends its own (`Insights QC`, …) so the log
+    shows where a request came from. Setting `cms_write.program_mode = cms` sends the
+    CMS client's program names instead, in case the server turns out to care. To be
+    settled in the sandbox (see `docs/SANDBOX_CHECKLIST.md`).
+60. **Local audit table `cms_write_audit`** records who, what operation, the input,
+    every request sent, the CMS log id and result of each, and whether the run was
+    dry-run or live. Viewable at Admin → CMS → Writes.
+61. **Multi-request sequences stop at the first failure** and report which requests
+    committed. Sequences that CMS itself makes resumable (the waybill's to-do rows)
+    are resumed the same way; nothing is ever "rolled back" by Insights.
+62. **Golden tests.** For every template there is a test that rebuilds real logged
+    requests from their own values and compares the XML exactly. Fixtures in
+    `tests/fixtures/cms-requests/` are sanitised: people → `pic\user1`, workstations →
+    `WS1`, company names → `Company N`, codes → `COMPANYN`, addresses, phones, emails
+    and freight accounts → placeholders.
+63. **QC result entry**: only rows the user changed are sent; one sample container per
+    save (as the client does); test time is the moment of confirm; numbers are
+    normalised the way the client writes them; pass/fail-only tests send no result
+    value. Pass/fail is the tester's call: Insights suggests it from the item's limits
+    and warns when the choice disagrees with them, but does not overrule.
+64. **QC approve/reject**: only for a sample set still marked as being tested.
+    Approving with untested or failed tests is allowed (CMS allows it) but the preview
+    carries a clear warning. Approve is refused when the ticket has no in-process-test
+    line to complete, since the client never sends that shape.
+65. **QC entry screens** (`/qc/queue`, `/qc/sample/{id}`) are visible to anyone with
+    at least one QC write permission and hidden (404) from everyone else.
+66. **No CMS login/session call.** The client logs `Shell.Login`/`Logout` around its
+    work; Insights does not, because those only record client sessions. If the sandbox
+    shows the server needs one, it becomes a foundation change, not a per-flow one.
