@@ -32,7 +32,11 @@ foreach (cms_fixture_ids(IR::SAVE) as $log) {
         $r = IR::deleteCount($head['keys']['InventoryCount'], $head['keys']['Version'],
             array_map(static fn (array $l): string => $l['keys']['InventoryCountDetail'], array_slice($s, 0, -1)));
     } else {
-        $shape = $first['operation'] === 'Update' ? 'edit head' : 'edit lines';
+        // A changed description or date makes the head an Update; changed lines follow it in the same request.
+        $shape = $first['operation'] !== 'Update' ? 'edit lines' : (count($s) > 1 ? 'edit head and lines' : 'edit head');
+        if ($first['operation'] === 'Update') {
+            $shapes['edit head: ' . implode(' ', array_keys($first['data']))] = true;
+        }
         $r = IR::editCount($first['keys']['InventoryCount'], $first['keys']['Version'], $first['data'],
             array_map(static fn (array $l): array => ['detail' => $l['keys']['InventoryCountDetail'], 'qty' => $l['data']['QtyEntered']],
                 array_slice($s, 1)));
@@ -42,7 +46,8 @@ foreach (cms_fixture_ids(IR::SAVE) as $log) {
     t_xml_same($xml, $r->toXml($f['env']), "log {$log} ({$shape})");
 }
 ksort($shapes);
-t_same(['create', 'delete', 'edit head', 'edit lines'], array_keys($shapes), 'fixtures cover create, edit (head, lines) and delete');
+t_same(['create', 'delete', 'edit head', 'edit head and lines', 'edit head: Description', 'edit head: EffectiveDate', 'edit lines'], array_keys($shapes),
+    'fixtures cover create, edit (description, date, lines, description with lines) and delete');
 
 t_section('Inventory golden: InventoryCountDataSet.Post');
 $n = 0;

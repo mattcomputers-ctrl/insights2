@@ -34,9 +34,14 @@ foreach (cms_fixture_ids(IR::ITEM_SAVE) as $log) {
         $d = $s[0]['data'];
         t_xml_same($xml, IR::itemCreate($d['ItemCode'], $d['Description'], $d['Unit'], $d['GLGroup'], $s[2]['data']['Group'],
             $d['ShipInContainer'] === 'true', $d['CreateUser'], $d['CreateArea'], $s[0]['keys']['Version'])->toXml($f['env']), "log {$log} (create)");
-        $raw = IR::KINDS['raw'];
+        // Each create fixture is one of the kinds Insights offers, with that kind's settings and nothing else.
+        $kindKey = $d['GLGroup'] === 'Packaging' ? 'packaging' : 'raw';
+        $kind    = IR::KINDS[$kindKey];
+        $itShapes["create ({$kindKey})"] = true;
         t_same([$d['Unit'], $d['GLGroup'], $s[2]['data']['Group'], $d['ShipInContainer'] === 'true'],
-            [$raw['unit'], $raw['glGroup'], $raw['group'], $raw['shipInContainer']], "log {$log}: the settings of the raw material kind");
+            [$kind['unit'], $kind['glGroup'], $kind['group'], $kind['shipInContainer']], "log {$log}: the settings of the {$kindKey} kind");
+        t_same('WHS', $d['Treatment'], "log {$log}: stock of the item is tracked");
+        t_check(!isset($d['Supplier']) && !isset($s[1]['data']['ConcentrationPercent']), "log {$log}: no supplier and no concentration, as Insights sends it");
     } else {
         // Products with pack sizes and tests, new pack sizes, test changes and deleting an item stay in the client.
         $itShapes['not built'] = true;
@@ -44,7 +49,7 @@ foreach (cms_fixture_ids(IR::ITEM_SAVE) as $log) {
     }
 }
 ksort($itShapes);
-t_same(['create', 'minimum (insert)', 'minimum (update)', 'not built', 'supplier'], array_keys($itShapes), 'fixtures cover what is built');
+t_same(['create', 'create (packaging)', 'create (raw)', 'minimum (insert)', 'minimum (update)', 'not built', 'supplier'], array_keys($itShapes), 'fixtures cover what is built, both kinds of new item included');
 t_same('ea', IR::itemCreate('X', 'Y', 'ea', 'Packaging', 'Packaging Material', false, 'u', '4')->steps()[0]->first('data')['Unit'], 'a packaging item counts in each');
 
 /* ── Flows ── */
@@ -176,7 +181,20 @@ $p = $wr->preview('item.create', ['code' => '5GP', 'description' => '5 GALLON PA
 $st = cms_fixture_parse($p->rendered->stages[0]['xml'])['steps'];
 t_same(['ea', 'Packaging', 'false', 'Packaging Material'], [$st[0]['data']['Unit'], $st[0]['data']['GLGroup'], $st[0]['data']['ShipInContainer'], $st[2]['data']['Group']],
     'a packaging item: each, Packaging, not shipped in its container');
-t_same(1, count($p->plan->warnings), 'the review says what is still to be set');
+t_same(2, count($p->plan->warnings), 'the review says what is still to be set and that the stock is tracked');
+t_check(str_contains($p->plan->warnings[1] ?? '', 'stock tracked') && str_contains($p->plan->warnings[1] ?? '', 'in CMS'),
+    'a packaging item: the review says an untracked one is created in CMS');
+t_same(1, count($wr->preview('item.create', ['code' => 'RM1', 'description' => 'RAW ONE', 'kind' => 'raw'], $itNow)->plan->warnings),
+    'a raw material: only the note on what is still to be set');
+$fake  = new FakeTransport();
+$wr    = $itWriter($itCms($itRows, $itSettings, $itSuppliers), $fake);
+$in    = ['code' => '5lb pail', 'description' => '5 POUND BLACK PLASTIC PAIL WITH HANDLE', 'kind' => 'packaging'];
+$itDay = new DateTimeImmutable('2023-05-10T12:56:24');
+$p     = $wr->preview('item.create', $in, $itDay);
+t_check($wr->execute('item.create', $in, $itDay, $p->hash)->ok(), 'a packaging item: committed on the fake transport');
+// The client sent Version 8 on this insert; Insights sends 1 and the new row starts at 1 either way.
+t_xml_same($itNorm(str_replace('Version="8"', 'Version="1"', cms_fixture(IR::ITEM_SAVE, 501743))), $itNorm($fake->sent[0] ?? ''),
+    'a packaging item: the request is log 501743 but for the Version on the insert');
 foreach ([
     'no kind'        => [['kind' => ''], 'what kind'],
     'unknown kind'   => [['kind' => 'finished'], 'what kind'],
