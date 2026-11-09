@@ -111,7 +111,7 @@ lot of each ingredient, signed warnings, and container labels.
 | `WaybillDataSet.SaveChanges` (Waybill) | 9,435 / 15 | Shipping one or more assembled orders | **3 + N requests** for N orders: (1) `Insert Waybill`, tracking numbers, address, document, and a to-do row in `WaybillInProcess` per later request; (2) per order: tick its to-do row, `UpdateVersion Waybill`, `Execute CreateShipmentsByOrder`; (3) tick, save shipped pallets; (4) tick, `Update Waybill Status=CMP`. To-do row ids are read back after request 1. An interrupted waybill is finished from the to-do rows (`ProcessOutstandingRequests`) | `/shipping` waybills, assemblies, tracking; **new** `/shipping/new` (ready orders, containers, weights, freight charge), Finish button on an unfinished waybill | **live-ready** (`ship.create_waybill`, `ship.resume_waybill`) |
 | `WaybillDataSet.RejectWaybill` | 31 / 0 | Cancelling a waybill | 1 request: `Update Waybill Status=REJ` → `Execute RejectWaybill` | Reject button on a completed waybill | **live-ready** (`ship.reject_waybill`) |
 | `PrintShippingLabel.UpdateShippingLabelAddress` | 2,457 / 0 | Saving the address printed on a shipping label | 1 request per container: one `Insert AddressReference` (or `Update` on a reprint; the client's envelope carries no user, workstation or owner, Insights sends its normal one) | "Mark labels printed" on a completed waybill | **live-ready** (`ship.label_address`) |
-| `LocationTools.ResetLabelRequired` (PrintContainerLabel) | 4,060 / 0 | Marking a container label as printed | 1 request: `Execute ResetLabelReqd` | — | researched |
+| `LocationTools.ResetLabelRequired` (PrintContainerLabel) | 4,060 / 0 | Marking a container label as printed | 1 request: `Execute ResetLabelReqd` | **new** `/inventory/labels`: containers with stock that still ask for a label, "Mark labelled" on each. Insights does not print the label | **live-ready** (`inv.reset_label`) |
 
 Print pages (read-only, linked per order from the waybill page): packing slip
 `/shipping/packing-slip/{change set}` (header from the `PackingSlipReport`
@@ -119,16 +119,16 @@ view; its detail views are empty here, so lines come from `ShipmentDetails`
 with the container of each line) and invoice `/shipping/invoice/{trans}`
 (`InvoiceReport`, `InvoiceDetailReport`, `InvoiceTaxReport`; needs the
 `shipping.invoice` permission because it shows prices). Still client-only:
-the shipping label itself, assembling an order into containers (flow 7), and
+the shipping label itself, assembling an order into containers, and
 tracking numbers and freight cost per container.
 
 ## 7. Inventory (Inventory)
 
 | CMS action (program) | Count / failed | What the user is doing | Request sequence | Insights today | Status |
 |---|---|---|---|---|---|
-| `InventoryCountDataSet.SaveChanges` | 156 / 0 | Saving a count sheet | 1 request | Stock by item / container | researched |
-| `InventoryCountDataSet.Post` | 151 / 1 | Posting the count | 1 request, about a second after the save: `UpdateVersion InventoryCount` → `Update InventoryCountDetail` ×N → `Execute CreateChangeSet` (COUNT) → `Execute MoveInventory` ×N → `Update InventoryCount Posted=true` | same | researched |
-| `InventoryTools.RecalculatePlanTrace` | 288 / 0 | Recalculating planned dates | 1 request: `Execute CalculateESD` | — | researched |
+| `InventoryCountDataSet.SaveChanges` | 156 / 0 | Saving a count sheet | 1 request. New: `Insert InventoryCount` → `Insert InventoryCountDetail` ×N. Change: `UpdateVersion InventoryCount` (or `Update` when the description or date changes) → `Update InventoryCountDetail` per changed line. Delete: `Delete InventoryCountDetail` ×N → `Delete InventoryCount` | **new** `/inventory/counts`: list, new count (item codes and quantities), change quantities, description and date, delete. Adding or removing items on a saved count stays in the client | **live-ready** (`inv.count_create`, `inv.count_edit`, `inv.count_delete`) |
+| `InventoryCountDataSet.Post` | 151 / 1 | Posting the count | 1 request, about a second after the save: `UpdateVersion InventoryCount` → `Update InventoryCountDetail` ×N (the adjustment: counted minus on hand) → `Execute CreateChangeSet` (COUNT) → `Execute MoveInventory` ×N → `Update InventoryCount Posted=true` | "Check and post" on a saved count, or "Check, save and post" on a new one (two requests in a row). The review lists what each line adds or removes | **live-ready** (`inv.count_post`, `inv.count_create_post`) |
+| `InventoryTools.RecalculatePlanTrace` | 288 / 0 | Recalculating planned dates | 1 request: `Execute CalculateESD` | "Recalculate planned dates" on `/inventory/counts` | **live-ready** (`inv.recalc_plan`) |
 
 Failure seen: posting a count that would take an item negative.
 

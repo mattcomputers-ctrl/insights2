@@ -11,6 +11,13 @@ use PII\Cms\Write\Ops\Execution\Packout;
 use PII\Cms\Write\Ops\Execution\SendToQc;
 use PII\Cms\Write\Ops\Execution\UndoMake;
 use PII\Cms\Write\Ops\Execution\UndoPackout;
+use PII\Cms\Write\Ops\Inventory\CreateAndPostCount;
+use PII\Cms\Write\Ops\Inventory\CreateCount;
+use PII\Cms\Write\Ops\Inventory\DeleteCount;
+use PII\Cms\Write\Ops\Inventory\EditCount;
+use PII\Cms\Write\Ops\Inventory\PostCount;
+use PII\Cms\Write\Ops\Inventory\RecalculatePlan;
+use PII\Cms\Write\Ops\Inventory\ResetLabel;
 use PII\Cms\Write\Ops\Manufacturing\AddPackTicket;
 use PII\Cms\Write\Ops\Manufacturing\CloseTicket;
 use PII\Cms\Write\Ops\Manufacturing\CreateTicket;
@@ -139,6 +146,20 @@ final class OperationRegistry
                 'write.ship.reject_waybill', RejectWaybill::class, ['WaybillDataSet.RejectWaybill']),
             new OperationDef('ship.label_address', 'shipping', 'record that shipping labels were printed',
                 'write.ship.label_address', RecordLabelAddress::class, ['PrintShippingLabel.UpdateShippingLabelAddress']),
+            new OperationDef('inv.count_create', 'inventory', 'save a new inventory count',
+                'write.inv.count', CreateCount::class, ['InventoryCountDataSet.SaveChanges']),
+            new OperationDef('inv.count_edit', 'inventory', 'change an inventory count that is not posted',
+                'write.inv.count', EditCount::class, ['InventoryCountDataSet.SaveChanges']),
+            new OperationDef('inv.count_delete', 'inventory', 'delete an inventory count that is not posted',
+                'write.inv.count', DeleteCount::class, ['InventoryCountDataSet.SaveChanges']),
+            new OperationDef('inv.count_post', 'inventory', 'post an inventory count (changes stock on hand)',
+                'write.inv.count_post', PostCount::class, ['InventoryCountDataSet.Post']),
+            new OperationDef('inv.count_create_post', 'inventory', 'save and post a new inventory count',
+                'write.inv.count_post', CreateAndPostCount::class, ['InventoryCountDataSet.SaveChanges', 'InventoryCountDataSet.Post']),
+            new OperationDef('inv.reset_label', 'inventory', 'mark a container as labelled',
+                'write.inv.reset_label', ResetLabel::class, ['LocationTools.ResetLabelRequired']),
+            new OperationDef('inv.recalc_plan', 'inventory', 'recalculate the planned dates of open orders',
+                'write.inv.recalc_plan', RecalculatePlan::class, ['InventoryTools.RecalculatePlanTrace']),
             new OperationDef('mf.publish_recipe', 'recipes', 'publish a recipe',
                 'write.mf.publish_recipe', PublishRecipe::class, ['ManufacturingOrderDataSet.PublishRecipe']),
             new OperationDef('mf.recipe_active', 'recipes', 'retire or reactivate a recipe',

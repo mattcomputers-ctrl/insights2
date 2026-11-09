@@ -289,9 +289,47 @@ second, identical ticket to compare against.
 10. **Direct-packed batch.** A bulk ticket packed without a packaging ticket in
     the client shows a note on the card and no packout or undo buttons.
 
-### 4.7 onward (not built yet)
+### 4.7 Inventory counts, labels and planned dates (built)
 
-Inventory,
+Grant `write.inv.*` to the test user. Pick two or three raw materials with
+stock and one with none.
+
+1. **Save a count.** `/inventory/counts`, New count: the item codes and
+   quantities, "Check and save". The review shows, per item, what was counted,
+   what is on hand and what posting would add or remove. Compare the request
+   with the client's count screen saving the same sheet.
+   - Refusals to try: an unknown item code, the same item twice, a negative
+     quantity, a date in the future.
+2. **Change it.** Open the count, change one quantity: only that line is sent
+   (`UpdateVersion` on the head). Change the description: the head is an
+   `Update` with its `Version`. Then change the date and a quantity together;
+   this combination and the date change were not seen in the log, so compare
+   with what the client sends and check CMS accepts ours.
+3. **Post it.** "Check and post". Compare `QtyAdjust` on every line and the
+   `Quantity` of every move with the client posting an identical count (the
+   adjustment is counted minus on hand, written to the last digit). After the
+   post: stock on hand equals the counted quantity, the count is posted, its
+   `Version` is 2.
+   - Change stock of one item between the review and the confirm (receive some
+     in the client): Insights re-reads on confirm and asks for a new review.
+   - Post a count whose line is already equal to stock: the move is `-0`.
+4. **Save and post in one go** on a new count: two requests in a row. The post
+   uses the count and line ids CMS returned from the save and `Version` 1.
+   Check both land; if the save's reply does not carry the ids, the sequence
+   stops after the save and the count is posted from its own page.
+5. **Delete** a count that is not posted: its lines and the head go, stock is
+   unchanged.
+6. **Mark a container labelled.** `/inventory/labels` lists containers with
+   stock whose label is still asked for. "Mark labelled" on one; it leaves the
+   list and `Location.LabelReqd` is 0. The client sends this after printing;
+   Insights prints nothing.
+7. **Recalculate planned dates.** One request; takes several seconds. Compare
+   the planned dates on a few open orders before and after with the client's
+   own recalculation.
+
+### 4.8 onward (not built yet)
+
+Assembling an order into containers,
 master data and bills are researched (`docs/research/`) with fixtures stored, but
 have no templates yet. Each gets its section here when it is built, following
 the same pattern: do it in Insights, do it in the client, compare the request

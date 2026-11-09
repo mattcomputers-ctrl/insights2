@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PII\Modules\InventoryBrowser;
 
+use PII\Cms\Write\OperationRegistry;
 use PII\Core\Module;
 use PII\Core\Router;
 
@@ -25,8 +26,8 @@ class InventoryBrowserModule extends Module
 
     public function permissions(): array
     {
-        return [
-            'inventory.view'             => 'Browse and search inventory items (code, description, unit)',
+        return OperationRegistry::permissionsFor('inventory') + [
+            'inventory.view'            => 'Browse and search inventory items (code, description, unit)',
             'inventory.col_vendor_codes' => 'Column: vendor item codes (from purchase history)',
             'inventory.col_on_hand'      => 'Column: quantity on hand',
             'inventory.col_on_so'        => 'Column: quantity on open sales orders',
@@ -51,6 +52,19 @@ class InventoryBrowserModule extends Module
         $router->group('/inventory', function (Router $r) use ($c) {
             $r->get('',        $c . '@index');
             $r->get('/export', $c . '@export');
+        });
+        $n = InventoryCountController::class;
+        $router->group('/inventory', function (Router $r) use ($n) {
+            $r->get('/counts',               $n . '@index');
+            $r->get('/counts/new',           $n . '@newCount');
+            $r->post('/counts/new',          $n . '@create');
+            $r->get('/counts/{id}',          $n . '@show');
+            $r->post('/counts/{id}',         $n . '@edit');
+            $r->post('/counts/{id}/post',    $n . '@post');
+            $r->post('/counts/{id}/delete',  $n . '@delete');
+            $r->get('/labels',               $n . '@labels');
+            $r->post('/labels/{location}',   $n . '@resetLabel');
+            $r->post('/recalculate',         $n . '@recalculate');
         });
     }
 }

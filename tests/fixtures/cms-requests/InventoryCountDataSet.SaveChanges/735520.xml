@@ -1,0 +1,1 @@
+<request Application="Chemical Management System" AppVersion="7.15.0.680" Program="Inventory Count" Action="InventoryCountDataSet.SaveChanges" Workstation="WS1" Owner="4" User="pic\user1" TransDate="2025-10-08T09:09:53"><action Object="InventoryCount" Step="1" Operation="Update"><keys InventoryCount="1389" Version="1"/><data Description="Adjust"/></action></request>

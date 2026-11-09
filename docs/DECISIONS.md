@@ -646,3 +646,33 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
 122. **Undo is refused on a completed or closed ticket**, and undoing the make
     is refused while a packout stands. The client is looser; Insights asks
     for the steps to be undone in order.
+123. **Inventory counts live in the Inventory module** (`/inventory/counts`),
+    with their own permissions: `write.inv.count` saves, changes and deletes;
+    `write.inv.count_post` posts. Posting is the step that changes stock.
+124. **A count line is an item code and a quantity in the stock location.**
+    Every count in CMS but two lines is at the stock location, with no lot, so
+    Insights offers nothing else. Counting a single container or lot stays in
+    the client.
+125. **The posted adjustment is counted minus on hand, read at the moment of
+    the review and again at the confirm**, and written with every digit as the
+    client writes it. If stock moved in between, the confirm asks for a new
+    review.
+126. **"Save and post" is two requests**, as in the client; the post takes the
+    ids from the save's reply. If the save lands and the post does not, the
+    count is left saved and can be posted from its page.
+127. **A saved count's items are fixed in Insights.** Quantities, description
+    and date can change; to add or remove an item, delete the count and start
+    again. The client's shape for adding a line to a saved count was not in
+    the log.
+128. **A changed description or date with changed lines is sent as one
+    request**: the head `Update` with its `Version`, then the lines. Only the
+    two halves were seen separately; flagged in the sandbox checklist.
+129. **"Mark labelled" is offered only for containers that hold stock.** CMS
+    has thousands of emptied containers still flagged; they are noise.
+    Insights does not print container labels, so this is a manual tick.
+130. **Recalculating planned dates is its own permission**
+    (`write.inv.recalc_plan`); it changes nothing a user typed but touches
+    every open order's dates.
+131. **"Repack" is not built.** No request under that name was found in the
+    log; moving stock between pack sizes goes through a packaging ticket
+    (flow 6). Left as a question for Matt.

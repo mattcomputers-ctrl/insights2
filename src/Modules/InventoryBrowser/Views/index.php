@@ -26,6 +26,12 @@ $qs = fn(array $extra) => '/inventory?' . http_build_query(array_filter($extra +
             <a href="<?= e('/inventory/export?' . http_build_query(array_filter(['q' => $search, 'all' => $showAll ? '1' : '']))) ?>"
                class="btn btn-sm" data-export="1">⬇ Excel</a>
         <?php endif; ?>
+        <?php if (user_can('write.inv.count') || user_can('write.inv.count_post')): ?>
+            <a href="/inventory/counts" class="btn btn-sm">Counts</a>
+        <?php endif; ?>
+        <?php if (user_can('write.inv.reset_label')): ?>
+            <a href="/inventory/labels" class="btn btn-sm">Labels waiting</a>
+        <?php endif; ?>
         <?= sync_now_button() ?>
     </div>
 </div>
