@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace PII\Modules\Shipping;
 
+use PII\Cms\Write\OperationRegistry;
 use PII\Core\Module;
 use PII\Core\Router;
 
 /**
- * Shipping — read-only browser over every waybill in CMS: when it
- * shipped, how (carrier / ship via), the assemblies (cartons/pallets)
- * with their tracking numbers and actual weights, and what was inside
- * each one. Live CMS.
+ * Shipping — browser over every waybill in CMS: when it shipped, how
+ * (carrier / ship via), the assemblies (cartons/pallets) with their
+ * tracking numbers and actual weights, and what was inside each one.
+ * Live CMS. Users with the write permissions can also ship assembled
+ * orders on a new waybill, reject a waybill and record printed labels,
+ * each through the shared confirm step.
  */
 class ShippingModule extends Module
 {
@@ -25,8 +28,9 @@ class ShippingModule extends Module
 
     public function permissions(): array
     {
-        return [
-            'shipping.view' => 'Browse shipments (waybills, assemblies, tracking numbers)',
+        return OperationRegistry::permissionsFor('shipping') + [
+            'shipping.view'    => 'Browse shipments (waybills, assemblies, tracking numbers) and print packing slips',
+            'shipping.invoice' => 'Open and print invoices from a waybill (shows prices)',
         ];
     }
 
@@ -38,9 +42,17 @@ class ShippingModule extends Module
     public function registerRoutes(Router $router): void
     {
         $c = ShippingController::class;
-        $router->group('/shipping', function (Router $r) use ($c) {
-            $r->get('',           $c . '@index');
-            $r->get('/{waybill}', $c . '@detail');
+        $e = ShippingEntryController::class;
+        $router->group('/shipping', function (Router $r) use ($c, $e) {
+            $r->get('',                          $c . '@index');
+            $r->get('/new',                      $e . '@newWaybill');
+            $r->post('/new',                     $e . '@create');
+            $r->get('/packing-slip/{changeSet}', $e . '@packingSlip');
+            $r->get('/invoice/{trans}',          $e . '@invoice');
+            $r->get('/{waybill}',                $c . '@detail');
+            $r->post('/{waybill}/finish',        $e . '@finish');
+            $r->post('/{waybill}/reject',        $e . '@reject');
+            $r->post('/{waybill}/labels',        $e . '@labels');
         });
     }
 }

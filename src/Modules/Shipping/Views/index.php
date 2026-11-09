@@ -2,7 +2,7 @@
 /**
  * Shipping browser (live CMS): waybills newest first.
  * @var string $q  @var array $waybills  @var bool $truncated
- * @var ?string $error  @var ?string $asOf
+ * @var ?string $error  @var ?string $asOf  @var bool $canShip
  */
 ?>
 <div class="card">
@@ -14,6 +14,7 @@
         <form method="GET" action="/shipping" class="flex gap-1">
             <input type="text" name="q" value="<?= e($q) ?>" placeholder="Waybill #, order #, customer, tracking #, item…" style="min-width:280px;">
             <button type="submit" class="btn btn-sm">Search</button>
+            <?php if (!empty($canShip)): ?><a href="/shipping/new" class="btn btn-sm btn-primary">Ship orders</a><?php endif; ?>
         </form>
     </div>
 

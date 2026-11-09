@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace PII\Modules\Shipping;
 
+use PII\Cms\Write\CmsWriter;
+use PII\Cms\Write\LiveCmsReader;
+use PII\Cms\Write\Ops\Shipping\ShippingState;
 use PII\Core\CMSDatabase;
 use PII\Core\CMSUnavailableException;
 use PII\Services\Sync\SyncSettings;
@@ -11,7 +14,8 @@ use PII\Services\Sync\SyncSettings;
 require_once dirname(__DIR__, 2) . '/Helpers/layout.php';
 
 /**
- * ShippingController — live, read-only CMS queries over waybills.
+ * ShippingController — live CMS queries over waybills (the browser and
+ * the waybill page; the write entry points are in ShippingEntryController).
  *
  * Data map (verified live 2026-11-04): Waybill.ShipVia → Entities (the
  * carrier); WaybillTrackingNumber = one row per ASSEMBLY (an ASM
@@ -101,6 +105,7 @@ class ShippingController
             'waybills'  => $waybills,
             'truncated' => $truncated,
             'error'     => $error,
+            'canShip'   => CmsWriter::forCurrentUser()->allowed('ship.create_waybill'),
             'asOf'      => SyncSettings::lastSuccessAt(),
         ], 'shipping');
     }
@@ -111,6 +116,7 @@ class ShippingController
         $head = null;
         $assemblies = [];
         $shipments = [];
+        $state = null;
         $error = null;
 
         try {
@@ -169,6 +175,9 @@ class ShippingController
                     FROM CMS.dbo.ShipmentDetails sd
                     WHERE sd.WayBill = ?
                     ORDER BY sd.Ordr, sd.ItemCode", [$waybill]);
+
+                // Documents, to-do list and label state, read the way the write flows read them.
+                $state = ShippingState::waybill(new LiveCmsReader(), $waybill);
             }
         } catch (CMSUnavailableException $e) {
             $error = $e->friendlyMessage();
@@ -180,12 +189,21 @@ class ShippingController
             render_not_found();
         }
 
+        $writer = CmsWriter::forCurrentUser();
+        $can = [];
+        foreach (['ship.resume_waybill', 'ship.reject_waybill', 'ship.label_address'] as $op) {
+            $can[$op] = $writer->allowed($op);
+        }
+
         layout('shipping::detail', [
             'pageTitle'  => 'Waybill ' . $waybill,
             'waybill'    => $waybill,
             'head'       => $head,
             'assemblies' => $assemblies,
             'shipments'  => $shipments,
+            'state'      => $state,
+            'can'        => $can,
+            'mode'       => $writer->mode(),
             'error'      => $error,
             'asOf'       => SyncSettings::lastSuccessAt(),
         ], 'shipping');
