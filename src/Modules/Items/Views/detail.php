@@ -6,6 +6,7 @@
  * @var array $specs  @var array $stock  @var ?array $totals
  * @var array $shipments  @var array $purchases  @var array $whereUsed
  * @var ?string $resolvedFrom  @var bool $showCost  @var ?string $error  @var ?string $asOf
+ * @var bool $canAlias  @var string $mode
  */
 ?>
 <div class="toolbar" style="margin-bottom:1rem;">
@@ -66,7 +67,52 @@
         </div>
     <?php endif; ?>
 
-    <?php if ($aliases !== []): ?>
+    <?php if ($canAlias): ?>
+        <h3 style="margin:0.75rem 0 0.3rem;">Aliases (<?= count($aliases) ?>)</h3>
+        <?php if ($mode !== 'live'): ?>
+            <div class="alert alert-info">Practice mode: changes are checked and previewed, but nothing is sent to CMS.</div>
+        <?php endif; ?>
+        <div class="table-scroll">
+            <table class="table">
+                <thead><tr><th>Alias</th><th>Description</th><th>Move to item</th><th></th></tr></thead>
+                <tbody>
+                <?php foreach ($aliases as $a): $fid = 'alias-' . (int) $a['Item']; ?>
+                    <tr>
+                        <td>
+                            <form method="POST" action="/items/alias/edit" id="<?= $fid ?>">
+                                <?= csrf_field() ?>
+                                <input type="hidden" name="alias" value="<?= (int) $a['Item'] ?>">
+                                <input type="hidden" name="item" value="<?= e((string) $head['ItemCode']) ?>">
+                            </form>
+                            <input type="text" form="<?= $fid ?>" name="code" value="<?= e((string) $a['ItemCode']) ?>" maxlength="30"
+                                   style="width:14rem;" aria-label="Code of alias <?= e((string) $a['ItemCode']) ?>">
+                        </td>
+                        <td><input type="text" form="<?= $fid ?>" name="description" value="<?= e((string) ($a['Description'] ?? '')) ?>" maxlength="256"
+                                   style="width:100%;min-width:16rem;" aria-label="Description of alias <?= e((string) $a['ItemCode']) ?>"></td>
+                        <td><input type="text" form="<?= $fid ?>" name="move_to" value="" maxlength="30" placeholder="Item code"
+                                   style="width:10rem;" aria-label="Item that alias <?= e((string) $a['ItemCode']) ?> should stand for"></td>
+                        <td class="text-right"><button type="submit" form="<?= $fid ?>" class="btn btn-sm">Review change…</button></td>
+                    </tr>
+                <?php endforeach; ?>
+                    <tr>
+                        <td>
+                            <form method="POST" action="/items/alias" id="alias-new">
+                                <?= csrf_field() ?>
+                                <input type="hidden" name="item" value="<?= e((string) $head['ItemCode']) ?>">
+                            </form>
+                            <input type="text" form="alias-new" name="code" value="" maxlength="30" placeholder="New alias code" required
+                                   style="width:14rem;" aria-label="Code of the new alias">
+                        </td>
+                        <td><input type="text" form="alias-new" name="description" value="" maxlength="256"
+                                   placeholder="<?= e((string) ($head['Description'] ?? '')) ?>"
+                                   style="width:100%;min-width:16rem;" aria-label="Description of the new alias"></td>
+                        <td class="text-muted" style="font-size:0.85rem;">Blank description: the item's own.</td>
+                        <td class="text-right"><button type="submit" form="alias-new" class="btn btn-sm btn-primary">Add alias…</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    <?php elseif ($aliases !== []): ?>
         <h3 style="margin:0.75rem 0 0.3rem;">Aliases (<?= count($aliases) ?>)</h3>
         <div style="font-size:0.9rem;columns:2;column-gap:2rem;">
             <?php foreach ($aliases as $a): ?>

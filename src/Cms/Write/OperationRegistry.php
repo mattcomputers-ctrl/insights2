@@ -25,6 +25,8 @@ use PII\Cms\Write\Ops\Manufacturing\EditTicket;
 use PII\Cms\Write\Ops\Manufacturing\PublishRecipe;
 use PII\Cms\Write\Ops\Manufacturing\ReleaseTicket;
 use PII\Cms\Write\Ops\Manufacturing\SetRecipeActive;
+use PII\Cms\Write\Ops\MasterData\CreateAlias;
+use PII\Cms\Write\Ops\MasterData\EditAlias;
 use PII\Cms\Write\Ops\Purchasing\CompletePurchaseOrder;
 use PII\Cms\Write\Ops\Purchasing\CreatePurchaseOrder;
 use PII\Cms\Write\Ops\Purchasing\EditPurchaseOrder;
@@ -166,6 +168,10 @@ final class OperationRegistry
                 'write.inv.reset_label', ResetLabel::class, ['LocationTools.ResetLabelRequired']),
             new OperationDef('inv.recalc_plan', 'inventory', 'recalculate the planned dates of open orders',
                 'write.inv.recalc_plan', RecalculatePlan::class, ['InventoryTools.RecalculatePlanTrace']),
+            new OperationDef('item.alias_edit', 'items', 'change an alias of an item',
+                'write.item.alias', EditAlias::class, ['ItemNameUpdateDataSet.SaveChanges']),
+            new OperationDef('item.alias_create', 'items', 'add and change aliases of items',
+                'write.item.alias', CreateAlias::class, ['ItemNameUpdateDataSet.SaveChanges']),
             new OperationDef('mf.publish_recipe', 'recipes', 'publish a recipe',
                 'write.mf.publish_recipe', PublishRecipe::class, ['ManufacturingOrderDataSet.PublishRecipe']),
             new OperationDef('mf.recipe_active', 'recipes', 'retire or reactivate a recipe',

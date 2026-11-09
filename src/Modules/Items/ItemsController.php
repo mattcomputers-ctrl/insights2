@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace PII\Modules\Items;
 
+use PII\Cms\Write\CmsWriter;
+use PII\Controllers\CmsWriteController;
 use PII\Core\CMSDatabase;
 use PII\Core\CMSUnavailableException;
+use PII\Core\CSRF;
 use PII\Services\Sync\SyncSettings;
 
 require_once dirname(__DIR__, 2) . '/Helpers/layout.php';
@@ -14,6 +17,8 @@ require_once dirname(__DIR__, 2) . '/Helpers/layout.php';
  * ItemsController — the item 360 view, live read-only CMS queries.
  * Detail is addressed by item CODE via ?code= (codes contain spaces and
  * parentheses, so no path parameter). Costs only show with margin.view.
+ * Users with the alias permission can add and change aliases; each POST
+ * goes to the shared confirm step and is only sent after a review.
  */
 class ItemsController
 {
@@ -116,7 +121,7 @@ class ItemsController
             if ($head) {
                 $id = (int) $head['Item'];
                 $d['aliases'] = $cms->fetchAll("
-                    SELECT al.ItemCode, al.Description FROM CMS.dbo.Item al
+                    SELECT al.Item, al.ItemCode, al.Description FROM CMS.dbo.Item al
                     WHERE al.ReplacedBy = ? ORDER BY al.ItemCode", [$id]);
 
                 $d['recipes'] = $cms->fetchAll("
@@ -189,12 +194,51 @@ class ItemsController
             render_not_found();
         }
 
+        $writer = CmsWriter::forCurrentUser();
         layout('items::detail', $d + [
             'pageTitle' => 'Item ' . ($d['head']['ItemCode'] ?? $code),
             'code'      => $code,
             'error'     => $error,
             'showCost'  => user_can('margin.view'),
+            'canAlias'  => $writer->allowed('item.alias_create'),
+            'mode'      => $writer->mode(),
             'asOf'      => SyncSettings::lastSuccessAt(),
         ], 'items');
+    }
+
+    /** Add an alias to the item whose page the form was on. */
+    public function aliasCreate(): void
+    {
+        CSRF::validateRequest();
+        if (!CmsWriter::forCurrentUser()->allowed('item.alias_create')) {
+            render_not_found();
+        }
+        $item = self::posted('item');
+        CmsWriteController::propose('item.alias_create',
+            ['item' => $item, 'code' => self::posted('code'), 'description' => self::posted('description')], self::back($item));
+    }
+
+    /** Change an alias: code, description, or the item it stands for. */
+    public function aliasEdit(): void
+    {
+        CSRF::validateRequest();
+        if (!CmsWriter::forCurrentUser()->allowed('item.alias_edit')) {
+            render_not_found();
+        }
+        CmsWriteController::propose('item.alias_edit', [
+            'alias' => self::posted('alias'), 'code' => self::posted('code'),
+            'description' => self::posted('description'), 'item' => self::posted('move_to'),
+        ], self::back(self::posted('item')));
+    }
+
+    private static function posted(string $name): string
+    {
+        $v = $_POST[$name] ?? '';
+        return is_string($v) ? trim($v) : '';
+    }
+
+    private static function back(string $code): string
+    {
+        return $code !== '' ? '/items/view?code=' . rawurlencode($code) : '/items';
     }
 }

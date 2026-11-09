@@ -699,3 +699,18 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
     in the log deletes one.
 138. **"Take out everything" sends what the container holds at the review**;
     the confirm reads it again and asks for a new review if it changed.
+139. **Aliases are added and changed on the item page** (`/items/view`), with
+    one permission, `write.item.alias`. The page already lists them.
+140. **Alias codes are sent in upper case.** No code in CMS (22,123 items and
+    aliases) has a lower-case letter. A code must be new across items and
+    aliases; CMS has no duplicates.
+141. **A blank description on a new alias becomes the item's description.**
+    Every logged alias insert carries a description.
+142. **An alias can only stand for a stock item** (contexts PP and SUNDRY):
+    all 7,706 aliases in CMS do. Given another alias as the target, Insights
+    uses the item behind it; there are no aliases of aliases in CMS.
+143. **An alias change sends only the columns that differ**, as the client
+    does (225 description-only, 98 re-point-only, 25 code-only requests).
+144. **Deleting an alias stays in the client.** Three deletes in the log
+    since 600000; a wrong alias can be renamed or moved here. The fixture is
+    kept to document the shape.

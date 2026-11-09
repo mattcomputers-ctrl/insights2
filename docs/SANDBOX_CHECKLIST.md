@@ -369,7 +369,32 @@ stock, and one line whose item has less stock than ordered.
    another order. Note whether CMS refuses, and with what message: Insights
    only compares against the total on hand.
 
-### 4.9 onward (not built yet)
+### 4.9 Item aliases (built)
+
+Grant `write.item.alias` to the test user. Use a stock item that has one or
+two aliases, and a second stock item to move an alias to.
+
+1. **Add.** On the item's page (`/items/view?code=…`) type a new alias code,
+   leave the description blank, Add alias: one request (`Insert Item` with
+   `Context="NAME"` and `ReplacedBy` the item, then `FixupItemManf`). Compare
+   with the client adding an alias to the same item. Confirm; the alias is
+   listed on the page and in the client, with the item's description.
+   - Type the code in lower case: Insights sends it in upper case, as every
+     code in CMS is. Note it if the client keeps lower case.
+2. **Change.** Change the description of an alias: the request has only
+   `Description`. Change the code: only `ItemCode`. Change both and move it
+   to the second item in one go: `ItemCode`, `Description`, `ReplacedBy` in
+   that order.
+3. **Move.** After a move the alias is on the second item's page. Open a
+   sales order or price list that used the alias and check it now shows the
+   second item, as it does after the same move in the client.
+4. **Refusals to try**: a code that an item or another alias already has, a
+   code over 30 characters, an item code that does not exist as the item to
+   move to, a packaging prototype as the item to move to, and an alias
+   changed in the client between review and confirm (CMS refuses on
+   `Version`; note the message).
+
+### 4.10 onward (not built yet)
 
 Master data and bills are researched (`docs/research/`) with fixtures stored, but
 have no templates yet. Each gets its section here when it is built, following

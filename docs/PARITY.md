@@ -138,7 +138,7 @@ Failure seen: posting a count that would take an item negative.
 | CMS action (program) | Count / failed | What the user is doing | Request sequence | Insights today | Status |
 |---|---|---|---|---|---|
 | `ItemUpdateDataSet.SaveChanges` (Item Update) | 1,338 / 7 | Creating or editing an item | 1 request: `Item` step, child rows, then `Execute InheritItemsPropertiesByPackagedProducts` and `Execute FixupItemManf` | Item 360 page | researched |
-| `ItemNameUpdateDataSet.SaveChanges` (Item Name Update) | 1,100 / 4 | Creating or editing an alias | 1 request: `Insert`/`Update Item` (alias row pointing at the real item) → `Execute FixupItemManf` | Aliases on item page | researched |
+| `ItemNameUpdateDataSet.SaveChanges` (Item Name Update) | 1,100 / 4 | Creating or editing an alias | 1 request: `Insert`/`Update Item` (alias row pointing at the real item) → `Execute FixupItemManf`. An update carries only the changed columns, in the order `ItemCode`, `Description`, `ReplacedBy` | Aliases on the item page; **new** on `/items/view`: add an alias, change its code or description, move it to another item | **live-ready** (`item.alias_create`, `item.alias_edit`); deleting an alias stays in the client |
 | `EntityUpdateDataSet.SaveChanges` (Bill To / Ship To / Supplier / Sales Rep Update) | 252 / 1 | Creating or editing a customer, ship-to or supplier | 1 request: `Insert Entity` → document rows (customers) → `Insert AddressRef` | Names on orders | researched |
 | `PriceVersionUpdateDataSet.SaveChanges` | 180 / 0 | New price list version | 1 request: `Insert PriceVersion` → `PriceDetail` rows | Prices on orders | researched |
 
