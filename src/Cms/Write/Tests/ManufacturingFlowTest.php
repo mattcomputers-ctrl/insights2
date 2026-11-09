@@ -72,8 +72,25 @@ $mfRecipes = [
             $mfRd(273317, 'UI', ['Item' => 121303, 'ItemCode' => 'B121303', 'Unit' => 'lb', 'QtyReqd' => '1.0e+000']),
         ],
     ],
+    // Recipe 17127 before log 866471. Its lines are given here in line order; CMS stores line 1 after lines 2 to 4.
+    17127 => [
+        'head'  => ['Recipe' => 17127, 'Version' => 2, 'Context' => 'RMBA', 'Owner' => '4', 'RecipeNumber' => 'B103606', 'Comment' => 'NOTE 1',
+                    'PercentPrecision' => 2, 'IsPublished' => 1, 'Inactive' => 0],
+        'lines' => [
+            $mfRd(249450, 'UB', ['AltID' => 21, 'UseFrom' => 18, 'Parent' => 249449]),
+            $mfRd(249449, 'PK', ['AltID' => 1, 'Item' => 103606, 'ItemCode' => 'B103606', 'Unit' => 'lb', 'QtyReqd' => '1.0e+000', 'Parent' => 249442]),
+            $mfRd(249448, 'INSTR', ['AltID' => 20, 'Description' => 'WEIGH ALL', 'ExecOrder' => 2]),
+            $mfUi(249446, 17, 1, 3, 101268, '8.0000000000000002e-002', '9.5498161032142126e-001'),
+            $mfUi(249443, 10, 2, 4, 117273, '5.0000000000000000e-001', '1.0315931328248533e+000'),
+            $mfUi(249444, 11, 3, 5, 117272, '3.1000000000000000e-001', '1.0938655451068200e+000'),
+            $mfUi(249445, 12, 4, 6, 101258, '1.1000000000000000e-001', '9.7965759953566989e-001'),
+            $mfRd(249447, 'INSTR', ['AltID' => 19, 'Description' => 'MIX WELL', 'ExecOrder' => 7]),
+            $mfRd(249442, 'BA', ['AltID' => 18, 'Phase' => 'PHASE', 'BatchType' => '2', 'TimeToAddUnit' => 'hr', 'ExecOrder' => 1]),
+        ],
+    ],
 ];
 $mfItems = [
+    'B103606' => ['Item' => 103606, 'ItemCode' => 'B103606', 'Description' => 'TEST RED', 'Unit' => 'lb', 'Status' => null, 'recipe' => 17127],
     'B121303' => ['Item' => 121303, 'ItemCode' => 'B121303', 'Description' => 'TEST BLUE', 'Unit' => 'lb', 'Status' => null, 'recipe' => 19257],
     'P121304' => ['Item' => 121304, 'ItemCode' => 'P121304', 'Description' => 'TEST BLUE 5LB', 'Unit' => 'ea', 'Status' => null, 'recipe' => 19255],
     'OLD1'    => ['Item' => 7, 'ItemCode' => 'OLD1', 'Description' => 'OLD', 'Unit' => 'lb', 'Status' => 'OBS', 'recipe' => null],
@@ -133,7 +150,7 @@ $mfCms = static function (array|\Closure|null $head = null, ?array $lines = null
         ->when('FROM CMS.dbo.OrdDetail od', $lines ?? $mfLines())
         ->when('FROM CMS.dbo.OrdDetailCommit c', $packs)
         ->when('FROM CMS.dbo.ItemTest t', $tests ?? $mfTests)
-        ->when('FROM CMS.dbo.Entities e WHERE', static fn (array $p) => (int) $p[0] === 101427 || (int) $p[0] === 101387
+        ->when('FROM CMS.dbo.Entities e WHERE', static fn (array $p) => in_array((int) $p[0], [101427, 101387, 100235], true)
             ? [['Entity' => (int) $p[0], 'EntityName' => 'Company 1']] : []);
 };
 
@@ -171,6 +188,13 @@ $mfPackDate = static fn (string $x): string => preg_replace('/DateOrdered="[^"]+
 t_xml_same($mfPackDate($mfNorm(cms_fixture(ManufacturingRequests::SAVE, 866304))), $mfPackDate($mfNorm($mfFake->sent[1] ?? '')), 'the packaging ticket matches log 866304');
 t_xml_same($mfNorm(cms_fixture(ManufacturingRequests::RELEASE, 866305)), $mfNorm($mfFake->sent[2] ?? ''), 'the release matches log 866305');
 t_check(str_contains($mfFake->sent[0], 'TotalWeight="4.5359237009071851"'), 'the batch weight in kilograms is exact');
+
+$mfFake = new FakeTransport();
+$mfRes  = $mfWriter($mfCms(), $mfFake)->execute('mf.create_ticket',
+    ['item' => 'B103606', 'qty' => '20', 'required' => '2026-11-09', 'bill_to' => '100235'], new DateTimeImmutable('2026-11-09T16:29:31'));
+t_check($mfRes->ok(), 'a ticket from a recipe whose lines are not stored in line order committed');
+t_xml_same($mfNorm(cms_fixture(ManufacturingRequests::SAVE, 866471)), $mfNorm($mfFake->sent[0] ?? ''),
+    'ingredients and instructions go out in the order the recipe stores them: matches log 866471');
 
 $mfRes = $mfWriter($mfCms(), new DryRunTransport())->execute('mf.create_ticket', $mfIn, $mfNow);
 t_check($mfRes->dryRun() && count($mfRes->stages) === 3, 'the whole sequence runs end to end in dry-run');
@@ -285,6 +309,32 @@ t_check(count($mfP->plan->warnings) === 1 && str_contains($mfP->plan->warnings[0
 $mfW->execute('mf.release_ticket', ['ordr' => 194759], new DateTimeImmutable('2026-11-06T12:22:19'));
 t_xml_same($mfNorm(cms_fixture(ManufacturingRequests::RELEASE, 865823)), $mfNorm($mfFake->sent[0] ?? ''), 'a product with no tests matches log 865823');
 
+// Six tests whose line numbers are not in name order (PULL is line 6): the client writes them by name.
+$mfT = static fn (string $name, int $line, ?string $min, ?string $max): array => [
+    'Test' => $name, 'TestGroup' => 'DEFAULT', 'Grade' => 'GMP', 'Line' => $line, 'Deferrable' => 0, 'Min' => $min, 'Max' => $max, 'Special' => 0];
+$mfTests641 = [
+    $mfT('DRAWDOWN', 1, null, null), $mfT('GRIND', 2, '0.0e+000', '2.0e+000'), $mfT('TACK 1200', 3, '1.95e+001', '2.05e+001'),
+    $mfT('VISC', 4, '2.0025e+002', '3.3375e+002'), $mfT('YIELD', 5, '1.6545e+003', '2.7575e+003'), $mfT('PULL', 6, '5.5e+000', '7.0e+000'),
+];
+$mfLines641 = [$mfOd(566116, 'BA', ['AltID' => 15, 'ExecOrder' => 1]),
+               $mfOd(566117, 'PK', ['AltID' => 1, 'Item' => 113083, 'ItemCode' => 'B113083', 'Unit' => 'lb', 'IsOpen' => 1, 'QtyReqd' => '3.6e+002']),
+               $mfOd(566118, 'UI', ['AltID' => 2, 'Line' => 1, 'ExecOrder' => 3, 'Item' => 5, 'ItemCode' => 'R5', 'Unit' => 'lb', 'IsOpen' => 1]),
+               $mfOd(566119, 'INSTR', ['AltID' => 19, 'ExecOrder' => 17])];
+$mfHead641  = $mfHead(['Ordr' => 194751, 'Version' => 2, 'PlanStartDate' => '2026-11-06T10:58:41']);
+$mfFake = new FakeTransport();
+$mfWriter($mfCms($mfHead641, $mfLines641, [], $mfTests641), $mfFake)
+    ->execute('mf.release_ticket', ['ordr' => 194751], new DateTimeImmutable('2026-11-06T11:00:33'));
+t_xml_same($mfNorm(cms_fixture(ManufacturingRequests::RELEASE, 865641)), $mfNorm($mfFake->sent[0] ?? ''),
+    'specification tests go out in name order, not line order: matches log 865641');
+$mfRefused(fn () => $mfWriter($mfCms($mfHead641, $mfLines641, [], [...$mfTests641, $mfT('VISC #3 ZAHN', 7, null, null), $mfT('VISC @20RPM', 8, null, null)]), new FakeTransport())
+    ->preview('mf.release_ticket', ['ordr' => 194751], $mfNowR), 'cannot put in the order CMS writes them', 'test names whose order is not known');
+$mfRefused(fn () => $mfWriter($mfCms($mfHead641, $mfLines641, [], [...$mfTests641, $mfT('Grind', 7, null, null)]), new FakeTransport())
+    ->preview('mf.release_ticket', ['ordr' => 194751], $mfNowR), 'cannot put in the order CMS writes them', 'test names that differ in case');
+$mfP = $mfWriter($mfCms($mfHead641, $mfLines641, [], [$mfT('VISC #3 ZAHN', 1, null, null), $mfT('VISC', 2, null, null), $mfT('CURE', 3, null, null)]), new FakeTransport())
+    ->preview('mf.release_ticket', ['ordr' => 194751], $mfNowR);
+t_check(preg_match('/Test="CURE".*Test="VISC".*Test="VISC #3 ZAHN"/s', $mfP->rendered->stages[0]['xml']) === 1,
+    'a longer name follows the name it starts with');
+
 $mfRefused(fn () => $mfWriter($mfCms($mfHead(['Status' => 'RLS', 'UserHold' => '', 'DateReleased' => '2026-11-09T00:00:00'])), new FakeTransport())
     ->preview('mf.release_ticket', ['ordr' => 194778], $mfNowR), 'is released already', 'releasing twice');
 $mfRefused(fn () => $mfWriter($mfCms(null, [...$mfLines(), $mfOd(566312, 'IPT', ['AltID' => 12])]), new FakeTransport())
@@ -321,6 +371,39 @@ t_check(count($mfP->plan->warnings) === 1 && str_contains($mfP->plan->warnings[0
 t_check(str_contains(json_encode($mfP->plan->summary), '194522 (P1)'), 'the linked packaging ticket is named');
 $mfW->execute('mf.close_ticket', ['ordr' => 194521], new DateTimeImmutable('2026-11-03T16:46:28'));
 t_xml_same($mfNorm(cms_fixture(ManufacturingRequests::CLOSE, 863585)), $mfNorm($mfFake->sent[0] ?? ''), 'cancelling an unreleased ticket matches log 863585');
+// Ticket 191511 as CMS held it before log 852174: lines 4 and 6 were stored after line 12, and a repack
+// ingredient line (no line number, no parent) was added last.
+$mfLines174 = [$mfOd(544074, 'BA', ['AltID' => 14, 'ExecOrder' => 1]),
+               $mfOd(544075, 'PK', ['AltID' => 1, 'IsOpen' => 1, 'Item' => 112872, 'ItemCode' => 'B112872', 'Unit' => 'lb', 'QtyReqd' => '1.0e+002', 'Parent' => 544074]),
+               $mfOd(544076, 'UB', ['AltID' => 18, 'Parent' => 544075])];
+foreach ([1, 2, 3, 5, 7, 8, 9, 10, 11, 12, 4, 6] as $mfI => $mfLineNo) {
+    $mfLines174[] = $mfOd(544077 + $mfI, 'UI', ['AltID' => $mfI + 2, 'IsOpen' => 1, 'Line' => $mfLineNo, 'Item' => 200 + $mfI, 'Parent' => 544074]);
+}
+foreach ([544089, 544090, 544091] as $mfId) {
+    $mfLines174[] = $mfOd($mfId, 'INSTR', ['Parent' => 544074]);
+}
+$mfLines174[] = $mfOd(544092, 'UI', ['AltID' => 19, 'IsOpen' => 1, 'IsRepackaging' => 1, 'Item' => 112872, 'ItemCode' => 'B112872', 'Unit' => 'lb', 'QtyReqd' => '1.0e+002']);
+$mfFake = new FakeTransport();
+$mfWriter($mfCms($mfHead(['Ordr' => 191511, 'Version' => 1]), $mfLines174), $mfFake)
+    ->execute('mf.close_ticket', ['ordr' => 191511], new DateTimeImmutable('2026-09-30T13:35:26'));
+t_xml_same($mfNorm(cms_fixture(ManufacturingRequests::CLOSE, 852174)), $mfNorm($mfFake->sent[0] ?? ''),
+    'a repack line is closed last with its commitment zeroed, the others in line order: matches log 852174');
+
+// Ticket 193899, a repack ticket: a product and one repack ingredient line, no batch.
+$mfLines233 = [$mfOd(560070, 'PK', ['AltID' => 1, 'IsOpen' => 1, 'Item' => 112871, 'ItemCode' => 'B112871', 'Unit' => 'lb']),
+               $mfOd(560071, 'UI', ['AltID' => 2, 'IsOpen' => 1, 'IsRepackaging' => 1, 'Item' => 114623, 'ItemCode' => 'R114623', 'Unit' => 'lb', 'QtyReqd' => '1.08e+002'])];
+$mfFake = new FakeTransport();
+$mfWriter($mfCms($mfHead(['Ordr' => 193899, 'Version' => 3]), $mfLines233), $mfFake)
+    ->execute('mf.close_ticket', ['ordr' => 193899], new DateTimeImmutable('2026-10-20T09:38:16'));
+t_xml_same($mfNorm(cms_fixture(ManufacturingRequests::CLOSE, 858233)), $mfNorm($mfFake->sent[0] ?? ''), 'cancelling a repack ticket matches log 858233');
+
+$mfRefused(fn () => $mfWriter($mfCms($mfHead(['Ordr' => 193899]), [...$mfLines233, $mfOd(560072, 'UI', ['IsOpen' => 1, 'IsRepackaging' => 1])]), new FakeTransport())
+    ->preview('mf.close_ticket', ['ordr' => 193899], $mfNowR), 'Close it in CMS', 'two repack lines');
+$mfRefused(fn () => $mfWriter($mfCms($mfHead(['Ordr' => 193899]), [...$mfLines233, $mfOd(560072, 'UI', ['IsOpen' => 1])]), new FakeTransport())
+    ->preview('mf.close_ticket', ['ordr' => 193899], $mfNowR), 'Close it in CMS', 'an ordinary ingredient line without a line number');
+$mfRefused(fn () => $mfWriter($mfCms(null, [...$mfLines(), $mfOd(566312, 'UI', ['IsOpen' => 1, 'Line' => 3])]), new FakeTransport())
+    ->preview('mf.close_ticket', ['ordr' => 194778], $mfNowR), 'Close it in CMS', 'two ingredient lines with the same line number');
+
 $mfRefused(fn () => $mfWriter($mfCms($mfHead(['Status' => 'RLS', 'UserHold' => '', 'DateReleased' => '2026-11-09T00:00:00'])), new FakeTransport())
     ->preview('mf.close_ticket', ['ordr' => 194778], $mfNowR), 'Only a completed ticket', 'a ticket on the floor');
 $mfRefused(fn () => $mfWriter($mfCms($mfHead(['Status' => 'CLS', 'UserHold' => ''])), new FakeTransport())->preview('mf.close_ticket', ['ordr' => 194778], $mfNowR),

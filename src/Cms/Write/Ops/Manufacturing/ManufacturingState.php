@@ -172,8 +172,10 @@ final class ManufacturingState
                 throw new WriteRefused("An instruction line of the recipe for {$code} is incomplete. {$no}");
             }
         }
-        usort($by['UI'], static fn (array $a, array $b): int => [$a['line'], $a['id']] <=> [$b['line'], $b['id']]);
-        usort($by['INSTR'], static fn (array $a, array $b): int => [$a['altId'], $a['id']] <=> [$b['altId'], $b['id']]);
+        // The client copies ingredient and instruction lines in the order the recipe stores them, not in line order.
+        $stored = static fn (array $a, array $b): int => $a['id'] <=> $b['id'];
+        usort($by['UI'], $stored);
+        usort($by['INSTR'], $stored);
         return ['batch' => $ba, 'product' => $pk, 'useBatch' => $ub, 'ingredients' => $by['UI'], 'instructions' => $by['INSTR']];
     }
 
@@ -322,7 +324,7 @@ final class ManufacturingState
                         THEN 1 ELSE 0 END AS Special
             FROM CMS.dbo.ItemTest t
             WHERE t.Item = ?
-            ORDER BY t.Line, t.ItemTest", [$item]) as $t) {
+            ORDER BY t.ItemTest", [$item]) as $t) {
             if ((int) ($t['Special'] ?? 0) === 1) {
                 throw new WriteRefused("The specification of {$code} has a test Insights does not copy (a target, a text result or one not done at production). Release this ticket in CMS.");
             }
@@ -338,6 +340,17 @@ final class ManufacturingState
             $tests[] = $test + ['TestGroup' => (string) $t['TestGroup'], 'Grade' => (string) $t['Grade'],
                                 'Line' => (int) $t['Line'], 'Deferrable' => self::truthy($t['Deferrable'] ?? false)];
         }
+        // The client writes the tests in the order of their names, whatever their line numbers are.
+        usort($tests, static function (array $a, array $b) use ($code): int {
+            [$x, $y] = [(string) $a['Test'], (string) $b['Test']];
+            $same    = strspn($x ^ $y, chr(0));
+            $pair    = substr($x, $same, 1) . substr($y, $same, 1);
+            // Only the order of capital letters, digits and spaces is known; a longer name follows the one it starts with.
+            if ($x === $y || (strlen($pair) === 2 && preg_match('/^[A-Z0-9 ]{2}$/', $pair) !== 1)) {
+                throw new WriteRefused("The specification of {$code} has test names Insights cannot put in the order CMS writes them. Release this ticket in CMS.");
+            }
+            return strcmp($x, $y);
+        });
         return $tests;
     }
 

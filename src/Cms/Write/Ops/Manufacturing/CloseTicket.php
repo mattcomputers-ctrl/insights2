@@ -36,10 +36,17 @@ final class CloseTicket implements Flow
         } elseif (ManufacturingInput::unreleased($t)) {
             $open = array_values(array_filter($t['lines'], static fn (array $l): bool => $l['isOpen']));
             $pk   = array_filter($open, static fn (array $l): bool => $l['context'] === 'PK');
-            $ui   = array_filter($open, static fn (array $l): bool => $l['context'] === 'UI');
-            usort($ui, static fn (array $a, array $b): int => [$a['line'] ?? 0, $a['id']] <=> [$b['line'] ?? 0, $b['id']]);
+            $ui   = array_filter($open, static fn (array $l): bool => $l['context'] === 'UI' && !$l['repack']);
+            // A repack ingredient line has no line number. The client closes it last and zeroes what it had committed.
+            $repack = array_values(array_filter($open, static fn (array $l): bool => $l['context'] === 'UI' && $l['repack']));
+            $lineNo = array_map(static fn (array $l): ?int => $l['line'], $ui);
+            if (count($repack) > 1 || in_array(null, $lineNo, true) || count(array_unique($lineNo)) !== count($lineNo)) {
+                throw new WriteRefused("Ticket {$t['Ordr']} has ingredient lines Insights cannot put in the order CMS closes them. Close it in CMS.");
+            }
+            usort($ui, static fn (array $a, array $b): int => $a['line'] <=> $b['line']);
+            $ids       = static fn (array $lines): array => array_map(static fn (array $l): int => $l['id'], $lines);
             $request   = ManufacturingRequests::close($t['Ordr'], $t['Version'], Fmt::dateTime($ctx->now),
-                array_map(static fn (array $l): int => $l['id'], [...$pk, ...$ui]));
+                $ids([...$pk, ...$ui]), $ids($repack));
             $summary[]  = ['Result', 'The ticket is cancelled: closed without being made'];
             $warnings[] = 'This ticket was never released. Closing it cancels it; it cannot be reopened here.';
         } else {

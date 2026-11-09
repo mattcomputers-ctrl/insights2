@@ -272,10 +272,13 @@ final class ManufacturingRequests
      * @param ?string $dateCompleted null for a ticket production has completed; the closing moment for a
      *        ticket that never ran (it is then cancelled: its open lines are closed with it)
      * @param list<int> $openLines the lines to close on a ticket that never ran: product first, then ingredients
+     * @param list<int> $repackLines the repack ingredient lines of such a ticket; they go last and
+     *        their committed quantity is set to zero
      */
-    public static function close(int $ordr, int $version, ?string $dateCompleted = null, array $openLines = []): Request
-    {
-        if ($dateCompleted === null && $openLines !== []) {
+    public static function close(
+        int $ordr, int $version, ?string $dateCompleted = null, array $openLines = [], array $repackLines = [],
+    ): Request {
+        if ($dateCompleted === null && ($openLines !== [] || $repackLines !== [])) {
             throw new \InvalidArgumentException('Lines are only closed on a ticket that never ran.');
         }
         $r = new Request(self::PROGRAM, self::CLOSE, self::CMS_ORDER);
@@ -283,6 +286,9 @@ final class ManufacturingRequests
             ->data(($dateCompleted === null ? [] : ['DateCompleted' => $dateCompleted]) + ['Status' => 'CLS']));
         foreach ($openLines as $line) {
             $r->add(Step::update('OrdDetail')->keys(['OrdDetail' => $line])->data(['IsOpen' => false]));
+        }
+        foreach ($repackLines as $line) {
+            $r->add(Step::update('OrdDetail')->keys(['OrdDetail' => $line])->data(['IsOpen' => false, 'QtyCommitted' => 0]));
         }
         $r->add(Step::execute('CloseLinkedPackagingOrders')->data(['Ordr' => $ordr]));
         $r->add(Step::execute('ExportTransaction')->data(['OrderCompleted' => $ordr]));

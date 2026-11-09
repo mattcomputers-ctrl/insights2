@@ -81,7 +81,7 @@ foreach (cms_fixture_ids(ManufacturingRequests::SAVE) as $mfLog) {
     t_xml_same($mfXml, $mfReq->toXml($mfF['env']), "log {$mfLog}");
     $mfDone[] = (string) $mfLog;
 }
-t_same(['839011', '850590', '862211', '865832', '866303', '866304'], $mfDone,
+t_same(['839011', '850590', '862211', '865832', '866303', '866304', '866471'], $mfDone,
     'ticket create, packaging ticket and header edits are reproduced');
 // Left to the client: recipe editing, tickets without a recipe, rescale, packaging quantity change and removal.
 t_same(['844641', '846224', '857625', '860225', '861076', '861077', '861269', '861270', '863400', '863613', '863850', '865555', '865829'],
@@ -116,7 +116,7 @@ foreach (cms_fixture_ids(ManufacturingRequests::RELEASE) as $mfLog) {
     t_xml_same($mfXml, $mfReq->toXml($mfF['env']), "log {$mfLog}");
     $mfDone[] = (string) $mfLog;
 }
-t_same(['865823', '866305'], $mfDone, 'release with and without specification tests is reproduced');
+t_same(['865641', '865823', '866305'], $mfDone, 'release with and without specification tests is reproduced');
 
 t_section('Manufacturing golden: ' . ManufacturingRequests::CLOSE);
 $mfCount = 0;
@@ -124,27 +124,37 @@ foreach (cms_fixture_ids(ManufacturingRequests::CLOSE) as $mfLog) {
     $mfXml = cms_fixture(ManufacturingRequests::CLOSE, $mfLog);
     $mfF   = cms_fixture_parse($mfXml);
     $mfS   = $mfF['steps'];
-    $mfLines = [];
+    $mfLines  = [];
+    $mfRepack = [];
     foreach ($mfS as $mfX) {
-        if ($mfX['object'] === 'OrdDetail') {
+        if ($mfX['object'] === 'OrdDetail' && isset($mfX['data']['QtyCommitted'])) {
+            $mfRepack[] = (int) $mfX['keys']['OrdDetail'];
+        } elseif ($mfX['object'] === 'OrdDetail') {
             $mfLines[] = (int) $mfX['keys']['OrdDetail'];
         }
     }
     $mfReq = ManufacturingRequests::close((int) $mfS[0]['keys']['Ordr'], (int) $mfS[0]['keys']['Version'],
-        $mfS[0]['data']['DateCompleted'] ?? null, $mfLines);
+        $mfS[0]['data']['DateCompleted'] ?? null, $mfLines, $mfRepack);
     t_xml_same($mfXml, $mfReq->toXml($mfF['env']), "log {$mfLog}");
     $mfCount++;
 }
-t_check($mfCount >= 2, 'both close shapes were exercised');
+t_same(4, $mfCount, 'the close shapes were exercised: completed, cancelled, cancelled with a repack line');
 
 t_section('Manufacturing golden: ' . ManufacturingRequests::PUBLISH);
-$mfDone = [];
+$mfDone    = [];
+$mfNotDone = [];
 foreach (cms_fixture_ids(ManufacturingRequests::PUBLISH) as $mfLog) {
     $mfXml = cms_fixture(ManufacturingRequests::PUBLISH, $mfLog);
     $mfF   = cms_fixture_parse($mfXml);
     $mfS   = $mfF['steps'];
-    if (count($mfS) !== 4 || $mfF['program'] === '') {
-        continue;   // one publish also rewrote the batch weight; one was logged without a program name
+    if ($mfF['program'] === '') {
+        continue;   // logged without a program name
+    }
+    if (count($mfS) !== 4) {
+        // NOT reproduced: the client often adds a step that rewrites the batch line's TotalWeight.
+        // When it does, and how it gets the value, is not known, so Insights never sends that step.
+        $mfNotDone[] = (string) $mfLog;
+        continue;
     }
     $mfD   = $mfS[2]['data'];
     $mfReq = ManufacturingRequests::publishRecipe((int) $mfS[0]['keys']['Recipe'], (int) $mfS[0]['keys']['Version'], $mfD['Owner'],
@@ -152,7 +162,8 @@ foreach (cms_fixture_ids(ManufacturingRequests::PUBLISH) as $mfLog) {
     t_xml_same($mfXml, $mfReq->toXml($mfF['env']), "log {$mfLog}");
     $mfDone[] = (string) $mfLog;
 }
-t_same(['861271', '863615'], $mfDone, 'recipe publish is reproduced');
+t_same(['861271', '863615'], $mfDone, 'recipe publish without a batch weight step is reproduced');
+t_same(['866297'], $mfNotDone, 'the publish that also rewrites the batch weight (five steps) is not reproduced');
 
 t_section('Manufacturing golden: ' . ManufacturingRequests::ACTIVE);
 $mfCount = 0;
@@ -191,6 +202,7 @@ foreach ([
     'approved lot without date'  => static fn () => ManufacturingRequests::release(1, 1, 'd', 2, 3, null,
         ['item' => 1, 'lotPrefix' => 'p', 'user' => 'u', 'manfDate' => null]),
     'lines on a completed close' => static fn () => ManufacturingRequests::close(1, 1, null, [5]),
+    'repack lines on a completed close' => static fn () => ManufacturingRequests::close(1, 1, null, [], [5]),
 ] as $mfWhat => $mfFn) {
     t_check(t_throws(\InvalidArgumentException::class, $mfFn) !== null, "refused: {$mfWhat}");
 }
