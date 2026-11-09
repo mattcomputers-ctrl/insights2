@@ -5,7 +5,7 @@
  * yield (bulk + each pack), produced lots & QC. Live CMS.
  * @var int $ordr  @var ?array $head  @var bool $isRepack  @var array $lines
  * @var array $packs  @var array $lots  @var array $qc  @var ?float $bulkActual
- * @var ?string $error  @var ?string $asOf
+ * @var ?string $error  @var ?string $asOf  @var ?array $actions (what the user may change on this ticket)
  */
 $statusPill = fn(string $s): string => match ($s) {
     'RLS' => '<span class="pill pill-active">Released</span>',
@@ -54,6 +54,82 @@ $done = in_array($head['Status'] ?? '', ['CMP', 'CLS', 'BAT'], true);
         <div class="alert alert-info" style="white-space:pre-wrap;"><?= e((string) $head['Comment']) ?></div>
     <?php endif; ?>
 </div>
+
+<?php if ($actions !== null): $act = $actions['can']; $tk = $actions['ticket']; ?>
+<div class="card no-print">
+    <h2 class="card-title">Change this ticket</h2>
+    <?php if ($actions['mode'] !== 'live'): ?>
+        <div class="alert alert-info">Practice mode: changes are checked and previewed, but nothing is sent to CMS.</div>
+    <?php endif; ?>
+    <div class="card-subtitle">You will see exactly what is sent before anything is saved.</div>
+
+    <?php if ($act['mf.edit_ticket']): ?>
+    <form method="POST" action="/batch-tickets/<?= (int) $ordr ?>/edit" style="margin-top:0.75rem;">
+        <?= csrf_field() ?>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="bt-start">Planned start</label>
+                <input id="bt-start" type="date" name="start" value="<?= e(substr((string) $tk['PlanStartDate'], 0, 10)) ?>">
+            </div>
+            <div class="form-group">
+                <label for="bt-required">Required date</label>
+                <input id="bt-required" type="date" name="required" value="<?= e(substr((string) $tk['DateRequired'], 0, 10)) ?>">
+            </div>
+            <div class="form-group">
+                <label for="bt-bill">Customer number<?= $tk['BillTo'] !== null ? ' (now ' . e($tk['BillToName']) . ')' : '' ?></label>
+                <input id="bt-bill" type="text" name="bill_to" value="<?= $tk['BillTo'] !== null ? (int) $tk['BillTo'] : '' ?>" inputmode="numeric" style="width:8rem;" autocomplete="off">
+            </div>
+        </div>
+        <label style="display:block;margin-bottom:0.5rem;">
+            <input type="checkbox" name="overcommit" value="1" <?= $tk['AllowOvercommit'] ? 'checked' : '' ?>>
+            Allow release when stock is short (overcommit)
+        </label>
+        <button type="submit" class="btn btn-sm">Check changes…</button>
+    </form>
+    <?php endif; ?>
+
+    <?php if ($act['mf.add_pack_ticket']): ?>
+    <form method="POST" action="/batch-tickets/<?= (int) $ordr ?>/packs" style="margin-top:1rem;">
+        <?= csrf_field() ?>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="bt-pack">Add a packaging ticket: packaged item</label>
+                <input id="bt-pack" type="text" name="code" style="width:16rem;" autocomplete="off" required>
+            </div>
+            <div class="form-group">
+                <label for="bt-pack-qty">Quantity</label>
+                <input id="bt-pack-qty" type="text" name="qty" inputmode="decimal" style="width:8rem;" autocomplete="off" required>
+            </div>
+            <div class="form-group">
+                <label for="bt-pack-by">Quantity is in</label>
+                <select id="bt-pack-by" name="by">
+                    <option value="units">units of the packaged item</option>
+                    <option value="lb">pounds of bulk</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-sm">Check packaging ticket…</button>
+    </form>
+    <?php endif; ?>
+
+    <?php if ($act['mf.release_ticket'] || $act['mf.close_ticket']): ?>
+    <div class="flex gap-1" style="margin-top:1rem;">
+        <?php if ($act['mf.release_ticket']): ?>
+        <form method="POST" action="/batch-tickets/<?= (int) $ordr ?>/release">
+            <?= csrf_field() ?>
+            <button type="submit" class="btn btn-sm btn-primary">Release to the floor…</button>
+        </form>
+        <?php endif; ?>
+        <?php if ($act['mf.close_ticket']): ?>
+        <form method="POST" action="/batch-tickets/<?= (int) $ordr ?>/close">
+            <?= csrf_field() ?>
+            <button type="submit" class="btn btn-sm"><?= $actions['unreleased'] ? 'Cancel this ticket…' : 'Close this ticket…' ?></button>
+        </form>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+</div>
+<?php endif; ?>
 
 <?php if ($packs !== []): ?>
 <div class="card">

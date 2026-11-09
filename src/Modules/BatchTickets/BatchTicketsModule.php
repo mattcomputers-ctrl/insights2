@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace PII\Modules\BatchTickets;
 
+use PII\Cms\Write\OperationRegistry;
 use PII\Core\Module;
 use PII\Core\Router;
 
 /**
- * Batch Tickets — read-only browser over every manufacturing ticket in
+ * Batch Tickets — browser over every manufacturing ticket in
  * CMS, open or completed: the full batch sheet (formula + procedure +
  * what was actually issued), produced lots and their QC results. Live
  * CMS. Shares orders.tickets_view with Order Readiness's ticket page
  * (which stays the "what's open right now" planning view — this is the
- * full record).
+ * full record). Holders of the write permissions can also cut, change,
+ * release and close tickets through the shared confirm step.
  */
 class BatchTicketsModule extends Module
 {
@@ -27,7 +29,8 @@ class BatchTicketsModule extends Module
 
     public function permissions(): array
     {
-        return [];   // orders.tickets_view is declared by Order Readiness
+        // orders.tickets_view is declared by Order Readiness; these are the write permissions.
+        return OperationRegistry::permissionsFor('batch_tickets');
     }
 
     public function syncJobs(): array
@@ -39,8 +42,15 @@ class BatchTicketsModule extends Module
     {
         $c = BatchTicketsController::class;
         $router->group('/batch-tickets', function (Router $r) use ($c) {
+            $e = BatchTicketEntryController::class;
             $r->get('',        $c . '@index');
+            $r->get('/new',    $e . '@create');
+            $r->post('/new',   $e . '@store');
             $r->get('/{ordr}', $c . '@detail');
+            $r->post('/{ordr}/edit',    $e . '@update');
+            $r->post('/{ordr}/packs',   $e . '@addPack');
+            $r->post('/{ordr}/release', $e . '@release');
+            $r->post('/{ordr}/close',   $e . '@close');
         });
     }
 }

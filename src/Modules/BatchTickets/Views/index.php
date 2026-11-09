@@ -2,7 +2,7 @@
 /**
  * Batch ticket browser (live CMS, full history).
  * @var string $q  @var string $tab  @var array $tickets
- * @var bool $truncated  @var ?string $error  @var ?string $asOf
+ * @var bool $truncated  @var ?string $error  @var ?string $asOf  @var bool $canCreate
  */
 $pill = fn(string $s): string => match ($s) {
     'RLS' => '<span class="pill pill-active">Released (RLS)</span>',
@@ -25,6 +25,7 @@ $tabs = ['open' => 'Open', 'completed' => 'Completed', 'all' => 'All'];
             </div>
         </div>
         <div class="flex gap-1">
+            <?php if ($canCreate): ?><a href="/batch-tickets/new?clear=1" class="btn btn-sm btn-primary">New batch ticket</a><?php endif; ?>
             <?php foreach ($tabs as $key => $label): ?>
                 <a href="/batch-tickets?tab=<?= e($key) ?><?= $q !== '' ? '&q=' . urlencode($q) : '' ?>"
                    class="btn btn-sm <?= $tab === $key ? 'btn-primary' : '' ?>"><?= e($label) ?></a>

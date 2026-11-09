@@ -105,6 +105,7 @@ class BatchTicketsController
             'truncated' => $truncated,
             'error'     => $error,
             'asOf'      => SyncSettings::lastSuccessAt(),
+            'canCreate' => BatchTicketEntryController::can()['mf.create_ticket'],
         ], 'batch_tickets');
     }
 
@@ -259,6 +260,7 @@ class BatchTicketsController
             'lots'       => $lots,
             'qc'         => $qc,
             'bulkActual' => $bulkActual,
+            'actions'    => $head !== null && $error === null ? BatchTicketEntryController::actions($ordr) : null,
             'error'      => $error,
             'asOf'       => SyncSettings::lastSuccessAt(),
         ], 'batch_tickets');
