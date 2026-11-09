@@ -261,6 +261,7 @@ class BatchTicketsController
             'qc'         => $qc,
             'bulkActual' => $bulkActual,
             'actions'    => $head !== null && $error === null ? BatchTicketEntryController::actions($ordr) : null,
+            'floor'      => $head !== null && $error === null && $head['Context'] === 'MFBA' ? BatchFloorController::floor($ordr) : null,
             'error'      => $error,
             'asOf'       => SyncSettings::lastSuccessAt(),
         ], 'batch_tickets');

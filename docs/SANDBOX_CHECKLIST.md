@@ -244,9 +244,54 @@ a third with two containers.
    waybill: it is marked reversed. A user without `shipping.invoice` sees no
    Invoice button and gets the usual not-found page on the address.
 
-### 4.6 onward (not built yet)
+### 4.6 Batch execution (built)
 
-Batch execution, inventory,
+Grant `write.mfx.*` to the test user. Cut and release a small bulk ticket with
+two packaging tickets (flow 4.4), and have the client's floor screen open on a
+second, identical ticket to compare against.
+
+1. **Add an ingredient.** On the ticket page, "On the floor": add an item and
+   a quantity. Compare the request with the client's `NewIngredient` (the new
+   `UI` line, its line number, the status steps). The client asks for a
+   signature when the quantity is over the maximum; Insights sends no warning
+   event. Check CMS accepts that.
+2. **Make the batch.** Change one quantity, clear another, Check the make. The
+   review lists what differs from the ticket and an estimated cost.
+   - Compare with the client's `BatchExecutionExpress`: the order of the
+     status steps (ours differs from the client's), `UnitCostMK` (ours is an
+     estimate from replacement costs; note what CMS stores after its own
+     costing), `StartDate`/`EndDate`.
+   - Confirm. The bulk is in a vessel, the ingredients are consumed, the lot
+     has stock. Note the ticket's status and `Version` afterwards.
+   - Known failure: make a batch with an ingredient that has no stock:
+     "Quantity of the item 'X' is negative" is shown and nothing is saved.
+3. **Send for testing.** One request; the sample set appears in the QC queue
+   (`/qc`) and results can be entered (flow 4.1).
+4. **Pack out, first time.** Pick a packaging ticket, type the quantity made
+   and the packages filled. Up to five requests are listed (open the packaging
+   phase, release the packaging ticket, ask for the packout, open its
+   production record, pack out). Compare each with the client's. Check the
+   bulk drawn and the components used against what the client would have
+   filled in, the package count, and the estimated `UnitCostMK`.
+5. **Pack out again** on the same packaging ticket: two requests, reusing the
+   container and cost record. Then the second packaging ticket.
+6. **Undo a packout**, then pack out once more: check which container the
+   client reuses after an undone packout and compare.
+7. **Undo the make** (after undoing every packout), then make it again: the
+   second make reuses the ticket's production record. If the batch had been
+   sent for testing, CMS adds a fresh test step.
+8. **Complete.** One request. Check whether CMS completes the packaging
+   tickets itself. The floor card is gone afterwards; undo on a completed
+   ticket is refused by Insights (the client allows some of it).
+9. **Stale page.** Open the ticket in two tabs, make it in one, press Make in
+   the other: refused with "has been made already" (or CMS's version error),
+   nothing sent twice.
+10. **Direct-packed batch.** A bulk ticket packed without a packaging ticket in
+    the client shows a note on the card and no packout or undo buttons.
+
+### 4.7 onward (not built yet)
+
+Inventory,
 master data and bills are researched (`docs/research/`) with fixtures stored, but
 have no templates yet. Each gets its section here when it is built, following
 the same pattern: do it in Insights, do it in the client, compare the request

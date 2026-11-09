@@ -6,6 +6,7 @@
  * @var int $ordr  @var ?array $head  @var bool $isRepack  @var array $lines
  * @var array $packs  @var array $lots  @var array $qc  @var ?float $bulkActual
  * @var ?string $error  @var ?string $asOf  @var ?array $actions (what the user may change on this ticket)
+ * @var ?array $floor (what the user may do to run this ticket on the floor)
  */
 $statusPill = fn(string $s): string => match ($s) {
     'RLS' => '<span class="pill pill-active">Released</span>',
@@ -127,6 +128,132 @@ $done = in_array($head['Status'] ?? '', ['CMP', 'CLS', 'BAT'], true);
         </form>
         <?php endif; ?>
     </div>
+    <?php endif; ?>
+</div>
+<?php endif; ?>
+
+<?php if (($floor ?? null) !== null): $fl = $floor['can']; $base = '/batch-tickets/' . (int) $ordr . '/floor'; ?>
+<div class="card no-print">
+    <h2 class="card-title">On the floor</h2>
+    <?php if ($floor['mode'] !== 'live'): ?>
+        <div class="alert alert-info">Practice mode: changes are checked and previewed, but nothing is sent to CMS.</div>
+    <?php endif; ?>
+    <div class="card-subtitle">
+        <?= $floor['made'] ? 'The batch has been made' . ($floor['vessel'] !== '' ? ' (vessel ' . e($floor['vessel']) . ')' : '') . '.' : 'The batch has not been made yet.' ?>
+        You will see exactly what is sent before anything is saved.
+    </div>
+
+    <?php if ($fl['mfx.make_batch']): ?>
+    <form method="POST" action="<?= e($base) ?>/make" style="margin-top:0.75rem;">
+        <?= csrf_field() ?>
+        <h3 style="margin:0 0 0.3rem;">Make the batch</h3>
+        <table class="table">
+            <thead><tr><th>Ingredient</th><th class="num">On the ticket</th><th>Actually used</th></tr></thead>
+            <tbody>
+            <?php foreach ($floor['ingredients'] as $ing): $q = rtrim(rtrim(number_format((float) $ing['qty'], 6, '.', ''), '0'), '.'); ?>
+                <tr>
+                    <td><strong><?= e((string) $ing['code']) ?></strong> <?= e((string) $ing['description']) ?></td>
+                    <td class="num"><?= e($q) ?> <?= e((string) $ing['unit']) ?></td>
+                    <td><input type="text" name="qty[<?= (int) $ing['id'] ?>]" inputmode="decimal" autocomplete="off" style="width:8rem;"
+                               value="<?= e($q) ?>" aria-label="Quantity of <?= e((string) $ing['code']) ?> used"></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        <div class="card-subtitle" style="margin-top:0.3rem;">Clear a quantity, or enter 0, for an ingredient that was not used.</div>
+        <button type="submit" class="btn btn-sm btn-primary" style="margin-top:0.5rem;">Check the make…</button>
+    </form>
+    <?php endif; ?>
+
+    <?php if ($fl['mfx.add_ingredient']): ?>
+    <form method="POST" action="<?= e($base) ?>/ingredient" style="margin-top:1rem;">
+        <?= csrf_field() ?>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="fl-item">Add an ingredient: item</label>
+                <input id="fl-item" type="text" name="item" style="width:16rem;" autocomplete="off" required>
+            </div>
+            <div class="form-group">
+                <label for="fl-item-qty">Quantity</label>
+                <input id="fl-item-qty" type="text" name="qty" inputmode="decimal" style="width:8rem;" autocomplete="off" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-sm">Check ingredient…</button>
+    </form>
+    <?php endif; ?>
+
+    <?php if ($fl['mfx.packout']): ?>
+    <form method="POST" action="<?= e($base) ?>/packout" style="margin-top:1rem;">
+        <?= csrf_field() ?>
+        <h3 style="margin:0 0 0.3rem;">Pack out</h3>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="fl-pack">Packaging ticket</label>
+                <select id="fl-pack" name="pack">
+                    <?php foreach ($floor['packs'] as $pk): ?>
+                        <option value="<?= (int) $pk['ordr'] ?>"><?= (int) $pk['ordr'] ?>: <?= e((string) $pk['code']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="fl-pack-qty">Quantity made (in the packaged item's unit)</label>
+                <input id="fl-pack-qty" type="text" name="qty" inputmode="decimal" style="width:8rem;" autocomplete="off" required>
+            </div>
+            <div class="form-group">
+                <label for="fl-pack-count">Packages filled</label>
+                <input id="fl-pack-count" type="text" name="packages" inputmode="numeric" style="width:6rem;" autocomplete="off" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-sm btn-primary">Check packout…</button>
+    </form>
+    <?php elseif ($floor['made'] && $floor['direct']): ?>
+        <div class="alert alert-info" style="margin-top:1rem;">This batch was packed directly, without a packaging ticket. Pack it and undo its packouts in CMS.</div>
+    <?php endif; ?>
+
+    <?php if ($fl['mfx.send_to_qc'] || $fl['mfx.complete'] || $fl['mfx.undo_make']): ?>
+    <div class="flex gap-1" style="margin-top:1rem;">
+        <?php if ($fl['mfx.send_to_qc']): ?>
+        <form method="POST" action="<?= e($base) ?>/test">
+            <?= csrf_field() ?>
+            <button type="submit" class="btn btn-sm btn-primary">Send for testing…</button>
+        </form>
+        <?php endif; ?>
+        <?php if ($fl['mfx.complete']): ?>
+        <form method="POST" action="<?= e($base) ?>/complete">
+            <?= csrf_field() ?>
+            <button type="submit" class="btn btn-sm">Complete this ticket…</button>
+        </form>
+        <?php endif; ?>
+        <?php if ($fl['mfx.undo_make']): ?>
+        <form method="POST" action="<?= e($base) ?>/undo-make">
+            <?= csrf_field() ?>
+            <button type="submit" class="btn btn-sm">Undo the make…</button>
+        </form>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+
+    <?php if ($fl['mfx.undo_packout']): ?>
+    <h3 style="margin:1rem 0 0.3rem;">Packouts</h3>
+    <table class="table">
+        <thead><tr><th>Packaging ticket</th><th>Packout</th><th></th></tr></thead>
+        <tbody>
+        <?php foreach ($floor['packouts'] as $po): ?>
+            <tr>
+                <td><?= (int) $po['ordr'] ?>: <?= e((string) $po['code']) ?></td>
+                <td>record <?= (int) $po['changeSet'] ?></td>
+                <td>
+                    <form method="POST" action="<?= e($base) ?>/undo-packout">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="pack" value="<?= (int) $po['ordr'] ?>">
+                        <input type="hidden" name="changeSet" value="<?= (int) $po['changeSet'] ?>">
+                        <button type="submit" class="btn btn-sm">Undo this packout…</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
     <?php endif; ?>
 </div>
 <?php endif; ?>

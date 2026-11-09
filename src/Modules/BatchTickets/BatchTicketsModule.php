@@ -15,7 +15,8 @@ use PII\Core\Router;
  * CMS. Shares orders.tickets_view with Order Readiness's ticket page
  * (which stays the "what's open right now" planning view — this is the
  * full record). Holders of the write permissions can also cut, change,
- * release and close tickets through the shared confirm step.
+ * release, run (make, test, pack out, complete) and close tickets
+ * through the shared confirm step.
  */
 class BatchTicketsModule extends Module
 {
@@ -51,6 +52,14 @@ class BatchTicketsModule extends Module
             $r->post('/{ordr}/packs',   $e . '@addPack');
             $r->post('/{ordr}/release', $e . '@release');
             $r->post('/{ordr}/close',   $e . '@close');
+            $f = BatchFloorController::class;
+            $r->post('/{ordr}/floor/ingredient',   $f . '@addIngredient');
+            $r->post('/{ordr}/floor/make',         $f . '@make');
+            $r->post('/{ordr}/floor/test',         $f . '@sendToQc');
+            $r->post('/{ordr}/floor/packout',      $f . '@packout');
+            $r->post('/{ordr}/floor/complete',     $f . '@complete');
+            $r->post('/{ordr}/floor/undo-packout', $f . '@undoPackout');
+            $r->post('/{ordr}/floor/undo-make',    $f . '@undoMake');
         });
     }
 }

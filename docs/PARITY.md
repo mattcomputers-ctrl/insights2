@@ -84,19 +84,25 @@ order for one batch is the order of the rows.
 
 | CMS action | Count / failed | What the user is doing | Request sequence | Status |
 |---|---|---|---|---|
-| `BatchExecutionDataSet.NewIngredient` | 2,437 / 0 | Adding an unplanned ingredient or substitute | 1 request | researched |
-| `…BatchExecutionExpress` | 4,642 / 304 | "Make the batch": consume ingredients, receive bulk into a vessel | 1 request (large) | researched |
-| `…InProcessTesting` | 4,065 / 0 | Sending the batch to QC (creates the sample set) | 1 request | researched |
-| `…ExecutePackagingPhase` | 4,314 / 0 | Starting packaging | 1 request | researched |
-| `…PackoutRequested` | 5,953 / 0 | Asking for a packout | 1 request | researched |
-| `…CreateChangeSet` | 4,249 / 0 | First packout of a pack ticket | 1 request | researched |
-| `…Packaging` | 5,949 / 44 | Recording packed containers | 1 request | researched |
-| `…MarkOrderComplete` | 4,462 / 0 | Completing the ticket | 1 request | researched |
-| `…Unpackaging` / `…ReverseReceipt` | 44 / 0, 22 / 0 | Undoing a packout; undoing the make | 1 request each | researched |
+| `BatchExecutionDataSet.NewIngredient` | 2,437 / 0 | Adding an unplanned ingredient or substitute | 1 request | **live-ready** (`mfx.add_ingredient`) |
+| `…BatchExecutionExpress` | 4,642 / 304 | "Make the batch": consume ingredients, receive bulk into a vessel | 1 request (large) | **live-ready** (`mfx.make_batch`) |
+| `…InProcessTesting` | 4,065 / 0 | Sending the batch to QC (creates the sample set) | 1 request | **live-ready** (`mfx.send_to_qc`) |
+| `…ExecutePackagingPhase` | 4,314 / 0 | Starting packaging | 1 request | **live-ready** (stage of `mfx.packout`, sent when the bulk product line is not started) |
+| `…PackoutRequested` | 5,953 / 0 | Asking for a packout | 1 request | **live-ready** (stage of `mfx.packout`) |
+| `…CreateChangeSet` | 4,249 / 0 | First packout of a pack ticket | 1 request | **live-ready** (stage of `mfx.packout`, first packout only) |
+| `…Packaging` | 5,949 / 44 | Recording packed containers | 1 request | **live-ready** (`mfx.packout`; an unreleased packaging ticket is released first) |
+| `…MarkOrderComplete` | 4,462 / 0 | Completing the ticket | 1 request | **live-ready** (`mfx.complete`) |
+| `…Unpackaging` / `…ReverseReceipt` | 44 / 0, 22 / 0 | Undoing a packout; undoing the make | 1 request each | **live-ready** (`mfx.undo_packout`, `mfx.undo_make`) |
 
 Failures seen: "Quantity of the item 'X' is negative" (stock at the source
 location would go below zero). Insights shows batch sheet, lots, yield and QC
-for every ticket today. Client-rendered output to rebuild: container labels.
+for every ticket, and an **On the floor** card on `/batch-tickets/{ticket}`
+for a released bulk ticket: make the batch (quantities actually used per
+ingredient), add an ingredient, send for testing, pack out through a packaging
+ticket (quantity made and packages filled), complete, undo a packout, undo the
+make. Each button only shows when the ticket's state in CMS allows it. Still
+client-only: batches packed directly without a packaging ticket, choosing the
+lot of each ingredient, signed warnings, and container labels.
 
 ## 6. Shipping (Shipping)
 

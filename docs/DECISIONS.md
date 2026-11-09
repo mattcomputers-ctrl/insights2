@@ -611,3 +611,38 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
     `shipping.view`; the invoice shows prices and has its own permission,
     `shipping.invoice`. Both use the logo set for the certificate of analysis.
     Lots are not listed on either yet.
+112. **Batch execution lives on the batch ticket page**, in an "On the floor"
+    card, not in a separate floor screen. Seven operations, six permissions
+    (`write.mfx.add_ingredient`, `make_batch`, `send_to_qc`, `packout`,
+    `complete`, `undo`; both undos share one).
+113. **Buttons follow the ticket's state in CMS**, read when the page loads and
+    again when the request is planned: add ingredient and make before the
+    make; test, pack out, complete and undo after it. A ticket the flows do
+    not handle (not released, finished, a repack, hand-built) shows no card.
+114. **A packout is planned as stages chosen from CMS state**: open the
+    packaging phase when the bulk product line is not started, release the
+    packaging ticket when it is not released, ask for the packout, open the
+    production record on the first packout, then pack. A packout is "later"
+    when the packaging ticket already has a packout that was not undone; it
+    then reuses the container and the cost record.
+115. **The user types the quantity made and the number of packages.** The bulk
+    drawn and the components used follow the packaging ticket's own
+    proportions; they are not typed.
+116. **`UnitCostMK` is an estimate** from replacement costs (ingredients for
+    the make; the batch cost plus components for a packout), to 6 decimals.
+    The client's figure differs in the later digits; which value CMS keeps
+    after its own costing is a sandbox question.
+117. **Start and end stamps equal the transaction time**; Insights does not
+    time the work.
+118. **No client warning events are sent** for execution, including the signed
+    "maximum quantity exceeded" one on add ingredient. Insights shows its own
+    warnings on the review page instead.
+119. **The order of the status steps in a make differs from the client's**;
+    the set is the same. The golden tests compare them as a set.
+120. **Lots of ingredients are not chosen.** The make sends what the client's
+    express make sends and leaves lot selection to CMS.
+121. **Batches packed directly, without a packaging ticket, stay in the
+    client**, both for packing and for undoing.
+122. **Undo is refused on a completed or closed ticket**, and undoing the make
+    is refused while a packout stands. The client is looser; Insights asks
+    for the steps to be undone in order.
