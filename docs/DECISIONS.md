@@ -439,22 +439,39 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
     shows where a request came from. Setting `cms_write.program_mode = cms` sends the
     CMS client's program names instead, in case the server turns out to care. To be
     settled in the sandbox (see `docs/SANDBOX_CHECKLIST.md`).
-60. **Local audit table `cms_write_audit`** records who, what operation, the input,
-    every request sent, the CMS log id and result of each, and whether the run was
-    dry-run or live. Viewable at Admin → CMS → Writes.
-61. **Multi-request sequences stop at the first failure** and report which requests
-    committed. Sequences that CMS itself makes resumable (the waybill's to-do rows)
-    are resumed the same way; nothing is ever "rolled back" by Insights.
+60. **Local audit table `cms_write_audit`** holds one row per request. The
+    row is written before the request is sent, with status `sending`: who,
+    the CMS user, the operation, the run and step, dry-run or live, what the
+    user entered (`input_json`) and the exact request. The same row is then
+    updated with the outcome: status, CMS log id, result code and text. If
+    the row cannot be written the request is not sent. A row that stays at
+    `sending` is a request whose outcome was never recorded and must be
+    looked up in the CMS log. An attempt refused before any request is sent
+    (no permission, stale preview, a refusal while planning) writes no row.
+    Viewable at Admin → CMS → Writes.
+61. **Multi-request sequences stop at the first failure** and report which
+    requests committed. This holds for any failure at any step: CMS
+    rejecting the request, a refusal or an error while preparing the next
+    request (CMS not readable, backup window starting), the call breaking
+    off, or the write log not being writable. Once a request has been handed
+    to CMS the result is never reported as "nothing was sent". The
+    confirmation is used up before the first request is sent, so it cannot
+    be confirmed twice, even if the page dies part way through. Sequences
+    that CMS itself makes resumable (the waybill's to-do rows) are resumed
+    the same way; nothing is ever "rolled back" by Insights.
 62. **Golden tests.** For every template there is a test that rebuilds real logged
     requests from their own values and compares the XML exactly. Fixtures in
     `tests/fixtures/cms-requests/` are sanitised: people → `pic\user1`, workstations →
     `WS1`, company names → `Company N`, codes → `COMPANYN`, addresses, phones, emails
     and freight accounts → placeholders.
-63. **QC result entry**: only rows the user changed are sent; one sample container per
-    save (as the client does); test time is the moment of confirm; numbers are
-    normalised the way the client writes them; pass/fail-only tests send no result
-    value. Pass/fail is the tester's call: Insights suggests it from the item's limits
-    and warns when the choice disagrees with them, but does not overrule.
+63. **QC result entry**: only rows the user changed are sent; one sample
+    container per save (as the client does); a first result is stamped with
+    the user and the moment of confirm; a correction of a row that already
+    has a result sends only the changed columns and no tester or time
+    (decision 194); numbers are normalised the way the client writes them;
+    pass/fail-only tests send no result value. Pass/fail is the tester's
+    call: Insights suggests it from the item's limits and warns when the
+    choice disagrees with them, but does not overrule.
 64. **QC approve/reject**: only for a sample set still marked as being tested.
     Approving with untested or failed tests is allowed (CMS allows it) but the preview
     carries a clear warning. Approve is refused when the ticket has no in-process-test
@@ -488,9 +505,11 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
 73. **Required date** is sent as the chosen date plus the time of entry (create) or
     the order's existing time of day (edit), matching the logged requests. A past
     date is refused on create and warned about on edit.
-74. **Every non-quote save runs the credit check**, as nearly all logged saves do
-    (a few early-version edits omit it; no rule found). New orders are sent with
-    over-commit allowed, a constant in every logged create.
+74. **Every non-quote save runs the credit check**, as nearly all logged
+    saves do. The exception is an order on credit hold: its edits and its
+    complete are sent without the check, as the client sends them (decision
+    196). New orders are sent with over-commit allowed, a constant in every
+    logged create.
 75. **Insights does not auto-release a new order.** The client usually follows a
     create with a release request; whether that is the user or the program is not
     visible in the log. Release is its own operation with its own permission.
@@ -524,9 +543,11 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
 84. **New-PO defaults come from the supplier**: terms, currency, delivery terms,
     usual carrier, address and standing PO memo. The form shows the memo and
     sends whatever is left in the box; an emptied box sends no memo.
-85. **Edit limits for POs**: only open POs; quantity cannot be changed on a line
-    with a receipt or a closed line; a line with a receipt cannot be removed; the
-    price of an existing line is not editable. Those stay in the client.
+85. **Edit limits for POs**: only open POs; quantity cannot be changed on a
+    line with a receipt or a closed line; a line with a receipt cannot be
+    removed; the price of an existing line is not editable; a promised date
+    can be set or moved but not cleared (decision 197). Those stay in the
+    client.
 86. **Complete PO** is sent as a save that sets the status and closes each open
     line, which is how the logged completions look.
 87. **Receiving is one line per receipt**, into the receiving location the logs
@@ -566,18 +587,21 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
     the ticket back from CMS for its number, version and line ids. If a later
     request fails, the earlier ones stay saved and the user is told which.
 97. **Release builds the in-process-test lines from the item's specification
-    tests.** An item with none is released with its lot approved, the shape the
-    logs show for such items.
+    tests**, written in test-name order (decision 199). An item with none is
+    released with its lot approved, the shape the logs show for such items.
 98. **Close** is offered for a completed ticket and for one never released
     (which cancels it). A ticket on the floor is closed in the client.
+    Cancelling closes a repack line last, with its commitment zeroed
+    (decision 200).
 99. **Packaging tickets are added here only before release.** Up to 12 on a new
     ticket. The quantity is a count of the packaged item or pounds of bulk; the
     lines may not draw more than the batch, and bulk left unassigned is a warning.
 100. **Customer on a ticket** is typed as the customer number and can be set or
     changed, not cleared.
-101. **Recipes**: Insights publishes a bulk recipe drafted in the client and
-    retires or reactivates a recipe. Drafting and editing recipes and the
-    recipe-replacement job stay in the client.
+101. **Recipes**: Insights publishes a bulk recipe drafted in the client, in
+    the four-step form (decision 201), and retires or reactivates a recipe.
+    Drafting and editing recipes and the recipe-replacement job stay in the
+    client.
 102. **Scheduling hands over to the new-ticket form, not to the confirm page**
     (as Need to Order does for POs): the run's item, pounds, day and packaging
     split are filled in with release ticked, and the user goes on from there.
@@ -587,10 +611,12 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
     stays in the client for now (it belongs with the inventory moves, flow 7).
     The containers and their weights are read from CMS's shipping-label view;
     the weight can be overtyped on the form.
-105. **One waybill is one ship-to, up to 6 orders.** Ship via, freight service,
-    freight account, PO number and delivery confirmation are copied from the
-    first order, as the client does. Tracking numbers and freight cost per
-    container are not entered here.
+105. **One waybill is one ship-to, up to 6 orders.** Ship via, freight
+    service, freight account, PO number and delivery confirmation are copied
+    from the first order, as the client does. An order with a delivery
+    confirmation and a freight account or freight service is refused
+    (decision 206). Tracking numbers and freight cost per container are not
+    entered here.
 106. **The date shipped is the moment of confirming**, not the moment the form
     was opened (the client uses the latter).
 107. **A waybill is several requests**, as the client sends them. After the
@@ -625,9 +651,11 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
     production record on the first packout, then pack. A packout is "later"
     when the packaging ticket already has a packout that was not undone; it
     then reuses the container and the cost record.
-115. **The user types the quantity made and the number of packages.** The bulk
-    drawn and the components used follow the packaging ticket's own
-    proportions; they are not typed.
+115. **The user types the quantity made and the number of packages, and may
+    pick the package taken from stock.** The bulk drawn and the components
+    used follow the packaging ticket's own proportions; they are not typed.
+    The package is NA (item 1, no stock) unless one is picked; CMS holds no
+    default for it (decisions 209 and 210).
 116. **`UnitCostMK` is an estimate** from replacement costs (ingredients for
     the make; the batch cost plus components for a packout), to 6 decimals.
     The client's figure differs in the later digits; which value CMS keeps
@@ -642,7 +670,11 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
 120. **Lots of ingredients are not chosen.** The make sends what the client's
     express make sends and leaves lot selection to CMS.
 121. **Batches packed directly, without a packaging ticket, stay in the
-    client**, both for packing and for undoing.
+    client**, both for packing and for undoing. It is a longer request (it
+    also completes the bulk-use line and deletes the container it made, Log
+    864910): 2,380 of 25,308 logged packouts with Log > 400000, and 322 of
+    the 330 that take a real package. Fixture 864910 is kept to show the
+    shape.
 122. **Undo is refused on a completed or closed ticket**, and undoing the make
     is refused while a packout stands. The client is looser; Insights asks
     for the steps to be undone in order.
@@ -660,13 +692,29 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
 126. **"Save and post" is two requests**, as in the client; the post takes the
     ids from the save's reply. If the save lands and the post does not, the
     count is left saved and can be posted from its page.
-127. **A saved count's items are fixed in Insights.** Quantities, description
-    and date can change; to add or remove an item, delete the count and start
-    again. The client's shape for adding a line to a saved count was not in
-    the log.
+127. **A saved count's items are fixed in Insights.** Quantities,
+    description and date can change; to add or remove an item, delete the
+    count and start again. The client's shapes are logged but not built:
+    adding sends the head step (`UpdateVersion`, or `Update` when the
+    description changes too) and then `Insert InventoryCountDetail` with
+    keys `InventoryCountDetail="@@identity"`, no subs, and data
+    `InventoryCount="<count id>" Item Location QtyEntered Qty` (8 requests,
+    e.g. logs 483274, 483288, 483301, 471684); removing sends the head step
+    and then `Delete InventoryCountDetail` by id (8 requests, e.g. logs
+    476123, 722604). One request (log 559762) does both, and where kinds of
+    line step are mixed the order is head step, Deletes, Updates, Inserts.
+    Leaving them in the client is a scope choice: both are rare (15 of 1,655
+    count saves).
 128. **A changed description or date with changed lines is sent as one
-    request**: the head `Update` with its `Version`, then the lines. Only the
-    two halves were seen separately; flagged in the sandbox checklist.
+    request**: the head `Update` with its `Version`, then the lines. A
+    changed description with changed quantities in one request is logged:
+    log 386765 (a golden fixture) is exactly that. 4 requests in all have a
+    head `Update` with a description followed by line steps; the other three
+    (logs 229099, 471684, 559762) also remove or add lines, which Insights
+    does not build. A changed date alone is logged once (log 560112, golden
+    fixture). A changed date together with lines, or together with a
+    description, is in no logged request; that combination is flagged in the
+    sandbox checklist.
 129. **"Mark labelled" is offered only for containers that hold stock.** CMS
     has thousands of emptied containers still flagged; they are noise.
     Insights does not print container labels, so this is a manual tick.
@@ -682,10 +730,27 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
 133. **Picks come from the stock location and go into a container under the
     receiving location, package type 1**: the only shape in the log (2,886
     requests). The three ids are constants beside the templates.
-134. **Quantities are in the item's stock unit**, sent as both `Quantity` and
-    `QtyEntered`. Every logged pick has the two equal. Picking in another
-    unit, and choosing the lot, stay in the client; CMS chooses the lot as it
-    does for the client.
+134. **Quantities are in the item's stock unit.** A line new to the
+    container is sent without a `CheckVersion`. In 43,403 of 43,616 such
+    logged moves `Quantity` and `QtyEntered` are the same text; in 198 (188
+    requests, last Log 863695) `Quantity` is the client's own unrounded
+    remainder (`83.699999999999989`) and `QtyEntered` its short print
+    (`83.7`); 15 (13 requests) have `Quantity` 0. Insights sends the typed
+    number in both; how the client works out the unrounded remainder is not
+    established. A line already in the container is sent as a change: a
+    `CheckVersion` of the stock location, then a move whose `Quantity` is
+    the new total less what the container holds (worked out in floating
+    point on the stored quantity, so it can read `-0.69999999999998863`) and
+    whose `QtyEntered` is the new total (31 of 31 top-ups, 21 of 21 partial
+    take-outs). Taking a whole line out moves minus what is held, with what
+    was held as `QtyEntered` (163 of 164; the exception is Log 386134 step
+    4). Changed lines go before new ones in one request (Logs 573424,
+    833998). Insights adds the typed amount to what the container holds, or
+    takes it off, and sends the total. A line held in the container as more
+    than one content row is changed in CMS; no logged pick was split that
+    way (0 of 43,777 steps), so this is a guard and not a known case.
+    Picking in another unit, and choosing the lot, stay in the client; CMS
+    chooses the lot as it does for the client.
 135. **Insights refuses a pick above what is left on the line** (ordered
     minus shipped minus already in this order's containers) **or above the
     stock on hand** in the stock location. No shipped line in CMS exceeds its
@@ -870,3 +935,217 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
     and the review reads CMS afresh. After confirming, the user lands back
     on the Ready to ship tab. Complete order (closing without shipping)
     stays on the sales order page only.
+190. **The audit row is written before the send.** Each request gets its
+    `cms_write_audit` row first, with status `sending`, and the same row is
+    updated with the outcome. No row, no send. If the outcome cannot be
+    recorded after a send, the row stays at `sending` as evidence, the step
+    is reported as saved in CMS (with its log id) but with an incomplete
+    write log, and the rest of the sequence is not run. A dry run takes the
+    same path and still ends as one row per request with status `dry-run`.
+    Migration 022 adds `input_json`, `cms_user` and `finished_at`.
+191. **A run always ends in a report.** Once the runner starts, nothing is
+    thrown: any error in the already-done check, in building the next
+    request, in the transport or in the write log becomes a step in the
+    result, with the saved steps and their log ids listed. A step counts as
+    sent once it was handed to CMS; a dry run, and a request the write
+    connection could not even start, count as not sent. Errors before the
+    first request is handed to CMS may be reported as nothing sent; after
+    that they never are.
+192. **A confirmation is used up before anything is sent.** Confirm takes
+    the pending write out of the session and saves the session before the
+    run starts, so a page that dies part way (time limit, memory, a stopped
+    worker) leaves nothing that could be confirmed again. The token is put
+    back only when it is certain nothing was sent: a stale preview, or CMS
+    not readable while re-checking. A second confirm of a used token is told
+    the page expired or was already used, and to check the record before
+    starting again. Confirm also runs with a 600 second limit and carries on
+    if the user closes the tab.
+193. **Finding the log row after a failed call uses the CMS user and never
+    guesses.** When the call errors without handing back its log id, the row
+    is looked up by application, action, workstation, transaction time and
+    `LoggedInUser`, above the high-water mark taken before the call.
+    `LoggedInUser` equals the request's User on every row that has one
+    (6,357 of 6,357 above log 860000; all 1,455 failed rows above log
+    600000). All Insights users share one workstation name, so the user is
+    the only thing that tells two people apart. In the client's own log
+    8,545 groups of rows share application, action, workstation and second
+    (always one user per group: 8,349 with a user, 196 with none), so
+    same-second repeats are normal and more than one match is never guessed
+    at. Exactly one match is taken as this request; none or more than one is
+    reported as unknown, to be checked in the CMS log.
+194. **QC corrections keep the original tester and test time.** When a test
+    row already has a result in CMS (its `TestedTime` is set), saving a
+    change sends only the columns that changed: `Result` if the value
+    changed, `Passed` if pass/fail changed, and never `TestedBy` or
+    `TestedTime`. A row with no result yet gets the full stamp (`Result`
+    unless empty, `Passed`, `TestedBy`, `TestedTime` = moment of confirm),
+    whatever its Version. Evidence: 32 successful saves touch a row at
+    Version 2 or higher (33 rows); of the 31 corrected rows 19 send only
+    `Passed`, 9 send `Result` and `Passed`, 3 send only `Result`, none sends
+    a tester or time, and the live rows still carry the first save's time.
+    The one re-stamp at Version 3 (Log 262510) follows a save that had
+    cleared the row (Log 262509). Clearing a result back to untested is seen
+    once only and is not offered in Insights: it is done in CMS. CMS has
+    only pass/fail and numeric tests (Test: 18 BOOL, 18 NUM;
+    LocationSampleTest: 29,668 BOOL, 44,653 NUM). The client also lets a
+    result be typed on a pass/fail test and clears it with `Result=""` (Logs
+    554075/554076, 273606; two of the three Result-only corrections);
+    Insights does not offer this: it never changes the result text of a
+    pass/fail test, so that is done in CMS. A test that is neither pass/fail
+    nor numeric is refused. The flow reproduces Logs 804783, 782795, 579957,
+    334822 and 262510 exactly; 554076 is covered at template level only
+    (from the same prior state the flow sends that log without its step 4).
+195. **A sales order edit sends removed lines first.** One save sends the
+    header step, then removed lines (`Delete OrdDetailPricing`, `Delete
+    OrdDetail` per line), then changed lines, then new lines, then memo
+    steps, then taxes and the credit check. Evidence: of 21,191 logged sales
+    order edit requests, 35 contain both a line delete and a line update and
+    all 35 have every delete before the first update; 10 of those also add
+    lines, always after the updates; no request has a delete after an update
+    or insert, an update after an insert, or a line step after a memo step
+    (11 have memo after lines). Fixtures 856662 and 847291.
+196. **An edit or a complete of a sales order on credit hold is sent without
+    the credit check.** When the order is on credit hold (Status `CSH` or
+    `CreditHold` set) both are sent with the tax step only, no
+    `CheckOrderCredit`, the same as for a quote. An edited order stays on
+    hold until Release from credit hold; a completed one becomes `CMP` and
+    keeps its `CreditHold` mark. The review page says so in both cases.
+    Evidence for edits: all 41 edits without `CheckOrderCredit` after Log
+    835000 are on non-quote orders and are followed by a release as the next
+    credit request on the same order (e.g. 856537 and 856662 then 856663;
+    847292 then 847567; 862342 and 862343 then 862345); since Log 600000 it
+    is 320 of 327, the other 7 being quote conversions (677466-677468,
+    729163, 804159) and one held order that was completed without a release
+    (661753, 662525). Edits made straight after a release carry the check
+    (847291, 842624, 857165, 862341). Evidence for completes: of 2,035
+    successful complete requests, 2,028 carry the credit check and 7 do not
+    (190165, 428696, 439420, 560604, 562611, 637565, 662525); six of those
+    seven orders are the only orders now `CMP` with `CreditHold` set. 428696
+    and 439420 are the plain complete shape and are fixtures. The order's
+    hold state at the time of a logged request cannot be read back directly,
+    so the rule is inferred from request sequences and from the `CreditHold`
+    flag left on the completed orders.
+197. **Clearing a promised date on a purchase order line is not built.** The
+    PO edit can set a promised date or move it to another date (the logged
+    shape: `OrdDetail Update` with `DatePromised="yyyy-mm-ddT00:00:00"`,
+    1,359 successful requests, fixture 852597). Blanking a date that exists
+    is refused with a message to clear it in CMS, and the form marks the
+    field as required when the line has a date. Evidence: across the whole
+    log and every action, 0 requests contain `DatePromised=""` and 0 carry a
+    1900-style promised date; of 8,810 successful
+    `PurchaseOrderDataSet.SaveChanges` requests, all 4,028 that mention
+    `DatePromised` carry a real date. The client does send an empty date
+    attribute in one other place (`DateCompleted=""` on the `Ordr Update`
+    when a PO is reopened, 40 requests), but that is a different field on a
+    different table and does not prove the line-level case.
+198. **Ticket creation copies recipe ingredient and instruction lines in the
+    order the recipe stores them** (RecipeDetail id order), not in Line or
+    ExecOrder order. Evidence: over all bulk tickets 0 of 135,256
+    consecutive ingredient pairs and 0 of 40,874 instruction pairs are out
+    of RecipeDetail order, while 9,160 ingredient pairs are out of Line
+    order and 1,654 instruction pairs out of ExecOrder order (Ordr > 192000:
+    333 of 4,434 and 53 of 1,382). AltID gives the same order in every
+    recipe and is not used. Fixture 866471.
+199. **Release writes specification tests in order of test name**, compared
+    byte by byte, not in `ItemTest.Line` order (3,771 releases with tests in
+    Log 780001-866473, no counter-example; fixture 865641). A release is
+    refused in Insights when two test names first differ at a character
+    outside A-Z, 0-9 and space, or are equal, because only that ordering is
+    evidenced in the log.
+200. **Cancelling a never-released ticket closes a repack line last, with
+    its commitment zeroed.** The request closes the product line, then the
+    ingredient lines by Line, then the repack ingredient line
+    (`IsRepackaging=1`, no Line, no Parent) with `QtyCommitted="0"`.
+    Evidence: 92 `CloseOrder` logs all time, 0 failed, 8 with
+    `QtyCommitted="0"`, always on the repack line and always the last line
+    step (fixtures 852174, 858233). Refused in Insights: more than one open
+    repack line, an ordinary open ingredient line with no Line, duplicate
+    Line numbers among open ingredient lines. The close template takes the
+    repack lines as a separate list.
+201. **Publish keeps the four-step shape.** The client's extra step that
+    rewrites the batch line's `TotalWeight` (710 of 1,143 Batching Recipe
+    publishes since Log 780000, 57 distinct values) is deliberately not
+    sent, because its trigger and value cannot be reproduced from stored
+    data. The batch line keeps the weight it was drafted with. The golden
+    test asserts that fixture 866297 is not reproduced.
+202. **A line already in the chosen container is never picked a second
+    time.** Insights adds the typed quantity to what the container holds and
+    sends the client's change shape (`CheckVersion` of the stock location,
+    `Quantity` = new total minus held in double arithmetic, `QtyEntered` =
+    new total; 31 of 31 logged top-ups). Changed lines are sent before lines
+    new to the container (Logs 573424, 833998).
+203. **On a take-out CMS is told what stays in.** Part out: `Quantity` is
+    what stays minus what is held, `QtyEntered` is what stays (21 of 21).
+    Whole line out: `Quantity` is minus what is held (the exact stored
+    float), `QtyEntered` is what was held to 15 significant digits (163 of
+    164; the exception is Log 386134 step 4).
+204. **A top-up or take-out of an order line that sits in the container as
+    more than one content row is refused**, with a message to do it in CMS.
+    That includes "Take out everything" when any line is held that way. No
+    logged pick was split over rows (0 of 43,777 steps), so this is a guard
+    and not a known case. A line whose item differs from the one in the
+    container is refused with the message "Order N has changed in CMS. Open
+    it again" on the page.
+205. **A pick of a line new to the container carries the typed number as
+    both `Quantity` and `QtyEntered`** (43,403 of 43,616 logged moves). The
+    client sometimes sends its own unrounded remainder as `Quantity` with
+    the short print as `QtyEntered` (198 moves in 188 requests, last Log
+    863695; e.g. `83.699999999999989` / `83.7`), and 15 moves have
+    `Quantity` 0. The rule behind the unrounded value is not established, so
+    Insights does not imitate it.
+206. **Waybill header order is `ShipVia`, `FreightService`, `FreightOption`,
+    `FreightAccount`, `DeliveryConfirmation`, `PoNumber`.**
+    `DeliveryConfirmation` sits directly before `PoNumber` in 15 of 15
+    logged waybills that have it (fixture 863747). It never occurs with
+    `FreightAccount` or `FreightService` (0 of 15 waybills, 0 of 15 orders),
+    so an order that has a delivery confirmation together with a freight
+    account or freight service is refused and shipped in CMS.
+207. **Resume requests are golden-tested against the only three real ones in
+    the log.** The three `WaybillDataSet.ProcessOutstandingRequests` rows
+    (Logs 299822-299824) are fixtures. The flow comparison ignores the
+    envelope Owner, because those were logged under owner 100877.
+208. **Only stock items and packaged products can be added as an ingredient
+    on the floor** (`Item.Context` SUNDRY or PP). Every successful
+    `NewIngredient` request in the log names one of the two and nothing
+    else: 13,904 in all (12,582 SUNDRY, 1,322 PP). An alias code (Context
+    NAME, 7,705 of them, each pointing at a real item through `ReplacedBy`)
+    is refused with the code it stands for; a package (26), a prototype (36)
+    and any other kind are refused, to be added in CMS.
+209. **The package taken from stock at a packout is the user's choice, NA by
+    default.** CMS stores no default: the product line, the item, the recipe
+    line and the container all have no package type that explains it, and
+    the same ticket line was packed with a pail and then with NA twelve
+    seconds apart (Logs 797611, 797613). On packaging tickets NA is used
+    22,920 times against 8 with a real package (Log > 400000). Insights
+    sends NA unless the user picks a package item (`Item.Context` PACKAGE,
+    not obsolete) on the packout form; the shape with a real package is the
+    one of Log 814606. The package count stays a typed whole number: one
+    package move per packout, always first, always whole, in 1,249 of 1,249
+    requests (Log > 845000).
+210. **What a packout uses is sent in item order.** The component moves and
+    the bulk draw go in ascending Item id, each followed by its
+    quantity-used step: 1,124 of 1,124 packaging-ticket packouts with Log >
+    845000. Ticket line order fails 202 of them and components-then-bulk
+    fails 217. No logged packout has the same item on two lines, so a
+    packaging ticket built that way is refused and packed in CMS.
+211. **A new packaging item is always created stock tracked**
+    (`Treatment="WHS"`), like a raw material, and the review says so. In the
+    client the treatment is chosen per item: 678 of 685 raw material creates
+    sent WHS, but the 91 packaging creates are split 49 WHS to 42 NONE, with
+    both values sent by the same user minutes apart (logs 153646 and 153647;
+    740418/740419 NONE then 740445/740446 WHS). Packaging items of the kind
+    Insights creates (Context SUNDRY) in CMS today are 43 WHS and 40 NONE; a
+    further 26 with Context PACKAGE are all NONE. Insights does not offer
+    the choice: the review warns that the item is created with its stock
+    tracked and that an untracked packaging item is created in CMS. The
+    packaging create is golden-tested against log 501743 (one of 5 packaging
+    creates with no supplier, no concentration, no stock settings row and
+    WHS; three of them were compared and all match the template byte for
+    byte apart from the Version on the insert, decision 151).
+212. **Count edits are golden-tested for four head shapes**: lines only
+    (`UpdateVersion` head), description only, date only (log 560112, the
+    single logged date change) and description with changed quantities (log
+    386765, the one logged request that is exactly this; three more have it
+    together with removed or added lines). A date change combined with lines
+    or with a description is in no logged request and is still sent as one
+    request by Insights; it stays on the sandbox checklist.

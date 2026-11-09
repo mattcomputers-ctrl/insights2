@@ -105,7 +105,11 @@ Step 1 `Ordr Insert`, `keys Ordr="@@identity" Version=""`, data attributes in or
 Steps 2..n `OrdDetail Insert` — one per RecipeDetail row, `keys OrdDetail="@@identity"`, first
 `<subs FromStep="1" FromTable="Ordr" FromKey="Ordr" Section="data"/>`, then for child lines a second
 `<subs FromStep="<parent step>" FromTable="OrdDetail" FromKey="OrdDetail" Section="data" ToName="Parent"/>`.
-Order sent: BA, PK (parent BA), UB (parent PK), UI lines in `Line` order (parent BA), INSTR lines (parent BA).
+Order sent: BA, PK (parent BA), UB (parent PK), UI lines in the order the recipe stores them
+(RecipeDetail id; AltID gives the same order in every recipe), then INSTR lines in the same stored order (parent BA).
+Not Line or ExecOrder order: on tickets with Ordr > 192000, 333 of 4,434 consecutive UI pairs and 53 of 1,382 INSTR
+pairs are out of Line/ExecOrder order, none out of RecipeDetail order (all MFBA tickets: 0 of 135,256 UI pairs and
+0 of 40,874 INSTR pairs out of RecipeDetail order). Fixture 866471.
 Per context, the `<data>` attributes in order:
 
 - **BA**: `RecipeDetailReference Context="BA" AltID Owner="4" Phase BatchType TimeToAddUnit TotalWeight TotalVolume Status="NST" ExecStatus="NST" ExecOrder Discarded="false" Inactive="false"`
@@ -208,6 +212,10 @@ n  UpdateOrderQtyCommitted Execute data Ordr
 - The IPT line and its tests are **client-built at release time**. OrdDetailTest rows are one per `ItemTest` row of the
   bulk PK item (verified for Item 121303: DRAWDOWN line 1; GRIND Min 0 Max 2 line 2; TestGroup DEFAULT, Grade GMP,
   Deferrable false). Min/Max omitted when NULL. Items with no ItemTest rows: no IPT insert at all (865823).
+- The rows are written in ascending test-name order, not ItemTest.Line order (3,771 releases with tests in Log
+  780001-866473, no counter-example found; fixture 865641 has PULL as Line 6 written third). Only the relative order
+  of capitals, digits and spaces is evidenced; Insights refuses a release whose names would be ordered by other
+  characters or by case.
 - `LotPrefix` = release date `yyMMdd`; the server appends a 3-digit sequence (`Length="3"`) to make the lot number.
 - LogResult returns: Ordr; IPT OrdDetail; OrdDetailTest ids; Lot, SubLot (and Release id) from CreateLot; the FT
   OrdDetail created by CreateMFOrderFinalTests; lots created for linked pack tickets.
@@ -246,8 +254,13 @@ One request.
 - Completed ticket (854877): `Ordr Update keys Ordr Version data Status="CLS"`;
   `CloseLinkedPackagingOrders Execute data Ordr`; `ExportTransaction Execute data OrderCompleted=<Ordr>`.
 - Never-run ticket (863585): `Ordr Update data DateCompleted="<now>" Status="CLS"`; then `OrdDetail Update keys OrdDetail
-  data IsOpen="false"` for the PK line and every UI line (ExecOrder order, no Version); CloseLinkedPackagingOrders;
-  ExportTransaction. LogResult shows the linked pack Ordr the server also closed.
+  data IsOpen="false"` for the PK line and every UI line (PK first, then UI lines in Line order, no Version; all 92 logs,
+  all ResultCode 0); CloseLinkedPackagingOrders; ExportTransaction. LogResult shows the linked pack Ordr the server
+  also closed.
+- A repack ingredient line (UI, IsRepackaging=1, no Line, no Parent) is closed last with
+  `data IsOpen="false" QtyCommitted="0"`: 8 of 92 logs, every ticket that has such a line, none without (fixtures
+  852174, 858233). Insights refuses a ticket with two open repack lines, an ordinary ingredient line without a Line,
+  or duplicate Line numbers.
 
 ---
 
@@ -290,7 +303,7 @@ One request (fixtures 861271, 863615, 866297; 862575 is the Program-less form se
 
 ```
 1 Recipe UpdateVersion keys Recipe Version
-[ RecipeDetail Update keys <BA line> data TotalWeight ]        optional (866297)
+[ RecipeDetail Update keys <BA line> data TotalWeight ]        see note below (866297)
 2 RecipeDetail Update keys <PK line> data Parent="<BA RecipeDetail>"
 3 RecipeDetail Insert keys RecipeDetail="@@identity" data Recipe Context="UB" AltID=<max AltID+1> Owner="4" Parent=<PK line> UseFrom=<BA AltID> IsCommentFormatted="false"
 4 PublishRecipe Execute data Recipe
@@ -300,6 +313,10 @@ Publishing is what gives the recipe its PK-under-BA / UB shape that ticket creat
 PublishRecipe step returns Recipe, the Item and ItemCode (and the superseded Recipe id): the server sets
 `IsPublished`/`DatePublished`, points the item at the recipe, and marks the previous version Inactive
 (verified: 12731 E6802.01 became inactive when 21087 E6802.02 was published).
+
+The bracketed `TotalWeight` step is sent on 710 of the 1,143 Batching Recipe publishes since Log 780000 (never on the
+528 Program-less ones); 57 distinct values near 0.45359237 that cannot be derived from the stored recipe lines; when
+it is sent and how the value is computed is not established. Insights never sends this step.
 
 ### 5.3 `ManufacturingOrderDataSet.ChangeActiveState` (154 `Batching Recipe`, 2 `Batching Recipe (Readonly)`)
 
@@ -415,7 +432,7 @@ First packout into a new container (fixtures 866323, 866110):
 4  CreateContainer Execute data ChangeSet=<from 7.6> Owner InLocation="" Prefix="V" OrdDetail=<pack PK line>
 5  CreateChangeSet Execute data Context="MFP" Owner Ordr=<pack Ordr>
 6  MoveInventory subs(step 5 ChangeSet) subs(step 4 Location -> TrgLocation)
-       data Owner Context="PCKAGE" TrgOrdDetail=<pack PK> Item="1" MakeContext="MKB" UseUnreservedInventory="true" SrcLocation="10669" Quantity=<number of packages> UseContext="US"
+       data Owner Context="PCKAGE" TrgOrdDetail=<pack PK> Item=<package item: "1" (NA) unless the user picks a real package> MakeContext="MKB" UseUnreservedInventory="true" SrcLocation="10669" Quantity=<number of packages> UseContext="US"
 7  per packaging component: MoveInventory (same subs)
        data Owner Context="PCKAGE" SrcOrdDetail=<pack UI line> TrgOrdDetail Item MakeContext="MKB" UseUnreservedInventory="true" SrcLocation="10669" Quantity UseContext="US"
        + UpdateManufacturingOrdDetailQtyUsed data OrdDetail
@@ -429,11 +446,22 @@ First packout into a new container (fixtures 866323, 866110):
 12 UpdateManufacturingOrderStatus data Ordr=<bulk>
 ```
 
+Steps 7 and 8 (the components and the bulk draw, each followed by UpdateManufacturingOrdDetailQtyUsed) are sent
+together in ascending Item id, not components first: 1,124 of 1,124 packaging-ticket packouts with Log > 845000. The
+bulk draw is not last in 217 of them (Logs 866288, 866275); Log 814606, earlier, shows the same. No logged packout
+has the same item on two lines.
+
 Repeat packout into the existing container (fixture 866271): no CreateInventoryCost/CreateContainer; CreateChangeSet MFP
 is step 3; MoveInventory rows carry a literal `TrgLocation="<container Location>"` (attribute placed right after Context)
 and only the ChangeSet subs; the make move carries literal
 `SrcLocation="<container>" TrgLocation="10669" ... InventoryCost="<existing InventoryCost>"` at the end.
-`Item="1"` is the "NA" package pseudo-item; its Quantity matches packages filled (2 for 10 lb into 5 lb cans; 1 for 4 lb).
+`Item="1"` is the "NA" package item, the usual choice (22,920 of 22,928 packaging-ticket packouts with Log > 400000).
+The user can pick a real package item instead (Item.Context PACKAGE: 101065, 101073, 101075, 101077, 101085 seen); 8
+packaging-ticket packouts do (Log 814606) and 322 direct ones (Log 864910). Nothing on the ticket, item or recipe holds
+the choice: the same ticket line was packed with 101075 and then with item 1 twelve seconds apart (Logs 797611,
+797613). Quantity is a whole number of packages typed by the user. A packout made directly on the bulk ticket
+(CreateChangeSet MFP names the bulk Ordr) also sends UpdateManufacturingOrdDetailExecStatus Status="CMP" for the UB
+line after its QtyUsed step and a Location Update Status="DEL" for the new container after the MK move (Log 864910).
 
 ### 7.8 `BatchExecutionDataSet.MarkOrderComplete` (29,527; 7 failed)
 
@@ -522,6 +550,7 @@ Requests with Action NULL are in folder `_NoAction`.
 | Log | Scenario |
 |---|---|
 | 866303 | create bulk ticket from recipe (BA, PK, UB, 6 UI, 2 INSTR) |
+| 866471 | create bulk ticket whose UI and INSTR lines are in stored recipe order, not Line order |
 | 861076 | create recipe-less (repack) bulk ticket, PK line only |
 | 860225 | create repack ticket with PK and repack source UI line, no BillTo |
 | 866304 | add one pack ticket linked to bulk (OrdDetailCommit insert) |
@@ -552,14 +581,16 @@ Requests with Action NULL are in folder `_NoAction`.
 |---|---|---|
 | 866305 | Batching Order | release bulk with IPT + 2 tests |
 | 865823 | Batching Order | release without IPT, lot Approved |
+| 865641 | Batching Order | release with tests written in test-name order, not Line order |
 | 861079 | Batching Order | first release of repack ticket (builds BA/UB/IPT/UGR) |
 | 866320 | Batch Execution Express | auto-release pack ticket (lot exists) |
 | 865557 | Batch Execution Express | auto-release pack ticket added after bulk release (CreateLot) |
 
-`ManufacturingOrderDataSet.CloseOrder` (Batching Order): 854877 close completed ticket; 863585 close never-run ticket.
+`ManufacturingOrderDataSet.CloseOrder` (Batching Order): 854877 close completed ticket; 863585 close never-run ticket;
+852174, 858233 close never-run ticket with a repack line.
 
 `ManufacturingOrderDataSet.PublishRecipe`: 861271, 863615 (Batching Recipe, 4 steps); 866297 (Batching Recipe, with BA
-TotalWeight update); 862575 (Program NULL, from Recipe Replacement).
+TotalWeight update; held as a fixture but not reproduced by Insights); 862575 (Program NULL, from Recipe Replacement).
 
 `ManufacturingOrderDataSet.ChangeActiveState`: 841135 deactivate (`Inactive="true"`), 844803 reactivate (`Inactive="false"`), both Batching Recipe;
 839561 deactivate from `Batching Recipe (Readonly)`.
@@ -585,6 +616,9 @@ TotalWeight update); 862575 (Program NULL, from Recipe Replacement).
 | CreateChangeSet | 866322, 866109 | MF change set for pack ticket |
 | Packaging | 866323, 866110 | first packout, new container |
 | Packaging | 866271 | repeat packout into existing container |
+| Packaging | 814606 | packaging ticket, real package item 101073, bulk draw before components |
+| Packaging | 866288 | packaging ticket, item 1, bulk item sorts before the component |
+| Packaging | 864910 | direct packout on the bulk ticket with package item 101075 (kept to show the shape, not built) |
 | MarkOrderComplete | 866324, 866111 | complete ticket |
 | Unpackaging | 865478 | undo packout, three events |
 | Unpackaging | 865040 | undo packout, one pack line |
@@ -610,7 +644,9 @@ large-recipe ticket creates / BatchExecutionExpress requests (20+ ingredients); 
    the bulk PlanStartDate) — rule not confirmed.
 8. Constants assumed from uniform data, not from configuration: `Manufacturer="9"`, `Location`/`CurrentLocation="2"`,
    `SrcLocation="10669"`, zones 1/3/4, `Length="3"`.
-9. `MoveInventory Item="1"` Quantity = packages filled is inferred from two examples only.
+9. The package move: exactly one per packout, always the first move, Quantity always a whole number, in all 1,249
+   successful Packaging requests with Log > 845000. It cannot be derived from the quantity made. Open: what CMS does
+   when a real package item has no stock.
 10. Which warning `<event>`s the server requires (if any) versus merely logs; whether omitting them changes behaviour.
 11. `CloneFIPT` semantics and exactly when the client includes it in ReverseReceipt.
 12. The QC steps between InProcessTesting and ExecutePackagingPhase (`TestsDataSet.SaveChanges`,

@@ -84,6 +84,8 @@ Value rules (verified on 866081, 861112, 768179, 851621):
 - `InventoryCountDataSet.SaveChanges/866080.xml` create, one line, counted 0
 - `InventoryCountDataSet.SaveChanges/861111.xml` create, two lines
 - `InventoryCountDataSet.SaveChanges/768178.xml` edit one line's quantity (UpdateVersion + Update detail)
+- `InventoryCountDataSet.SaveChanges/386765.xml` edit description and one line's quantity (head Update + Update detail)
+- `InventoryCountDataSet.SaveChanges/560112.xml` edit the date alone (head Update with EffectiveDate; the only logged date change)
 - `InventoryCountDataSet.SaveChanges/798764.xml` delete an unposted count (2 details then header)
 - `InventoryCountDataSet.Post/866081.xml` post of 866080, one negative adjustment
 - `InventoryCountDataSet.Post/861112.xml` post of 861111, one negative and one positive adjustment
@@ -168,7 +170,7 @@ Recent shapes:
 
 Attribute lists (order as sent):
 
-- **Item Insert, bulk**: keys `Item="@@identity" Version=""`; data `ItemCode Prototype="false" Description Context="SUNDRY" Unit PkgType="1" Treatment="WHS" ReceivedApproved="false" IsKit="false" LotRequired="0" QtyPerPackage="1" NoExpiry="true" AutoApprove="true" SpecificGravity="1" PerPackageTolerance="100" PkgPerOuter="1" ByVolume="false" UnderReceive="1" OverReceive="1" GLGroup StandardCost="0.0000" CreateUser CreateArea="4" ShipInContainer CertifiedOrganic="false"`. Optional `Supplier` (17 of 879). User-entered: ItemCode, Description, Unit (`lb`/`ea`), GLGroup (`Finished Good`, `Raw Material`, `Resale`, ...), ShipInContainer (true on the raw-material example). Everything else is a client default. `CreateUser` = request User.
+- **Item Insert, bulk**: keys `Item="@@identity" Version=""`; data `ItemCode Prototype="false" Description Context="SUNDRY" Unit PkgType="1" Treatment="WHS" ReceivedApproved="false" IsKit="false" LotRequired="0" QtyPerPackage="1" NoExpiry="true" AutoApprove="true" SpecificGravity="1" PerPackageTolerance="100" PkgPerOuter="1" ByVolume="false" UnderReceive="1" OverReceive="1" GLGroup StandardCost="0.0000" CreateUser CreateArea="4" ShipInContainer CertifiedOrganic="false"`. Optional `Supplier` (17 of 879). User-entered: ItemCode, Description, Unit (`lb`/`ea`), GLGroup (`Finished Good`, `Raw Material`, `Resale`, ...), ShipInContainer (true on the raw-material example). Everything else is a client default. `CreateUser` = request User. `Treatment` is chosen by the user: `WHS` on 678 of 685 raw material creates but only 49 of 91 packaging creates (the other 42 are `NONE`). Golden fixtures: 864641 (raw material), 501743 (packaging, no supplier, WHS).
 - **Item Insert, pack (PP)**: data `ItemCode Prototype Description AltDescription Context="PP" Unit Treatment ReceivedApproved IsKit LotRequired NoExpiry AutoApprove SpecificGravity ByVolume GLGroup Comment CreateUser CreateArea ShipInContainer CertifiedOrganic NotInHost="false" ControlledSubstance="false"`. ItemCode = parent ItemCode + `-` + ItemCode of the packaging prototype (Item with Context PROTOTYPE; e.g. Item 101338 code `50`, Comment `5LB SLIP LID CAN`); `Comment` = prototype.Comment; Description/AltDescription default to parent description plus a size suffix like ` (5 LB)` (user-editable; 863620 has no suffix); SpecificGravity copies the parent's with float noise.
 - **ItemChemical Insert**: no keys; subs `FromStep=<item step> FromTable="Item" FromKey="Item" Section="keys"`. Bulk data: `ReverseWeightAllowed PPE="A" DisposalGroup="PENDING" HMISHealth="0" HMISFire="0" HMISReact="0" HMISCarcinogen HMISMutagen HMISTeratogen HMISIrritant HMISSensitizer HMISPoison HMISToxic HMISCorrosive HMISOxidizer HMISFlammable HMISCombustible Api Drug InSolution` (all false). Pack data omits PPE/DisposalGroup/HMIS numbers and inserts `CompressedGas DangerouslyReactive Biohazard DoNotFreeze NegativeWeightAllowed MayGangWeigh` before `InSolution`. Rare extras: `PercentVOC`, `ConcentrationPercent`. Update: keys `Item`, data e.g. `PercentVOC`.
 - **ItemCustom Insert**: no keys; subs Item -> keys; data `ListCarcinogen ListEDSTA ListHPV ListPBTP ListPOP Sara302 Sara313 Seveso ListCRTQ` (false) `Group` (`Raw Material` / `Packaging Material`).
@@ -190,6 +192,7 @@ Attribute lists (order as sent):
 **Fixtures**
 
 - `ItemUpdateDataSet.SaveChanges/864641.xml` create plain raw-material item (5 steps)
+- `ItemUpdateDataSet.SaveChanges/501743.xml` create plain packaging item (no supplier, `Treatment="WHS"`)
 - `ItemUpdateDataSet.SaveChanges/866294.xml` create finished good with 2 tests and a 5 lb pack (14 steps)
 - `ItemUpdateDataSet.SaveChanges/863620.xml` add a pack size to an existing item
 - `ItemUpdateDataSet.SaveChanges/864642.xml` edit one Item column (Supplier)

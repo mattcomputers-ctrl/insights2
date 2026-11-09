@@ -115,7 +115,7 @@ Step order: `Insert Ordr` | (`Insert OrdDetail`, `Insert OrdDetailPricing`) x N 
 <action Object="CheckOrderCredit" Step="n+1" Operation="Execute"><subs FromStep="1" FromTable="Ordr" FromKey="Ordr" Section="data" FromName=""/><data OldReserveAmount="0"/></action>
 ```
 
-`UpdateOrderTaxes` is in every request (5454). `CheckOrderCredit` is omitted in about 120 (quotes, and a few edits such as 860919, 862343 - rule unknown).
+`UpdateOrderTaxes` is in every request (5454). `CheckOrderCredit` is omitted in about 120 of this sample of 5454 (quotes, and edits or completes of an order that is on credit hold, e.g. 860919, 862343, 856662, 428696: the next credit request on the same order is always the release).
 
 ### 1.2 Edit order
 
@@ -127,6 +127,8 @@ Header change: step 1 is `Update Ordr` with `<keys Ordr="id" Version="v"/>` and 
 ```
 
 `OldReserveAmount` = `Ordr.ReserveAmount` as last read (4 dp; `0.0000` when zero).
+
+Edit step order: header | line deletes (`Delete OrdDetailPricing`, `Delete OrdDetail` per line) | line updates | line inserts | memo steps | `Update AddressRef` | `UpdateOrderTaxes` | [`CheckOrderCredit`]. 35 requests have both a line delete and a line update, all deletes first. Memo before address rests on 2 requests (0 the other way).
 
 | Variant | Shape | Fixtures |
 |---|---|---|
@@ -193,11 +195,13 @@ Picks stock for order lines into a shipping container ("assembly", a `Location` 
 ```
 
 - CreateAssembly data: `Owner` (request Owner), `Location` = parent location for assemblies (`2` for Owner 4, `31285` for Owner 100877 - appears to be the area's staging/in-transit location, cf. `Entity.InTransitLocation`), `PkgType` (`1` default; `101100` also seen = an `ItemPkg` package type).
-- MoveInventory data, in order: `Owner Context="PICK" SrcLocation [TrgLocation] Quantity QtyEntered TrgOrdDetail Item Reserve="true" ValidateStorageRules="false" UseUnreservedInventory="true"`. `SrcLocation` = stock location picked from (10669 almost always; 31429 for the consignment area). `Quantity` = qty in item unit, `QtyEntered` = qty as typed (same here). `TrgOrdDetail` = order line. `Item` = inventory item (OrdDetail.Item). `TrgLocation` is supplied by subs from the CreateAssembly step.
+- MoveInventory data, in order: `Owner Context="PICK" SrcLocation [TrgLocation] Quantity QtyEntered TrgOrdDetail Item Reserve="true" ValidateStorageRules="false" UseUnreservedInventory="true"`. `SrcLocation` = stock location picked from (10669 almost always; 31429 for the consignment area). `Quantity` = qty in item unit, `QtyEntered` = the line's total in the container after the move. For a line new to the container it is the same text as `Quantity` in 43,403 of 43,616 moves; in 198 `Quantity` is an unrounded double and `QtyEntered` its short print (Log 857769: 83.699999999999989 / 83.7), 15 have `Quantity` 0. `TrgOrdDetail` = order line. `Item` = inventory item (OrdDetail.Item). `TrgLocation` is supplied by subs from the CreateAssembly step.
 
 **Add to an existing assembly** (423): `UpdateVersion Ordr` | `UpdateVersion Location` (`<keys Location="119472" Version="1"/>`, the assembly) | MoveInventory x N with literal `TrgLocation="119472"` and no subs (fixture 865759).
 
-**Remove from an assembly** (37): as above, but each MoveInventory is preceded by `<action Object="Location" Operation="CheckVersion"><keys Location="10669" Version="1"/></action>` (the stock location) and has `Quantity="-5" QtyEntered="5"` (fixtures 864847, 855689).
+**Remove from an assembly** (37): as above, but each MoveInventory is preceded by `<action Object="Location" Operation="CheckVersion"><keys Location="10669" Version="1"/></action>` (the stock location) and has `Quantity="-5" QtyEntered="5"` (fixtures 864847, 855689). This is the whole-line case: `Quantity` = minus what is held, `QtyEntered` = what was held (163 of 164, exception Log 386134 step 4).
+
+**Change a line already in the container** (CheckVersion of stock location 10669 first): top-up `Quantity="2" QtyEntered="128"` (Log 802177, held 126), part out `Quantity="-2" QtyEntered="62"` (Log 803958, held 64), `Quantity="-0.69999999999998863" QtyEntered="272"` (Log 814460, held 272.7). `Quantity` = new total minus held, worked out as a double; `QtyEntered` = new total (31 of 31 top-ups, 21 of 21 partial take-outs). Mixed request: changed line first, new line last without a check (Logs 833998, 573424).
 
 Server returns: LogResult `Ordr`, and for CreateAssembly `Location.Location` 119594 + `Location.LocationCode` A018693. No LogRequest cascades (procs write directly: inventory moved and reserved to the order line).
 
@@ -216,7 +220,7 @@ Ships one or more assembled orders. **One user "save" = 3 + N requests (N = numb
 Steps: `UpdateVersion Ordr` x N | `UpdateVersion Location` x C (each assembly container) | `Insert Waybill` | `Insert WaybillTrackingNumber` x C | `Insert AddressRef` | `Execute CreateDocument` | `Insert WaybillInProcess` x (N + 2).
 
 - `Ordr` keys `Ordr Version`; `Location` keys `Location Version` (assembly `Location.Version`).
-- `Waybill` Insert: keys `Waybill="@@identity" Version=""`; data in order `Owner PlacedBy DateShipped ShipAsIs="false" TrailerNumber="" SealNumbers="" Comment="" [ShipVia] [FreightService] [FreightOption] [FreightAccount] [PoNumber] [DeliveryConfirmation]`. `DateShipped` = time the form was opened. ShipVia/FreightService/FreightOption/FreightAccount/PoNumber are copied from the (first) order (verified Ordr 194579: ShipVia 100741, FreightAccount 107281, PoNumber 75622; FreightOption sent as `0` when the order has NULL). TrailerNumber/SealNumbers/Comment were always empty.
+- `Waybill` Insert: keys `Waybill="@@identity" Version=""`; data in order `Owner PlacedBy DateShipped ShipAsIs="false" TrailerNumber="" SealNumbers="" Comment="" [ShipVia] [FreightService] [FreightOption] [FreightAccount] [DeliveryConfirmation] [PoNumber]`. DeliveryConfirmation directly before PoNumber in 15 of 15 (last Log 863747); it never appears with FreightAccount or FreightService (0 of 15 waybills, 0 of 15 orders), so Insights refuses an order that has both. `DateShipped` = time the form was opened. ShipVia/FreightService/FreightOption/FreightAccount/PoNumber are copied from the (first) order (verified Ordr 194579: ShipVia 100741, FreightAccount 107281, PoNumber 75622; FreightOption sent as `0` when the order has NULL). TrailerNumber/SealNumbers/Comment were always empty.
 - `WaybillTrackingNumber` Insert (one per container): keys `WaybillTrackingNumber="@@identity"`; subs `FromStep="<Waybill step>" FromTable="Waybill" FromKey="Waybill" Section="data"`; data `Location TrackingNumber="" FreightCost="" ActWeightKg ActWeightLb`. Weight = contents of the container in lb; kg = lb x 0.45359237 unrounded (`29.6` -> `13.426334152`). `0`/`0` is sent for a container with no weighable content.
 - `AddressRef` Insert: keys `TableName="Waybill" Reference="ShipToAddress"`; subs `... Section="keys" ToName="TableID"`; data is the **full** address row, empty columns included: `Address Name Department AddrLine1 AddrLine2 AddrLine3 City State ZipCode Country Contact Email Fax Phone StateName CountryName URL Residential TableID TableName="Waybill" Reference="ShipToAddress" EmergencyContact`. `Address` = the order's ShipToAddress address id (shared row). The `TableID` inside data is a client-side placeholder that matched the real new id in only 488 of 2187 cases; the server uses the subs value.
 - `CreateDocument` Execute: subs `FromStep FromTable="Waybill" FromKey="Waybill" Section="data" ToName="TableID"`; data `TableName="Waybill" Role="Waybill"`.
@@ -252,7 +256,7 @@ Cascade: `Insert PalletTracking (Ordr, PkgType, QtyShipped)` per order/package t
 
 ### Resumability
 
-`WaybillInProcess` (WaybillInProcess, Waybill, IsDone, Ordr, IsShipped, ContainersNotShipped, Action, FreightCharge) is the persisted to-do list. Because each later request sets `IsDone` and does the work atomically, a failure leaves the remaining rows `IsDone=0`. Real example (2020, Logs 299815-299824): request 1 succeeded, request 2 failed (`In Transit Location is not set in Target Area`); the user fixed the setup, reopened the Waybill program, and the client replayed the outstanding rows in order as three requests with `Action="WaybillDataSet.ProcessOutstandingRequests"` - byte-for-byte the same bodies as requests 2-4. Today no row in the table is outstanding (0 of 55627 with IsDone=0).
+`WaybillInProcess` (WaybillInProcess, Waybill, IsDone, Ordr, IsShipped, ContainersNotShipped, Action, FreightCharge) is the persisted to-do list. Because each later request sets `IsDone` and does the work atomically, a failure leaves the remaining rows `IsDone=0`. Real example (2020, Logs 299815-299824): request 1 succeeded, request 2 failed (`In Transit Location is not set in Target Area`); the user fixed the setup, reopened the Waybill program, and the client replayed the outstanding rows in order as three requests with `Action="WaybillDataSet.ProcessOutstandingRequests"` - byte-for-byte the same bodies as requests 2-4. Today no row in the table is outstanding (0 of 55627 with IsDone=0). The three real ProcessOutstandingRequests requests in the log are fixtures (Logs 299822-299824, waybill 3863, Owner 100877, same AppVersion and body shape as the SaveChanges to-do requests).
 
 An implementation should therefore: after request 1 read the to-do rows for the waybill ordered by id; for each row with IsDone=0 send the matching request (re-reading Waybill.Version each time); on start-up look for rows with IsDone=0 and finish them.
 
@@ -373,6 +377,9 @@ Directory: `C:\Claude Sessions\insights2\tests\fixtures\cms-requests\<Action>\<L
 | 864679.xml, 864848.xml | change line quantity |
 | 862343.xml, 863536.xml | add line to existing order |
 | 842628.xml, 852291.xml | delete line |
+| 847291.xml | edit: one line removed and one quantity changed (deletes before updates) |
+| 856662.xml | same on an order on credit hold (no CheckOrderCredit) |
+| 428696.xml, 439420.xml | complete of an order on credit hold (no CheckOrderCredit) |
 | 863694.xml | replace line (delete + insert) |
 | 861386.xml | edit ship-to address (AddressRef Update) |
 | 858964.xml | add ShippingMemo to existing order |
@@ -380,7 +387,7 @@ Directory: `C:\Claude Sessions\insights2\tests\fixtures\cms-requests\<Action>\<L
 
 **ShippingOrderDataSet.CompleteSale**: 860984.xml, 859136.xml, 846031.xml - complete sale of an order.
 
-**AssembleDataSet.SaveChanges**: 866340.xml, 866325.xml (new assembly, 1 line); 866114.xml (new assembly, 2 lines); 865759.xml (add to existing assembly); 864847.xml (remove 1 line, CheckVersion); 855689.xml (remove 2 lines).
+**AssembleDataSet.SaveChanges**: 866340.xml, 866325.xml (new assembly, 1 line); 866114.xml (new assembly, 2 lines); 865759.xml (add to existing assembly); 864847.xml (remove 1 line, CheckVersion); 855689.xml (remove 2 lines); 802177.xml (top-up of a line already in the container); 802136.xml (top-up, unrounded Quantity); 803958.xml, 814460.xml (part of a line taken out); 733555.xml (whole line out, unrounded Quantity); 833998.xml (changed line first, then a new line).
 
 **WaybillDataSet.SaveChanges**
 
@@ -391,6 +398,9 @@ Directory: `C:\Claude Sessions\insights2\tests\fixtures\cms-requests\<Action>\<L
 | 861915.xml - 861919.xml | 5-request sequence, 2 orders / 2 containers (861916, 861917 = one CreateShipmentsByOrder each) |
 | 855512.xml - 855515.xml | 4-request sequence with FreightCharge |
 | 859033.xml | request 1 only, 3 orders / 3 containers |
+| 863747.xml | request 1 with DeliveryConfirmation (directly before PoNumber) |
+
+**WaybillDataSet.ProcessOutstandingRequests**: 299822.xml - 299824.xml, the three resume requests of waybill 3863 (the only ones in the log).
 
 **WaybillDataSet.RejectWaybill**: 848374.xml, 846026.xml, 844378.xml.
 
@@ -405,7 +415,7 @@ No fixture: AddressReference `Update` label variant (1 case), SHCheckInventory (
 ## 10. Open questions
 
 1. **ChangeNumber**: the client gets it from sequence `IDGenerator_ChangeNumber` via something outside ProcessXMLRequest (encrypted `GenerateID`). Insights 2 has SELECT-only access, so how will it obtain the next value? Is `Ordr.ChangeNumber` required/unique, or would the server accept it missing? Also unclear when a DateRequired edit sends a new one.
-2. **CheckOrderCredit** is encrypted. Inferred: recalculates `ReserveAmount` and may set `Status='CSH'`/`CreditHold`. 1411 of 2161 new orders are followed seconds later by a release request - is the user doing that by hand (a prompt), and should Insights 2 replicate it automatically? When may the step be omitted?
+2. **CheckOrderCredit** is encrypted. Inferred: recalculates `ReserveAmount` and may set `Status='CSH'`/`CreditHold`. 1411 of 2161 new orders are followed seconds later by a release request - is the user doing that by hand (a prompt), and should Insights 2 replicate it automatically? The step is omitted for quotes and for edits and completes of an order on credit hold: all 41 edits without CheckOrderCredit after Log 835000 are on non-quote orders and are followed by a release as the next credit request on the same order; since Log 600000 it is 320 of 327, the other 7 being quote conversions (677466-677468, 729163, 804159) and one held order that was completed without a release (661753, 662525). Of 2035 completes, the 7 without the step are orders completed while on hold.
 3. **Waybill to-do row ids** are not returned in LogResult; assumed the client re-reads `WaybillInProcess` by Waybill. Confirm ordering by id is the right replay order.
 4. **Placeholder `TableID`** in the waybill AddressRef data - assumed ignored by the server (subs wins). Is it safe to send the real attribute list without it, or with `TableID=""`?
 5. **Does attribute order matter** to the server? All evidence is consistent ordering from one client; never seen a different order, so keep it identical.
@@ -415,4 +425,4 @@ No fixture: AddressReference `Update` label variant (1 case), SHCheckInventory (
 9. **FreightOption** meaning of 0/1/2 (prepaid / collect / third party?) and why the waybill sends `0` when the order has NULL.
 10. **Invoice amendment memo**: `Memo="276"` with empty Data appears often - is 276 a shared empty memo row, and what should be sent when the original invoice has no memo?
 11. **Label request envelope** has no User/Workstation/Owner; does the server accept that from any caller, and is the insert needed at all for label reprints (unique key on TableID/TableName/Reference would make a second Insert fail - the one `Update` case suggests the client checks first)?
-12. Waybill fields never used here (TrailerNumber, SealNumbers, Comment, ShipAsIs, DeliveryConfirmation, ContainersNotShipped / IsShipped=false) - behaviour unverified.
+12. Waybill fields never used here (TrailerNumber, SealNumbers, Comment, ShipAsIs, ContainersNotShipped / IsShipped=false) - behaviour unverified. DeliveryConfirmation is used: 15 waybills carry `DeliveryConfirmation="1"`.

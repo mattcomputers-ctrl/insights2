@@ -50,8 +50,28 @@ stored in MariaDB.
    in Insights. Expected: Insights refuses and sends nothing.
 4. **CMS failure is reported.** Any failed request must show CMS's message in
    plain words, and the audit row must hold the failed log id and message.
+   Check that the log id on the audit row is the row CMS wrote for this
+   request (same user, action and time). If Insights says the outcome is
+   unknown instead, note whether the call returned no log id: that decides how
+   often the fallback lookup is used.
 5. **Kill switch.** Turn the CMS kill switch on; confirm a write is refused.
 6. **Unmapped user.** A user with no CMS user set cannot write (clear message).
+7. **Audit comes first.** Apply migration 022 before testing. Do one dry run
+   and one live write and read their `cms_write_audit` rows column by column:
+   `cms_user` is the CMS user, `input_json` holds what was entered,
+   `request_xml` is the request, `status` is `dry-run` or `committed` (not
+   `sending`), `log_id` is the CMS log id on the live row, and `finished_at`
+   is filled. While a live request is in flight the row already exists with
+   status `sending`. Then make the audit table unwritable for a moment (for
+   example rename the `input_json` column on the test database) and confirm a
+   write: nothing is sent, `SELECT MAX([Log]) FROM Log` has not moved, and
+   Insights says the step was not sent.
+8. **One confirmation, one run.** Confirm a write, then go back in the browser
+   and press Confirm again (or double-click Confirm). The second press says
+   the confirmation page has expired or was already used, and the CMS log
+   shows the request once. After a stale-preview warning or a "CMS
+   unavailable, nothing was sent" message the same page can still be
+   confirmed.
 
 ## 4. Per-flow live verification
 
@@ -66,6 +86,10 @@ and program.
    to QC from the CMS client first).
 2. Enter results for two tests, one numeric and one pass/fail-only; save; confirm.
    - Check the `LocationSampleTest` rows: `Result`, `Passed`, `TestedBy`, `TestedTime`.
+   - Change one of the two results (value and pass/fail) and save again. Check
+     the request holds only `Result` and/or `Passed` for that row, and that
+     the row's `TestedBy` and `TestedTime` are still those of the first save.
+     Also flip a Pass to Fail on a saved row and check the row shows Fail.
    - Open the same sample in the CMS client: the values show and can be edited.
 3. Approve the sublot; confirm.
    - Check: a `Release` row with status Approved; `SampleSet.BeingTested = 0`;
@@ -105,9 +129,16 @@ and program.
    - Edit the same order in the client while the Insights confirm page is open,
      then confirm: Insights should refuse because the order changed since the preview.
 5. **Release from credit hold** on an order in `CSH`: status `RTS`, `CreditHold` 0.
-6. **Complete order** on an order with an unshipped line: lines closed,
+6. **Edit an order on credit hold** (`CSH`): change a quantity and remove a
+   line in one save. The request has the deletes before the update and no
+   `CheckOrderCredit` step; the order stays `CSH` until Release from credit
+   hold. Note `Ordr.ReserveAmount` before and after the release, and what
+   status a held order really carries (`CSH`, or `RTS` with `CreditHold` 1).
+7. **Complete an order on credit hold**: the request has no `CheckOrderCredit`
+   step; the order becomes `CMP` and `CreditHold` stays 1.
+8. **Complete order** on an order with an unshipped line: lines closed,
    `QtyCommitted` cleared, status `CMP`, `DateCompleted` set, reserve released.
-7. **Complete sale** on an open order for a sundry or fee item: a shipment and an
+9. **Complete sale** on an open order for a sundry or fee item: a shipment and an
    invoice are created and the order completes. Compare with a client-made one.
    Then try an order for a stocked item with no stock: expect the CMS refusal to
    come back in plain words.
@@ -139,6 +170,8 @@ Grant `write.po.*` to the test user. Pick a supplier with a current price list.
    remove an unreceived line, change the carrier and the memo, each as its own
    save; compare each request with a client-made one. Edit the PO in the client
    while the Insights confirm page is open, then confirm: Insights should refuse.
+   Also blank the promised date of a line that has one and check the save is
+   refused with a message to clear it in CMS, and nothing is sent.
 5. **Receive** (`/purchase-orders/{po}/receive`): receive part of a line, then
    the rest, then a line of a non-costed item.
    - Check `ChangeSet`, `ChangeSetReceipt`, the inventory movement into the
@@ -170,6 +203,9 @@ packaged items.
    - `TotalVolume` is computed from specific gravities and may differ from the
      client in the last digits; note whether CMS minds.
    - Open the ticket in the client: it loads, prints and saves normally.
+   - The ingredient and instruction lines are sent in the order the recipe
+     stores them, not in line-number order. Pick a recipe whose lines were
+     renumbered and compare the order with the client's.
 2. **New ticket with two packaging lines and release**, one line in units and
    one in pounds of bulk. This is three or four requests in a row.
    - After the first request, check the confirm result names the new ticket
@@ -195,11 +231,24 @@ packaged items.
 7. **Release** an unreleased ticket from its page. Then one with overcommit off
    and short stock: expect the CMS refusal in plain words; switch overcommit on
    and release again.
+   - Release an item whose specification tests are not in alphabetical order
+     by line: the tests are written in test-name order, as the client writes
+     them. An item with two test names that first differ at a character other
+     than a capital, a digit or a space is refused by Insights; release it in
+     the client and note the order it writes.
 8. **Close**: a completed ticket (status `CLS`, packaging tickets closed with
    it), and a never-released ticket (cancelled; its open lines closed).
+   - Cancel an unreleased ordinary ticket and an unreleased repack ticket, in
+     the client and in Insights, and compare which lines get
+     `QtyCommitted="0"`. Insights zeroes only the repack line and sends it
+     last. A ticket with two open repack lines is refused.
 9. **Recipes** (`/recipes`, open a recipe): publish a bulk recipe drafted in
    the client and compare with a client publish (the old version retires, the
    item's costing recipe moves). Retire a recipe and make it active again.
+   - The client's publish often has a fifth step that rewrites the batch
+     line's `TotalWeight`; Insights never sends it. Note when the client sends
+     it, and compare the batch line's weight after a client publish and after
+     an Insights publish.
 
 ### 4.5 Shipping (built)
 
@@ -228,9 +277,14 @@ a third with two containers. (Assembling in Insights is checked in 4.8.)
 4. **Different ship-to**: tick two orders for different customers: refused.
 5. **Stop part way.** Start a waybill and, between requests, break the
    connection (or open the order in the client so its version moves). Insights
-   stops and says which steps are saved. `/shipping/new` now lists the waybill
-   under "did not finish"; Finish sends the remaining steps. Compare with the
-   client's own prompt to finish outstanding waybills.
+   stops and says which steps are saved and their log ids. It never says
+   nothing was sent, and the confirmation page cannot be confirmed again. Try
+   both connections: with the read connection down the next step is reported
+   as not sent; with the write connection down before a call the step is
+   reported as not sent; with the write connection cut during a call the step
+   is reported as unknown and must be checked in the CMS log. `/shipping/new`
+   now lists the waybill under "did not finish"; Finish sends the remaining
+   steps. Compare with the client's own prompt to finish outstanding waybills.
 6. **Labels.** On the completed waybill, "Mark labels printed": one request per
    container. Print the same labels from the client for another waybill and
    compare the `AddressReference` rows. Press it again: refused, already
@@ -243,6 +297,12 @@ a third with two containers. (Assembling in Insights is checked in 4.8.)
    shipped, prices, freight, taxes and totals. Open the invoice of the rejected
    waybill: it is marked reversed. A user without `shipping.invoice` sees no
    Invoice button and gets the usual not-found page on the address.
+9. **Delivery confirmation.** Ship an order that has a delivery confirmation:
+   the waybill carries `DeliveryConfirmation` directly before `PoNumber`. An
+   order with a delivery confirmation and a freight account or freight service
+   is refused by Insights ("Ship it in CMS"); if one is ever made in the
+   sandbox, capture the client's waybill request to settle the attribute
+   order.
 
 ### 4.6 Batch execution (built)
 
@@ -254,7 +314,8 @@ second, identical ticket to compare against.
    a quantity. Compare the request with the client's `NewIngredient` (the new
    `UI` line, its line number, the status steps). The client asks for a
    signature when the quantity is over the maximum; Insights sends no warning
-   event. Check CMS accepts that.
+   event. Check CMS accepts that. Try an alias code, a package and a prototype
+   item: each must be refused before anything is sent.
 2. **Make the batch.** Change one quantity, clear another, Check the make. The
    review lists what differs from the ticket and an estimated cost.
    - Compare with the client's `BatchExecutionExpress`: the order of the
@@ -272,7 +333,15 @@ second, identical ticket to compare against.
    phase, release the packaging ticket, ask for the packout, open its
    production record, pack out). Compare each with the client's. Check the
    bulk drawn and the components used against what the client would have
-   filled in, the package count, and the estimated `UnitCostMK`.
+   filled in, their order (item id ascending, the bulk among the components),
+   the package count, and the estimated `UnitCostMK`. Then pack once with a
+   real package picked (for example the 3.5 gallon pail) and compare with the
+   client doing the same: the first `MoveInventory` must name that item, and
+   the pail's stock must drop by the package count. Check what CMS does when
+   the pail has no stock. A batch packed directly on the bulk ticket must show
+   no packout form. A packaging ticket with the same item on two lines is
+   refused by Insights; if one exists, pack it in the client and note the order
+   of its moves.
 5. **Pack out again** on the same packaging ticket: two requests, reusing the
    container and cost record. Then the second packaging ticket.
 6. **Undo a packout**, then pack out once more: check which container the
@@ -302,9 +371,12 @@ stock and one with none.
      quantity, a date in the future.
 2. **Change it.** Open the count, change one quantity: only that line is sent
    (`UpdateVersion` on the head). Change the description: the head is an
-   `Update` with its `Version`. Then change the date and a quantity together;
-   this combination and the date change were not seen in the log, so compare
-   with what the client sends and check CMS accepts ours.
+   `Update` with its `Version`. Change the date alone: the head is an `Update`
+   with `EffectiveDate` (as in log 560112). Then change the date and a quantity
+   together, and the date and the description together; a date change was only
+   ever logged alone (once), so compare these two with what the client sends
+   (including the order of `Description` and `EffectiveDate`) and check CMS
+   accepts ours.
 3. **Post it.** "Check and post". Compare `QtyAdjust` on every line and the
    `Quantity` of every move with the client posting an identical count (the
    adjustment is counted minus on hand, written to the last digit). After the
@@ -351,21 +423,37 @@ stock, and one line whose item has less stock than ordered.
    - Check what CMS did to the line's shipped quantity. Insights works out
      "left" as ordered minus shipped minus in containers; if CMS already
      counts assembled stock as used, "left" is too low and needs a fix.
-3. **Add to the container.** Assemble a part quantity first, then the rest
-   into the same container: the request carries the container's `Version`.
-4. **Refusals to try**: more than is left on the line, more than is in stock,
+3. **Add to the container.** Assemble a part quantity of a line first, then
+   more of the same line into the same container: the request carries the
+   container's `Version`, a `CheckVersion` of the stock location before the
+   move, `Quantity` = the amount added and `QtyEntered` = the new total in the
+   container. Then add a line the container does not hold yet: that move has
+   no `CheckVersion` and carries the typed number as both `Quantity` and
+   `QtyEntered`.
+4. **Remainder that is not exact.** On a line whose remainder is not an exact
+   decimal (for example 163.7 ordered, 80 already assembled), leave the
+   offered quantity alone in the client and in Insights and compare: the
+   client can send `Quantity="83.699999999999989" QtyEntered="83.7"` (Log
+   857769), Insights sends `83.7` in both. Confirm CMS accepts the Insights
+   request and the line shows fully assembled.
+5. **Refusals to try**: more than is left on the line, more than is in stock,
    zero, a closed line, an order that is not ready to ship, a container of
    another order (edit the form), and an order changed in the client between
    review and confirm.
-5. **Take out.** Take part of one line out, then "Take out everything": each
+6. **Take out.** Take part of one line out, then "Take out everything": each
    request has a `CheckVersion` of the stock location before each move and a
-   negative `Quantity`. The stock is back in the stock location and no longer
-   reserved. The emptied container stays in CMS, as it does in the client.
+   negative `Quantity`. For the part taken out `QtyEntered` is what stays in
+   the container; for a whole line it is what came out. The stock is back in
+   the stock location and no longer reserved. The emptied container stays in
+   CMS, as it does in the client.
    - If the stock location's `Version` has moved since the log was captured,
      CMS may refuse the check; note the message.
-6. **Ship it.** Assemble again, "Ship this order": the order is on
+   - If a container ever shows one order line as two content rows, note it:
+     Insights refuses to add to or take from such a line and asks for it to be
+     done in CMS.
+7. **Ship it.** Assemble again, "Ship this order": the order is on
    `/shipping/new` with the container, and ships as in 4.5.
-7. **Reserved stock.** Assemble an item whose stock is partly reserved to
+8. **Reserved stock.** Assemble an item whose stock is partly reserved to
    another order. Note whether CMS refuses, and with what message: Insights
    only compares against the total on hand.
 
@@ -417,7 +505,11 @@ Grant `write.item.settings` and `write.item.create` to the test user.
    sometimes sends a `Version` other than 1 on the insert; the new row has
    Version 1 either way). Open the new item in the client: every tab opens,
    and it can be put on a purchase order and received.
-   Repeat with kind Packaging (unit `ea`, GL group Packaging).
+   Repeat with kind Packaging (unit `ea`, GL group Packaging). The packaging
+   request is golden-tested against log 501743. Insights always sends
+   `Treatment="WHS"` and the review says so; in the client the treatment is
+   chosen per item and about half of packaging items are `NONE`, so create one
+   of each in the client and confirm WHS is the wanted default.
 5. **Refusals to try**: a minimum that is not a number, the minimum it
    already has, a code that exists, an inactive supplier (only reachable by
    posting by hand), and an item changed in the client between review and
