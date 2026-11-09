@@ -75,12 +75,13 @@ final class Step
             'FromKey'   => $fromKey,
             'Section'   => $section,
         ];
+        if ($fromName !== null) {
+            // Some Execute steps carry an (empty) FromName, exactly as the CMS client sends it;
+            // where both are present the client writes FromName first.
+            $attrs['FromName'] = $fromName;
+        }
         if ($toName !== null) {
             $attrs['ToName'] = $toName;
-        }
-        if ($fromName !== null) {
-            // Some Execute steps carry an (empty) FromName, exactly as the CMS client sends it.
-            $attrs['FromName'] = $fromName;
         }
         return $this->child('subs', $attrs);
     }
