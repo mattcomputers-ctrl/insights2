@@ -26,7 +26,10 @@ use PII\Cms\Write\Ops\Manufacturing\PublishRecipe;
 use PII\Cms\Write\Ops\Manufacturing\ReleaseTicket;
 use PII\Cms\Write\Ops\Manufacturing\SetRecipeActive;
 use PII\Cms\Write\Ops\MasterData\CreateAlias;
+use PII\Cms\Write\Ops\MasterData\CreateItem;
 use PII\Cms\Write\Ops\MasterData\EditAlias;
+use PII\Cms\Write\Ops\MasterData\SetItemSupplier;
+use PII\Cms\Write\Ops\MasterData\SetMinimumStock;
 use PII\Cms\Write\Ops\Purchasing\CompletePurchaseOrder;
 use PII\Cms\Write\Ops\Purchasing\CreatePurchaseOrder;
 use PII\Cms\Write\Ops\Purchasing\EditPurchaseOrder;
@@ -172,6 +175,12 @@ final class OperationRegistry
                 'write.item.alias', EditAlias::class, ['ItemNameUpdateDataSet.SaveChanges']),
             new OperationDef('item.alias_create', 'items', 'add and change aliases of items',
                 'write.item.alias', CreateAlias::class, ['ItemNameUpdateDataSet.SaveChanges']),
+            new OperationDef('item.min_stock', 'items', 'set the minimum stock of an item',
+                'write.item.settings', SetMinimumStock::class, ['ItemUpdateDataSet.SaveChanges']),
+            new OperationDef('item.supplier', 'items', 'set the minimum stock and the preferred supplier of items',
+                'write.item.settings', SetItemSupplier::class, ['ItemUpdateDataSet.SaveChanges']),
+            new OperationDef('item.create', 'items', 'create raw material and packaging items',
+                'write.item.create', CreateItem::class, ['ItemUpdateDataSet.SaveChanges']),
             new OperationDef('mf.publish_recipe', 'recipes', 'publish a recipe',
                 'write.mf.publish_recipe', PublishRecipe::class, ['ManufacturingOrderDataSet.PublishRecipe']),
             new OperationDef('mf.recipe_active', 'recipes', 'retire or reactivate a recipe',

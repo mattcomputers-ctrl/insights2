@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PII\Cms\Write\Ops\MasterData;
 
 use PII\Cms\Write\CmsReader;
+use PII\Cms\Write\Fmt;
 use PII\Cms\Write\WriteRefused;
 
 /** Reading what a user typed for an item or an alias. */
@@ -50,5 +51,28 @@ final class ItemInput
             throw new WriteRefused('The description is too long (limit ' . self::DESCRIPTION_MAX . ' characters).');
         }
         return $s;
+    }
+
+    /** A minimum stock: a number from 0 up, in the stock unit of the item. */
+    public static function minimum(mixed $v): string
+    {
+        $s = str_replace(',', '', trim(is_scalar($v) ? (string) $v : ''));
+        if ($s === '') {
+            throw new WriteRefused('Enter the minimum stock.');
+        }
+        if (!preg_match('/^\d{1,7}(\.\d{1,4})?$/', $s)) {
+            throw new WriteRefused('The minimum stock must be a number from 0 to 9,999,999.');
+        }
+        return Fmt::num($s);
+    }
+
+    /** One of the kinds of item that can be created here. */
+    public static function kind(mixed $v): string
+    {
+        $k = is_scalar($v) ? trim((string) $v) : '';
+        if (!isset(ItemRequests::KINDS[$k])) {
+            throw new WriteRefused('Choose what kind of item it is.');
+        }
+        return $k;
     }
 }

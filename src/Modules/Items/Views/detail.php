@@ -6,7 +6,7 @@
  * @var array $specs  @var array $stock  @var ?array $totals
  * @var array $shipments  @var array $purchases  @var array $whereUsed
  * @var ?string $resolvedFrom  @var bool $showCost  @var ?string $error  @var ?string $asOf
- * @var bool $canAlias  @var string $mode
+ * @var bool $canAlias  @var bool $canSettings  @var array $suppliers  @var string $mode
  */
 ?>
 <div class="toolbar" style="margin-bottom:1rem;">
@@ -50,6 +50,40 @@
             <div class="tile"><div class="tile-name"><?= fmt_number((float) $head['SpecificGravity'], 3) ?></div><div class="tile-desc">Specific gravity</div></div>
         <?php endif; ?>
     </div>
+    <?php if ($canSettings): $isBought = trim((string) $head['Context']) === 'SUNDRY'; ?>
+        <?php if ($mode !== 'live'): ?>
+            <div class="alert alert-info">Practice mode: changes are checked and previewed, but nothing is sent to CMS.</div>
+        <?php endif; ?>
+        <div class="form-row" style="margin-bottom:0.75rem;">
+            <form method="POST" action="/items/minimum-stock" class="form-row">
+                <?= csrf_field() ?>
+                <input type="hidden" name="item" value="<?= e((string) $head['ItemCode']) ?>">
+                <div class="form-group" style="margin-bottom:0;">
+                    <label for="item-minimum">Minimum stock (<?= e((string) ($head['Unit'] ?? '')) ?>)</label>
+                    <input type="text" id="item-minimum" name="minimum" inputmode="decimal" style="width:9rem;" required
+                           value="<?= $head['MinimumStock'] !== null ? e(rtrim(rtrim(number_format((float) $head['MinimumStock'], 4, '.', ''), '0'), '.')) : '' ?>">
+                </div>
+                <button type="submit" class="btn btn-sm">Set minimum…</button>
+            </form>
+            <?php if ($isBought && $suppliers !== []): ?>
+                <form method="POST" action="/items/supplier" class="form-row">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="item" value="<?= e((string) $head['ItemCode']) ?>">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label for="item-supplier">Preferred supplier</label>
+                        <select id="item-supplier" name="supplier" required style="max-width:22rem;">
+                            <?php if ($head['Supplier'] === null): ?><option value="">Choose…</option><?php endif; ?>
+                            <?php foreach ($suppliers as $s): ?>
+                                <option value="<?= e((string) $s['EntityCode']) ?>" <?= (int) $s['Entity'] === (int) ($head['Supplier'] ?? 0) ? 'selected' : '' ?>>
+                                    <?= e((string) $s['EntityName']) ?> (<?= e((string) $s['EntityCode']) ?>)</option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-sm">Set supplier…</button>
+                </form>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
     <?php if (!empty($head['Comment'])): ?>
         <div class="alert alert-info" style="white-space:pre-wrap;"><?= e((string) $head['Comment']) ?></div>
     <?php endif; ?>
@@ -69,7 +103,7 @@
 
     <?php if ($canAlias): ?>
         <h3 style="margin:0.75rem 0 0.3rem;">Aliases (<?= count($aliases) ?>)</h3>
-        <?php if ($mode !== 'live'): ?>
+        <?php if ($mode !== 'live' && !$canSettings): ?>
             <div class="alert alert-info">Practice mode: changes are checked and previewed, but nothing is sent to CMS.</div>
         <?php endif; ?>
         <div class="table-scroll">

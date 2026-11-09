@@ -714,3 +714,32 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
 144. **Deleting an alias stays in the client.** Three deletes in the log
     since 600000; a wrong alias can be renamed or moved here. The fixture is
     kept to document the shape.
+145. **Three item changes are built; the rest of the item screen stays in the
+    client.** Minimum stock, preferred supplier and creating a raw material
+    or packaging item each have an exact logged shape. A product that is
+    made here is saved with its pack sizes, tests and pack recipes in one
+    request, and each pack carries a specific gravity whose last digits could
+    not be reproduced, so those are not built.
+146. **Minimum stock and preferred supplier are two separate changes**, each
+    with its own button, because that is how they appear in the log. No
+    request that changes both was found to copy.
+147. **The minimum stock is kept on the stock settings row of our own site**
+    (`ItemEntity`, Entity 4, Context ST). An item without that row gets one
+    (as log 858032); an item with it has the row updated (as log 865429).
+148. **A minimum stock of 99 is allowed but warned about**: the item page
+    shows such items as discontinued.
+149. **Only bought items (context SUNDRY) can have a preferred supplier.** No
+    pack size in CMS has one. The supplier must be active. Clearing the
+    supplier is not built: no logged request clears it.
+150. **New items come in two kinds with fixed settings**, the ones nearly
+    every such item in CMS has: raw material (lb, GL group Raw Material,
+    group Raw Material, shipped in its container) and packaging (ea, GL
+    group Packaging, group Packaging Material). Resale items are split
+    between two sets of settings in CMS, so they stay in the client.
+151. **A new item is sent with Version 1 on the insert.** The client sent 1
+    in 507 of the last 517 creates and other numbers in the rest; the row
+    starts at 1 either way.
+152. **A new item has no supplier, minimum stock or cost.** The client sets
+    those in later saves too (logs 864641 then 864642).
+153. **`ConcentrationPercent` is not sent on a new item.** One of the last 517
+    creates carried it.

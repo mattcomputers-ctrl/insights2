@@ -12,7 +12,8 @@ use PII\Core\Router;
  * Items — the item 360 view, live from CMS: master data, aliases,
  * recipes, QC specs, stock on hand by container/lot, recent sales and
  * purchases, and where the item is used. Users with the write
- * permission can add and change aliases.
+ * permissions can add and change aliases, set the minimum stock and the
+ * preferred supplier, and create raw material and packaging items.
  */
 class ItemsModule extends Module
 {
@@ -43,6 +44,10 @@ class ItemsModule extends Module
             $r->get('',      $c . '@index');
             // By ?code= — item codes contain spaces/parentheses, so no path param.
             $r->get('/view', $c . '@detail');
+            $r->get('/new',  $c . '@newItem');
+            $r->post('/new', $c . '@create');
+            $r->post('/minimum-stock', $c . '@minimumStock');
+            $r->post('/supplier',      $c . '@supplier');
             $r->post('/alias',      $c . '@aliasCreate');
             $r->post('/alias/edit', $c . '@aliasEdit');
         });

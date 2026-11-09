@@ -394,7 +394,36 @@ two aliases, and a second stock item to move an alias to.
    changed in the client between review and confirm (CMS refuses on
    `Version`; note the message).
 
-### 4.10 onward (not built yet)
+### 4.10 Items: minimum stock, preferred supplier, new item (built)
+
+Grant `write.item.settings` and `write.item.create` to the test user.
+
+1. **Minimum stock, item that has one.** On a raw material's page change
+   the minimum, Set minimum: one request (`UpdateVersion Item`, `Update
+   ItemEntity` with `MinimumStock`, then the two closing steps). Compare with
+   the client changing the minimum of the same item. Confirm; the tile on
+   the page, the client and Need to Order show the new minimum.
+2. **Minimum stock, item that never had stock settings.** Pick an item with
+   no minimum (a new one from step 4 will do): the request has `Insert
+   ItemEntity` with `Entity="4" Context="ST"` instead of the update.
+3. **Preferred supplier.** On a raw material's page pick another supplier,
+   Set supplier: one request (`Update Item` with `Supplier`, then the two
+   closing steps). Need to Order proposes the item under the new supplier.
+   A pack size of a product has no supplier box.
+4. **New item.** Items → New item: kind Raw material, a new code, a
+   description. One request: `Insert Item`, `Insert ItemChemical`, `Insert
+   ItemCustom`, the two closing steps. Create the same kind of item in the
+   client and compare the two requests attribute by attribute (the client
+   sometimes sends a `Version` other than 1 on the insert; the new row has
+   Version 1 either way). Open the new item in the client: every tab opens,
+   and it can be put on a purchase order and received.
+   Repeat with kind Packaging (unit `ea`, GL group Packaging).
+5. **Refusals to try**: a minimum that is not a number, the minimum it
+   already has, a code that exists, an inactive supplier (only reachable by
+   posting by hand), and an item changed in the client between review and
+   confirm (CMS refuses on `Version`; note the message).
+
+### 4.11 onward (not built yet)
 
 Master data and bills are researched (`docs/research/`) with fixtures stored, but
 have no templates yet. Each gets its section here when it is built, following

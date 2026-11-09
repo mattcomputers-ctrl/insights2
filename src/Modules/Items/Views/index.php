@@ -2,7 +2,7 @@
 /**
  * Item search (live CMS) — results link to the item 360 page.
  * @var string $q  @var array $items  @var bool $truncated
- * @var ?string $error  @var ?string $asOf
+ * @var ?string $error  @var ?string $asOf  @var bool $canCreate
  */
 ?>
 <div class="card">
@@ -15,6 +15,9 @@
             <input type="text" name="q" value="<?= e($q) ?>" style="flex:1;" autofocus placeholder="Item #, description or alias…">
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
+        <?php if ($canCreate): ?>
+            <a href="/items/new" class="btn btn-sm">New item…</a>
+        <?php endif; ?>
     </div>
 
     <?php if ($error !== null): ?>

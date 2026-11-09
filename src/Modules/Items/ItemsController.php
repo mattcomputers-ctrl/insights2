@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PII\Modules\Items;
 
 use PII\Cms\Write\CmsWriter;
+use PII\Cms\Write\Ops\MasterData\ItemRequests;
 use PII\Controllers\CmsWriteController;
 use PII\Core\CMSDatabase;
 use PII\Core\CMSUnavailableException;
@@ -17,8 +18,10 @@ require_once dirname(__DIR__, 2) . '/Helpers/layout.php';
  * ItemsController — the item 360 view, live read-only CMS queries.
  * Detail is addressed by item CODE via ?code= (codes contain spaces and
  * parentheses, so no path parameter). Costs only show with margin.view.
- * Users with the alias permission can add and change aliases; each POST
- * goes to the shared confirm step and is only sent after a review.
+ * Users with the write permissions can add and change aliases, set the
+ * minimum stock and the preferred supplier, and create raw material and
+ * packaging items; each POST goes to the shared confirm step and is only
+ * sent after a review.
  */
 class ItemsController
 {
@@ -70,6 +73,7 @@ class ItemsController
             'items'     => $items,
             'truncated' => $truncated,
             'error'     => $error,
+            'canCreate' => CmsWriter::forCurrentUser()->allowed('item.create'),
             'asOf'      => SyncSettings::lastSuccessAt(),
         ], 'items');
     }
@@ -83,8 +87,10 @@ class ItemsController
 
         $d = ['head' => null, 'aliases' => [], 'recipes' => [], 'specs' => [],
               'stock' => [], 'totals' => null, 'shipments' => [], 'purchases' => [],
-              'whereUsed' => [], 'resolvedFrom' => null];
+              'whereUsed' => [], 'resolvedFrom' => null, 'suppliers' => []];
         $error = null;
+        $writer = CmsWriter::forCurrentUser();
+        $canSettings = $writer->allowed('item.min_stock');
 
         try {
             $cms = CMSDatabase::getInstance();
@@ -92,7 +98,7 @@ class ItemsController
             $head = $cms->fetch("
                 SELECT i.Item, i.ItemCode, i.Description, i.AltDescription, i.Unit, i.Context,
                        i.GLGroup, i.StandardCost, i.SpecificGravity, CONVERT(VARCHAR(2000), i.Comment) AS Comment, i.ReplacedBy,
-                       pe.EntityName AS PreferredVendor,
+                       pe.EntityName AS PreferredVendor, i.Supplier,
                        ie.MinimumStock,
                        ic.Type AS CustomType
                 FROM CMS.dbo.Item i
@@ -107,7 +113,7 @@ class ItemsController
                 $head = $cms->fetch("
                     SELECT i.Item, i.ItemCode, i.Description, i.AltDescription, i.Unit, i.Context,
                            i.GLGroup, i.StandardCost, i.SpecificGravity, CONVERT(VARCHAR(2000), i.Comment) AS Comment, i.ReplacedBy,
-                           pe.EntityName AS PreferredVendor,
+                           pe.EntityName AS PreferredVendor, i.Supplier,
                            ie.MinimumStock,
                            ic.Type AS CustomType
                     FROM CMS.dbo.Item i
@@ -123,6 +129,15 @@ class ItemsController
                 $d['aliases'] = $cms->fetchAll("
                     SELECT al.Item, al.ItemCode, al.Description FROM CMS.dbo.Item al
                     WHERE al.ReplacedBy = ? ORDER BY al.ItemCode", [$id]);
+
+                if ($canSettings && trim((string) $head['Context']) === 'SUNDRY') {
+                    $d['suppliers'] = $cms->fetchAll("
+                        SELECT e.Entity, e.EntityCode, n.EntityName
+                        FROM CMS.dbo.Entity e
+                        JOIN CMS.dbo.Entities n ON n.Entity = e.Entity
+                        WHERE ',' + e.Context LIKE '%,SP,%' AND COALESCE(e.Inactive, 0) = 0
+                        ORDER BY n.EntityName");
+                }
 
                 $d['recipes'] = $cms->fetchAll("
                     SELECT r.Recipe, r.RecipeNumber, r.Inactive,
@@ -194,13 +209,13 @@ class ItemsController
             render_not_found();
         }
 
-        $writer = CmsWriter::forCurrentUser();
         layout('items::detail', $d + [
             'pageTitle' => 'Item ' . ($d['head']['ItemCode'] ?? $code),
             'code'      => $code,
             'error'     => $error,
             'showCost'  => user_can('margin.view'),
             'canAlias'  => $writer->allowed('item.alias_create'),
+            'canSettings' => $canSettings,
             'mode'      => $writer->mode(),
             'asOf'      => SyncSettings::lastSuccessAt(),
         ], 'items');
@@ -229,6 +244,57 @@ class ItemsController
             'alias' => self::posted('alias'), 'code' => self::posted('code'),
             'description' => self::posted('description'), 'item' => self::posted('move_to'),
         ], self::back(self::posted('item')));
+    }
+
+    /** Set the minimum stock of the item whose page the form was on. */
+    public function minimumStock(): void
+    {
+        CSRF::validateRequest();
+        if (!CmsWriter::forCurrentUser()->allowed('item.min_stock')) {
+            render_not_found();
+        }
+        $item = self::posted('item');
+        CmsWriteController::propose('item.min_stock', ['item' => $item, 'minimum' => self::posted('minimum')], self::back($item));
+    }
+
+    /** Set the preferred supplier of the item whose page the form was on. */
+    public function supplier(): void
+    {
+        CSRF::validateRequest();
+        if (!CmsWriter::forCurrentUser()->allowed('item.supplier')) {
+            render_not_found();
+        }
+        $item = self::posted('item');
+        CmsWriteController::propose('item.supplier', ['item' => $item, 'supplier' => self::posted('supplier')], self::back($item));
+    }
+
+    /** GET /items/new: the form for a new raw material or packaging item. */
+    public function newItem(): void
+    {
+        $writer = CmsWriter::forCurrentUser();
+        if (!$writer->allowed('item.create')) {
+            render_not_found();
+        }
+        $get = static fn (string $k): string => is_string($_GET[$k] ?? null) ? trim($_GET[$k]) : '';
+        layout('items::new', [
+            'pageTitle'   => 'New item',
+            'kinds'       => ItemRequests::KINDS,
+            'code'        => $get('code'),
+            'description' => $get('description'),
+            'kind'        => $get('kind'),
+            'mode'        => $writer->mode(),
+        ], 'items');
+    }
+
+    /** POST /items/new: review the new item. */
+    public function create(): void
+    {
+        CSRF::validateRequest();
+        if (!CmsWriter::forCurrentUser()->allowed('item.create')) {
+            render_not_found();
+        }
+        $input = ['code' => self::posted('code'), 'description' => self::posted('description'), 'kind' => self::posted('kind')];
+        CmsWriteController::propose('item.create', $input, '/items/new?' . http_build_query($input));
     }
 
     private static function posted(string $name): string
