@@ -9,7 +9,7 @@ namespace PII\Cms\Write;
  *
  * ResultText is XML like
  *   <Result Level="16" State="1" Procedure="ProcessXMLRequest" Line="171"
- *           Message="Order 186936 is currently locked by pic\x at CS-PC"/>
+ *           Message="Order 186936 is currently locked by pic\x at WS1"/>
  * The patterns below come from the failed requests in the CMS log
  * (docs/PARITY.md lists them per action). Anything unrecognised is shown
  * as CMS worded it.

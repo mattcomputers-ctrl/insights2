@@ -26,7 +26,15 @@ final class LiveTransport implements Transport
     {
         // High-water mark first, so that if the call errors before handing
         // back its Log id we can still find the row it wrote.
-        $before = (int) ($this->scalar('SELECT MAX([Log]) FROM dbo.[Log]') ?? 0);
+        try {
+            $before = (int) ($this->scalar('SELECT MAX([Log]) FROM dbo.[Log]') ?? 0);
+        } catch (\PDOException $e) {
+            return new TransportResult(
+                TransportResult::FAILED,
+                message: "CMS could not be reached on the write connection ({$e->getMessage()}). This request was not sent.",
+                notSent: true,
+            );
+        }
 
         $logId = null;
         $callError = null;
@@ -51,17 +59,27 @@ final class LiveTransport implements Transport
         }
 
         if ($logId === null) {
-            $logId = $this->findLog($before, $meta);
+            [$logId, $matches] = $this->findLog($before, $meta);
+            if ($logId === null) {
+                return new TransportResult(
+                    TransportResult::UNKNOWN,
+                    message: ($matches > 1
+                            ? "The call to CMS did not return a log id and {$matches} log rows could be this request"
+                            : 'The call to CMS did not return a log id')
+                        . ($callError !== null ? " ({$callError})" : '')
+                        . '. Check the CMS log before trying again — the request may or may not have been saved.',
+                );
+            }
         }
-        if ($logId === null) {
+        try {
+            return $this->readOutcome($logId, $callError);
+        } catch (\PDOException $e) {
             return new TransportResult(
-                TransportResult::UNKNOWN,
-                message: 'The call to CMS did not return a log id'
-                    . ($callError !== null ? " ({$callError})" : '')
-                    . '. Check the CMS log before trying again — the request may or may not have been saved.',
+                TransportResult::UNKNOWN, $logId,
+                message: "CMS log {$logId}: the outcome could not be read ({$e->getMessage()}). "
+                    . 'Check the CMS log before trying again — the request may or may not have been saved.',
             );
         }
-        return $this->readOutcome($logId, $callError);
     }
 
     public function generateId(string $kind, int $min, int $max): ?string
@@ -148,13 +166,27 @@ final class LiveTransport implements Transport
         );
     }
 
-    /** Newest Log row after the high-water mark that matches this request's envelope. */
-    private function findLog(int $before, array $meta): ?int
+    /**
+     * The Log row written after the high-water mark for this request's
+     * envelope, CMS user included: every Insights user shares one
+     * workstation name, so the user is what tells two people apart.
+     * Only an exact single match is taken. None, several, or no user to
+     * match on all answer null, and the outcome is reported as unknown
+     * rather than guessed.
+     *
+     * @return array{0:?int,1:int} the log id (or null) and how many rows matched
+     */
+    private function findLog(int $before, array $meta): array
     {
+        $user = trim((string) ($meta['user'] ?? ''));
+        if ($user === '') {
+            return [null, 0];
+        }
         try {
             $stmt = $this->pdo->prepare(
-                'SELECT MAX([Log]) FROM dbo.[Log] WHERE [Log] > ? AND Application = ? AND Action = ? '
-                . 'AND Workstation = ? AND TransDate = ?'
+                'SELECT COUNT(*) AS Matches, MAX([Log]) AS LogID FROM dbo.[Log] '
+                . 'WHERE [Log] > ? AND Application = ? AND Action = ? '
+                . 'AND Workstation = ? AND TransDate = ? AND LoggedInUser = ?'
             );
             $stmt->execute([
                 $before,
@@ -162,11 +194,16 @@ final class LiveTransport implements Transport
                 $meta['action'] ?? '',
                 $meta['workstation'] ?? '',
                 str_replace('T', ' ', (string) ($meta['transDate'] ?? '')),
+                $user,
             ]);
-            $v = $stmt->fetchColumn();
-            return ($v === false || $v === null) ? null : (int) $v;
+            $row     = $stmt->fetch(\PDO::FETCH_ASSOC) ?: [];
+            $matches = (int) ($row['Matches'] ?? 0);
+            if ($matches !== 1 || ($row['LogID'] ?? null) === null) {
+                return [null, $matches];
+            }
+            return [(int) $row['LogID'], 1];
         } catch (\PDOException) {
-            return null;
+            return [null, 0];
         }
     }
 

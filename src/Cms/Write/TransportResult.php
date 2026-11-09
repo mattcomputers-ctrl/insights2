@@ -22,6 +22,8 @@ final class TransportResult
 
     /**
      * @param list<array{step:int,table:string,field:string,value:string}> $outputs LogResult rows
+     * @param bool $notSent true when the transport knows the request never left for CMS
+     *        (it failed before the call). A dry run does not need it.
      */
     public function __construct(
         public readonly string $status,
@@ -30,6 +32,7 @@ final class TransportResult
         public readonly ?string $resultText = null,
         public readonly string $message = '',
         public readonly array $outputs = [],
+        public readonly bool $notSent = false,
     ) {}
 
     public function committed(): bool

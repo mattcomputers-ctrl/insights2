@@ -18,7 +18,7 @@ interface Transport
 
     /**
      * @param string $xml     the complete <request> document
-     * @param array{application:string,action:string,workstation:string,transDate:string} $meta
+     * @param array{application:string,action:string,workstation:string,transDate:string,user:string} $meta
      *        envelope fields, used by the live transport to find the Log row
      *        when the call errors before returning its id
      */

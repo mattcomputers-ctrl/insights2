@@ -50,7 +50,7 @@ created it, and every logged step's effects can be found in the data.
 ```xml
 <request Application="Chemical Management System" AppVersion="7.15.0.680"
          Program="Shipping Order" Action="ShippingOrderDataSet.SaveChanges"
-         Workstation="CS-PC" Owner="4" User="pic\kackermohr"
+         Workstation="WS1" Owner="4" User="pic\user1"
          TransDate="2026-11-09T09:02:33">
   <action Object="Ordr" Step="1" Operation="Insert">
     <keys Ordr="@@identity" Version=""/>

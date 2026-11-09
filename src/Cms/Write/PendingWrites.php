@@ -55,6 +55,54 @@ final class PendingWrites
         unset($_SESSION[self::KEY][$token]);
     }
 
+    /**
+     * Hand out a pending write and retire its token in one go, saving the
+     * session straight away. Confirm uses this before anything is sent, so
+     * a request that dies part way (time limit, memory, a killed worker)
+     * cannot leave a token behind that would send the same thing again.
+     *
+     * @return null|array{op:string,input:array,now:\DateTimeImmutable,hash:string,return:string,created:int}
+     */
+    public static function take(string $token): ?array
+    {
+        $p = self::get($token);
+        if ($p === null) {
+            return null;
+        }
+        self::forget($token);
+        self::save();
+        return $p;
+    }
+
+    /**
+     * Make a taken write confirmable again under the same token. Only for
+     * the cases where it is certain nothing was sent. The original age is
+     * kept, so the page still expires when it would have.
+     */
+    public static function putBack(string $token, array $pending, ?string $hash = null): void
+    {
+        $now = $pending['now'];
+        $_SESSION[self::KEY][$token] = [
+            'op'      => $pending['op'],
+            'input'   => $pending['input'],
+            'now'     => $now instanceof \DateTimeInterface ? $now->format('Y-m-d\TH:i:s') : (string) $now,
+            'hash'    => $hash ?? $pending['hash'],
+            'return'  => self::safeUrl((string) $pending['return']),
+            'created' => (int) ($pending['created'] ?? time()),
+        ];
+        self::save();
+    }
+
+    /** Write the session to its store now and carry on with it open. */
+    private static function save(): void
+    {
+        if (PHP_SAPI === 'cli' || session_status() !== PHP_SESSION_ACTIVE || headers_sent()) {
+            return;
+        }
+        session_write_close();
+        session_start();
+    }
+
     private static function prune(): void
     {
         $all = $_SESSION[self::KEY] ?? [];

@@ -12,7 +12,9 @@ use PII\Services\PermissionService;
  *
  *   preview()  allowlist → permission → CMS user → Flow::plan → rendered XML
  *   execute()  the same again with fresh CMS state, refuse if it no longer
- *              matches what was previewed, then run and audit
+ *              matches what was previewed, then run and audit. It throws
+ *              only before anything is sent; once the run starts the
+ *              answer is always a RunResult
  *
  * Nothing here knows whether the transport is dry-run, fake or live.
  */
@@ -20,7 +22,8 @@ final class CmsWriter
 {
     /**
      * @param \Closure(string):bool $can   does the acting user hold this permission?
-     * @param null|\Closure(array):void $audit one row per request sent (see WriteAudit)
+     * @param null|AuditSink|\Closure(array):void $audit told before and after each request sent (see WriteAudit);
+     *        a plain Closure (tests) gets one row per request, after the send
      * @param null|\Closure():\DateTimeImmutable $clock
      */
     public function __construct(
@@ -31,7 +34,7 @@ final class CmsWriter
         private readonly string $workstation = 'INSIGHTS',
         private readonly bool $cmsPrograms = false,
         private readonly string $appVersion = '2.0.0',
-        private readonly ?\Closure $audit = null,
+        private readonly AuditSink|\Closure|null $audit = null,
         private readonly ?\Closure $clock = null,
     ) {}
 
@@ -87,19 +90,18 @@ final class CmsWriter
             throw new StalePreview($preview);
         }
 
-        $def   = $preview->operation;
-        $plan  = $preview->plan;
-        $audit = $this->audit;
-        $sink  = $audit === null ? null : static function (array $row) use ($audit, $def, $plan): void {
-            $audit($row + [
-                'operation'  => $def->key,
-                'entityType' => $plan->entityType,
-                'entityId'   => $plan->entityId,
-            ]);
-        };
+        $def  = $preview->operation;
+        $plan = $preview->plan;
 
-        return (new SequenceRunner($this->transport, $sink, $this->clock))
-            ->run($plan->sequence, $this->envelope($now));
+        // From here on nothing is thrown: the runner always answers with a
+        // RunResult, so the caller can tell what was sent.
+        return (new SequenceRunner($this->transport, $this->audit, $this->clock, [
+            'operation'  => $def->key,
+            'entityType' => $plan->entityType,
+            'entityId'   => $plan->entityId,
+            'cmsUser'    => $this->cmsUser,
+            'input'      => $input,
+        ]))->run($plan->sequence, $this->envelope($now));
     }
 
     /** @return array{0:OperationDef,1:Plan} */
