@@ -112,9 +112,52 @@ and program.
    Then try an order for a stocked item with no stock: expect the CMS refusal to
    come back in plain words.
 
-### 4.3 onward (not built yet)
+### 4.3 Purchasing (built)
 
-Purchasing, batch tickets, shipping, batch execution, inventory,
+Grant `write.po.*` to the test user. Pick a supplier with a current price list.
+
+1. **New PO** (`/purchase-orders/new`): one packaged item (price list sells by
+   the drum or pail), one unpackaged item, one item not on the price list with
+   a typed price. Leave delivery terms, carrier and memo at the supplier's defaults.
+   - Compare the request on the confirm page with a client-made PO for the same
+     supplier: `Ordr` header, per line `OrdDetail` (`QtyReqd`, `SupQty`,
+     `SupUnit`, percent under and over, `ManualPrice`, `Price`) and
+     `OrdDetailPricing` (price-list reference, quantity breaks), both address
+     copies and the memo.
+   - Packaged line: `QtyReqd` is packages times the package size; check the PO
+     prints the package count the way the client's does.
+   - Memo: check how the supplier's standing memo arrives on the PO and that a
+     typed memo replaces it.
+   - Open the PO in the CMS client: it loads, edits, prints and saves normally.
+2. **Quantity breaks.** Order a tiered item at a quantity in the second break:
+   the price is the second break's. Order below the first minimum: Insights
+   warns; note what the client does with the same quantity.
+3. **From Need to Order.** Group by vendor, "Start a PO" on a group: the form
+   opens for that supplier with package counts rounded up. Check two or three
+   against the price list by hand.
+4. **Change PO.** On an open PO change a quantity, a promised date, add a line,
+   remove an unreceived line, change the carrier and the memo, each as its own
+   save; compare each request with a client-made one. Edit the PO in the client
+   while the Insights confirm page is open, then confirm: Insights should refuse.
+5. **Receive** (`/purchase-orders/{po}/receive`): receive part of a line, then
+   the rest, then a line of a non-costed item.
+   - Check `ChangeSet`, `ChangeSetReceipt`, the inventory movement into the
+     receiving location, the lot and sublot created, `OrdDetail.QtyUsed`, the
+     inventory cost entry and the bill detail row against a client-made receipt.
+   - Does the line close and the PO complete by themselves when everything is in?
+     Insights sends nothing for that and expects CMS to do it.
+   - Print the receiving labels from the client for the Insights-made receipt.
+   - Receive more than the over-receipt allowance: Insights warns; see what CMS says.
+6. **Reverse receipt**: reverse one of the receipts above. Stock leaves the
+   receiving location, the line reopens, the cost and bill rows are undone.
+   Then move a received lot elsewhere and try to reverse it: expect the CMS
+   refusal in plain words. Reverse a receipt on a completed PO and note whether
+   the PO reopens.
+7. **Complete PO** with an unreceived line: lines closed, status `CMP`.
+
+### 4.4 onward (not built yet)
+
+Batch tickets, shipping, batch execution, inventory,
 master data and bills are researched (`docs/research/`) with fixtures stored, but
 have no templates yet. Each gets its section here when it is built, following
 the same pattern: do it in Insights, do it in the client, compare the request

@@ -507,3 +507,44 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
     are hidden (404) without the matching write permission; action buttons on the
     order page show per permission and order status. A refused new order returns
     to the form with what was typed.
+80. **Numbers on purchasing requests** are written the way the client writes
+    doubles (shortest form that reads back the same: `441`, `44.09`, `7.88`);
+    price-list break prices keep their four decimals as stored.
+81. **PO quantities are typed in the supplier's ordering units**: whole packages
+    where the price list sells the item by the package (`SupQty` packages,
+    `QtyReqd` = packages times package size), otherwise the item's own unit.
+82. **Price from the price list**: a blank price takes the highest quantity break
+    the quantity reaches; below the first minimum the first price is used with a
+    warning. Refused, to be done in the client: price per package, a price-list
+    unit that differs from the stock unit, another currency than the supplier's,
+    quantity breaks on a packaged row, an item listed more than once (unless the
+    supplier's own code picks the row).
+83. **An item off the supplier's price list** can be ordered only with a typed
+    price, and the preview warns about it.
+84. **New-PO defaults come from the supplier**: terms, currency, delivery terms,
+    usual carrier, address and standing PO memo. The form shows the memo and
+    sends whatever is left in the box; an emptied box sends no memo.
+85. **Edit limits for POs**: only open POs; quantity cannot be changed on a line
+    with a receipt or a closed line; a line with a receipt cannot be removed; the
+    price of an existing line is not editable. Those stay in the client.
+86. **Complete PO** is sent as a save that sets the status and closes each open
+    line, which is how the logged completions look.
+87. **Receiving is one line per receipt**, into the receiving location the logs
+    use (10669), one container, quantity in the stock unit, packing slip number
+    required (20 characters). Cost entries follow the item's treatment as the
+    logged receipts do. US-dollar POs only. Over-receipt beyond the allowance and
+    a repeated packing slip number warn rather than refuse.
+88. **Insights does not close the line or complete the PO after a receipt**; the
+    logs suggest CMS does that itself. To be confirmed on the sandbox copy.
+89. **Reverse receipt**: single-line receipts, not yet on a supplier bill, on an
+    open or completed PO. Anything else stays in the client. There is no
+    "correct a receipt" in Insights: reverse it and receive again.
+90. **Need to Order hands over to the new-PO form, not to the confirm page.**
+    Package rounding, minimums and prices need a look first, so the vendor
+    group's "Start a PO" fills the form (need in stock units turned into the
+    supplier's ordering units, rounded up to whole packages, with the sum shown
+    beside each line) and the user goes on from there. The supplier is matched by
+    exact name; if that is not unique the supplier search opens instead.
+91. **Purchasing entry screens** are hidden (404) without the matching write
+    permission. Not built for purchasing: reopen a completed PO, the no-bill
+    flag, receipt correction, multi-line receipts in one save.
