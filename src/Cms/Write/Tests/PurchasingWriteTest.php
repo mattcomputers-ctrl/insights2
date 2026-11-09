@@ -457,3 +457,15 @@ foreach ([
     $poRefused(fn () => $poWriter($cms, $poFake())->preview('po.reverse_receipt', $in, $nowC), $needle, $name);
 }
 $poRefused(fn () => $poWriter($cms836, $poFake(), ['write.po.receive'])->preview('po.reverse_receipt', $in836, $nowC), 'permission', 'each purchasing operation needs its own permission');
+
+t_section('Purchasing: buy-list needs as PO lines');
+$needs = \PII\Cms\Write\Ops\Purchasing\PurchasingState::needLines($poCms(), 100298,
+    ['R101125' => 420.0, 'LOOSE' => 3.456, 'NOPE' => 1.0], $now603);
+t_same(['R101125', '10', ''], [$needs[0]['code'], $needs[0]['qty'], $needs[0]['price']], 'a packaged item is rounded up to whole packages');
+t_check(str_contains($needs[0]['note'], 'Need 420 lb: 10 × 44.09 lb'), 'the note shows the need and the package size: ' . $needs[0]['note']);
+t_check($needs[1]['qty'] === '3.46' && str_contains($needs[1]['note'], 'enter a price'), 'an item off the price list keeps its need and asks for a price');
+t_check($needs[2]['qty'] === '1' && str_starts_with($needs[2]['note'], 'Check this line'), 'an unknown item is kept with the reason');
+$needs = \PII\Cms\Write\Ops\Purchasing\PurchasingState::needLines($poCms([], [$poPriceRow(['PkgType' => null, 'EntityQuantity' => null])]), 100298, ['R101125' => 88.18], $now603);
+t_same('88.18', $needs[0]['qty'], 'an unpackaged item is ordered in its own unit');
+$needs = \PII\Cms\Write\Ops\Purchasing\PurchasingState::needLines($poCms(), 100298, ['R101125' => 88.18], $now603);
+t_same('2', $needs[0]['qty'], 'an exact multiple of the package is not rounded up further');

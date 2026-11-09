@@ -318,4 +318,40 @@ final class PurchasingState
     {
         return $v === true || $v === 1 || $v === '1' || (is_string($v) && strcasecmp($v, 'true') === 0);
     }
+
+    /**
+     * Buy-list needs (our item code => quantity in the stock unit) as form
+     * lines in the supplier's ordering units: whole packages, rounded up,
+     * where the price list sells the item by the package.
+     *
+     * @param array<string,float> $need
+     * @return list<array{code:string,qty:string,price:string,promised:string,note:string}>
+     */
+    public static function needLines(CmsReader $cms, int $supplier, array $need, ?\DateTimeInterface $on = null): array
+    {
+        $on ??= new \DateTimeImmutable();
+        $out = [];
+        foreach ($need as $code => $qty) {
+            $code = (string) $code;
+            $r    = self::resolveLine($cms, $supplier, $code, $on);
+            $text = self::dbl(ceil($qty * 100 - 1e-6) / 100);
+            if (isset($r['error'])) {
+                $out[] = ['code' => $code, 'qty' => $text, 'price' => '', 'promised' => '', 'note' => 'Check this line: ' . $r['error']];
+                continue;
+            }
+            $unit = $r['unit'];
+            $row  = $r['row'];
+            if ($row === null) {
+                $note = "Need {$text} {$unit}. Not on this supplier's price list: enter a price.";
+            } elseif ($row['perPack'] !== null) {
+                $packs = (int) max(1, ceil($qty / $row['perPack'] - 1e-9));
+                $note  = "Need {$text} {$unit}: {$packs} × " . self::dbl($row['perPack']) . " {$row['unit']}";
+                $text  = (string) $packs;
+            } else {
+                $note = "Need {$text} {$unit}";
+            }
+            $out[] = ['code' => $code, 'qty' => $text, 'price' => '', 'promised' => '', 'note' => $note];
+        }
+        return $out;
+    }
 }

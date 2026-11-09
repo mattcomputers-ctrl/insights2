@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PII\Modules\PurchaseOrders;
 
+use PII\Cms\Write\CmsWriter;
 use PII\Core\CMSDatabase;
 use PII\Core\CMSUnavailableException;
 use PII\Services\Sync\SyncSettings;
@@ -75,6 +76,7 @@ class PurchaseOrdersController
             'orders'    => array_slice($orders, 0, self::MAX_ROWS),
             'truncated' => $truncated,
             'error'     => $error,
+            'can'       => PurchaseOrderEntryController::can(),
             'asOf'      => SyncSettings::lastSuccessAt(),
         ], 'purchase_orders');
     }
@@ -137,6 +139,8 @@ class PurchaseOrdersController
             'lines'     => $lines,
             'receipts'  => $receipts,
             'error'     => $error,
+            'can'       => PurchaseOrderEntryController::can(),
+            'mode'      => CmsWriter::forCurrentUser()->mode(),
             'asOf'      => SyncSettings::lastSuccessAt(),
         ], 'purchase_orders');
     }

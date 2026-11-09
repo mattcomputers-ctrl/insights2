@@ -57,6 +57,7 @@ class NeedToOrderController
             'view'      => $view,
             'search'    => $search,
             'asOf'      => SyncSettings::lastSuccessAt(),
+            'canCreatePo' => \PII\Cms\Write\CmsWriter::forCurrentUser()->allowed('po.create_order'),
         ], 'need_to_order');
     }
 

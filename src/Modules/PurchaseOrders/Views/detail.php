@@ -3,11 +3,35 @@
  * One purchase order: header, lines, receipts (live CMS).
  * @var int $ordr  @var ?array $head  @var array $lines  @var array $receipts
  * @var ?string $error  @var ?string $asOf
+ * @var array<string,bool> $can  @var string $mode
  */
+$status  = $head !== null ? trim((string) ($head['Status'] ?? '')) : null;
+$isOpen  = $status === '';
 ?>
 <div class="toolbar" style="margin-bottom:1rem;">
     <a href="/purchase-orders" class="btn btn-sm">← Purchase Orders</a>
+    <?php if ($status !== null): ?>
+    <div class="flex gap-1 items-center">
+        <?php if ($can['po.edit_order'] && $isOpen): ?>
+            <a href="/purchase-orders/<?= (int) $ordr ?>/edit" class="btn btn-sm">Change PO…</a>
+        <?php endif; ?>
+        <?php if (($can['po.receive'] && $isOpen)
+            || ($can['po.reverse_receipt'] && in_array($status, ['', 'CMP'], true) && $receipts !== [])): ?>
+            <a href="/purchase-orders/<?= (int) $ordr ?>/receive" class="btn btn-sm <?= $isOpen ? 'btn-primary' : '' ?>"><?= $isOpen ? 'Receiving…' : 'Receipts…' ?></a>
+        <?php endif; ?>
+        <?php if ($can['po.complete_order'] && $isOpen): ?>
+            <form method="POST" action="/purchase-orders/<?= (int) $ordr ?>/complete" style="display:inline;">
+                <?= csrf_field() ?>
+                <button type="submit" class="btn btn-sm">Complete PO…</button>
+            </form>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
 </div>
+
+<?php if ($mode !== 'live' && in_array(true, $can, true)): ?>
+    <div class="alert alert-info">Practice mode: changes are checked and previewed, but nothing is sent to CMS.</div>
+<?php endif; ?>
 
 <?php if ($error !== null): ?>
     <div class="card"><div class="alert alert-info"><?= e($error) ?></div></div>

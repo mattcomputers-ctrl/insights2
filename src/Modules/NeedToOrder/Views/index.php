@@ -6,6 +6,7 @@
  * Flat (priority order) or grouped by preferred / last-purchased vendor.
  * @var array $rows  @var array $groups  @var string $groupBy  ''|'preferred'|'last'
  * @var string $view  'orders'|'min'  @var string $search  @var ?string $asOf
+ * @var bool $canCreatePo  the user may raise purchase orders
  */
 $today = date('Y-m-d');
 $isMin = $view === 'min';
@@ -147,6 +148,18 @@ $thead = '<tr>'
                         <?php endif; ?>
                     </span>
                 </summary>
+                <?php if ($canCreatePo && $vendor !== ''): ?>
+                    <form method="POST" action="/purchase-orders/from-need-to-order" style="margin:0.5rem 0;">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="vendor" value="<?= e((string) $vendor) ?>">
+                        <?php foreach (array_values($list) as $n => $r): ?>
+                            <input type="hidden" name="items[<?= (int) $n ?>][code]" value="<?= e($r['item_code']) ?>">
+                            <input type="hidden" name="items[<?= (int) $n ?>][qty]" value="<?= e((string) (float) $r['qty_needed']) ?>">
+                        <?php endforeach; ?>
+                        <button type="submit" class="btn btn-sm btn-primary">Start a PO for these <?= count($list) ?> item<?= count($list) === 1 ? '' : 's' ?>…</button>
+                        <span class="text-muted" style="font-size:0.85rem;">Opens a filled-in PO form to check; nothing is sent yet.</span>
+                    </form>
+                <?php endif; ?>
                 <div class="table-scroll">
                     <table class="table">
                         <thead><?= $thead ?></thead>
