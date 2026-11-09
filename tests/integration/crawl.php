@@ -121,6 +121,8 @@ $routes = [
     // "CMS unavailable" alert here, never an error dump).
     ['/sales-orders',                          200, 404, 404, 404, 404, 404, 404],
     ['/sales-orders/999999',                   200, 404, 404, 404, 404, 404, 404],
+    ['/sales-orders/new',                      200, 404, 404, 404, 404, 404, 404],
+    ['/sales-orders/999999/edit',              200, 404, 404, 404, 404, 404, 404],
     ['/purchase-orders',                       200, 404, 404, 404, 404, 404, 404],
     ['/purchase-orders/999999',                200, 404, 404, 404, 404, 404, 404],
     ['/batch-tickets',                         200, 200, 200, 200, 404, 404, 404],

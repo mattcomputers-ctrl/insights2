@@ -117,6 +117,8 @@ class SalesOrdersController
             'truncated' => $truncated,
             'error'     => $error,
             'asOf'      => SyncSettings::lastSuccessAt(),
+            'can'       => SalesOrderEntryController::can(),
+            'mode'      => \PII\Cms\Write\CmsWriter::forCurrentUser()->mode(),
         ], 'sales_orders');
     }
 
@@ -189,6 +191,8 @@ class SalesOrdersController
             'shipments' => $shipments,
             'error'     => $error,
             'asOf'      => SyncSettings::lastSuccessAt(),
+            'can'       => SalesOrderEntryController::can(),
+            'mode'      => \PII\Cms\Write\CmsWriter::forCurrentUser()->mode(),
         ], 'sales_orders');
     }
 }

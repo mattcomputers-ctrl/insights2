@@ -3,6 +3,7 @@
  * Sales order browser (live CMS).
  * @var string $q  @var string $tab  @var string $sort  @var array $orders
  * @var bool $truncated  @var ?string $error  @var ?string $asOf
+ * @var array<string,bool> $can
  */
 $pill = fn(string $s): string => match ($s) {
     'RTS' => '<span class="pill pill-active">Open (RTS)</span>',
@@ -24,6 +25,9 @@ $tabs = ['open' => 'Open', 'completed' => 'Completed', 'all' => 'All'];
                 <a href="/sales-orders?tab=<?= e($key) ?><?= $q !== '' ? '&q=' . urlencode($q) : '' ?>"
                    class="btn btn-sm <?= $tab === $key ? 'btn-primary' : '' ?>"><?= e($label) ?></a>
             <?php endforeach; ?>
+            <?php if (!empty($can['sales.create_order'])): ?>
+                <a href="/sales-orders/new?clear=1" class="btn btn-sm btn-primary">New order…</a>
+            <?php endif; ?>
         </div>
         <form method="GET" action="/sales-orders" class="flex gap-1 items-center">
             <input type="hidden" name="tab" value="<?= e($tab) ?>">

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PII\Modules\SalesOrders;
 
+use PII\Cms\Write\OperationRegistry;
 use PII\Core\Module;
 use PII\Core\Router;
 
@@ -12,6 +13,9 @@ use PII\Core\Router;
  * and historical): search, header + lines, shipments and invoice numbers.
  * First of the read-only operational viewers on the road to Insights
  * becoming the front-end (Matt, 2026-11-04). Queries CMS LIVE.
+ * Holders of a sales write permission also get order entry: new order or
+ * quote, changes to an open order, release, complete and complete sale,
+ * each through the shared check-then-confirm step.
  */
 class SalesOrdersModule extends Module
 {
@@ -25,7 +29,7 @@ class SalesOrdersModule extends Module
 
     public function permissions(): array
     {
-        return [
+        return OperationRegistry::permissionsFor('sales_orders') + [
             'sales.view' => 'Browse sales orders (headers, lines, shipments, invoice numbers)',
         ];
     }
@@ -39,8 +43,16 @@ class SalesOrdersModule extends Module
     {
         $c = SalesOrdersController::class;
         $router->group('/sales-orders', function (Router $r) use ($c) {
-            $r->get('',        $c . '@index');
-            $r->get('/{ordr}', $c . '@detail');
+            $e = SalesOrderEntryController::class;
+            $r->get('',                       $c . '@index');
+            $r->get('/new',                   $e . '@create');   // before /{ordr}
+            $r->post('/new',                  $e . '@store');
+            $r->get('/{ordr}',                $c . '@detail');
+            $r->get('/{ordr}/edit',           $e . '@edit');
+            $r->post('/{ordr}/edit',          $e . '@update');
+            $r->post('/{ordr}/release',       $e . '@release');
+            $r->post('/{ordr}/complete',      $e . '@complete');
+            $r->post('/{ordr}/complete-sale', $e . '@completeSale');
         });
     }
 }

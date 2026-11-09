@@ -3,14 +3,42 @@
  * One sales order: header, lines, shipments/invoices (live CMS).
  * @var int $ordr  @var ?array $head  @var array $lines  @var array $shipments
  * @var ?string $error  @var ?string $asOf
+ * @var array<string,bool> $can  @var string $mode
  */
+$status  = $head !== null ? trim((string) $head['Status']) : '';
+$hasOpen = false;
+foreach ($lines as $l) {
+    $hasOpen = $hasOpen || (int) ($l['IsOpen'] ?? 0) === 1;
+}
+$post = static function (string $path, string $label, string $class = '') use ($ordr): string {
+    return '<form method="POST" action="/sales-orders/' . (int) $ordr . '/' . $path . '" style="display:inline;">'
+        . csrf_field() . '<button type="submit" class="btn btn-sm ' . $class . '">' . e($label) . '</button></form>';
+};
 ?>
 <div class="toolbar" style="margin-bottom:1rem;">
     <a href="/sales-orders" class="btn btn-sm">← Sales Orders</a>
     <?php if ($head !== null && in_array($head['Status'], ['RTS', 'CSH'], true) && user_can('orders.view')): ?>
         <a href="/orders/list?tab=all&q=<?= (int) $ordr ?>" class="btn btn-sm">Coverage in Order Readiness</a>
     <?php endif; ?>
+    <?php if ($head !== null && $error === null): ?>
+        <?php if ($can['sales.edit_order'] && in_array($status, ['RTS', 'CSH', 'QUO'], true)): ?>
+            <a href="/sales-orders/<?= (int) $ordr ?>/edit" class="btn btn-sm">Change order…</a>
+        <?php endif; ?>
+        <?php if ($can['sales.release_order'] && $status === 'CSH'): ?>
+            <?= $post('release', 'Release from credit hold…') ?>
+        <?php endif; ?>
+        <?php if ($can['sales.complete_sale'] && $status === 'RTS' && $hasOpen): ?>
+            <?= $post('complete-sale', 'Complete sale (ship and invoice)…') ?>
+        <?php endif; ?>
+        <?php if ($can['sales.complete_order'] && in_array($status, ['RTS', 'CSH'], true)): ?>
+            <?= $post('complete', 'Complete order…') ?>
+        <?php endif; ?>
+    <?php endif; ?>
 </div>
+
+<?php if ($mode !== 'live' && in_array(true, $can, true)): ?>
+    <div class="alert alert-info">Practice mode: changes are checked and previewed, but nothing is sent to CMS.</div>
+<?php endif; ?>
 
 <?php if ($error !== null): ?>
     <div class="card"><div class="alert alert-info"><?= e($error) ?></div></div>
