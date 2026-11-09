@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace PII\Cms\Write;
 
+use PII\Cms\Write\Ops\Execution\AddIngredient;
+use PII\Cms\Write\Ops\Execution\CompleteTicket;
+use PII\Cms\Write\Ops\Execution\MakeBatch;
+use PII\Cms\Write\Ops\Execution\Packout;
+use PII\Cms\Write\Ops\Execution\SendToQc;
+use PII\Cms\Write\Ops\Execution\UndoMake;
+use PII\Cms\Write\Ops\Execution\UndoPackout;
 use PII\Cms\Write\Ops\Manufacturing\AddPackTicket;
 use PII\Cms\Write\Ops\Manufacturing\CloseTicket;
 use PII\Cms\Write\Ops\Manufacturing\CreateTicket;
@@ -109,6 +116,21 @@ final class OperationRegistry
                 'write.mf.release_ticket', ReleaseTicket::class, ['ManufacturingOrderDataSet.ReleaseOrder']),
             new OperationDef('mf.close_ticket', 'batch_tickets', 'close a completed or unreleased batch ticket',
                 'write.mf.close_ticket', CloseTicket::class, ['ManufacturingOrderDataSet.CloseOrder']),
+            new OperationDef('mfx.add_ingredient', 'batch_tickets', 'add an ingredient to a batch ticket on the floor',
+                'write.mfx.add_ingredient', AddIngredient::class, ['BatchExecutionDataSet.NewIngredient']),
+            new OperationDef('mfx.make_batch', 'batch_tickets', 'make a batch (consume its ingredients)',
+                'write.mfx.make_batch', MakeBatch::class, ['BatchExecutionDataSet.BatchExecutionExpress']),
+            new OperationDef('mfx.send_to_qc', 'batch_tickets', 'send a made batch for testing',
+                'write.mfx.send_to_qc', SendToQc::class, ['BatchExecutionDataSet.InProcessTesting']),
+            new OperationDef('mfx.packout', 'batch_tickets', 'pack out a made batch',
+                'write.mfx.packout', Packout::class, ['BatchExecutionDataSet.ExecutePackagingPhase', 'ManufacturingOrderDataSet.ReleaseOrder',
+                    'BatchExecutionDataSet.PackoutRequested', 'BatchExecutionDataSet.CreateChangeSet', 'BatchExecutionDataSet.Packaging']),
+            new OperationDef('mfx.complete', 'batch_tickets', 'mark a made batch ticket complete',
+                'write.mfx.complete', CompleteTicket::class, ['BatchExecutionDataSet.MarkOrderComplete']),
+            new OperationDef('mfx.undo_packout', 'batch_tickets', 'undo a packout',
+                'write.mfx.undo', UndoPackout::class, ['BatchExecutionDataSet.Unpackaging']),
+            new OperationDef('mfx.undo_make', 'batch_tickets', 'undo the make of a batch',
+                'write.mfx.undo', UndoMake::class, ['BatchExecutionDataSet.ReverseReceipt']),
             new OperationDef('ship.resume_waybill', 'shipping', 'finish a waybill that stopped part way',
                 'write.ship.create_waybill', ResumeWaybill::class, ['WaybillDataSet.ProcessOutstandingRequests']),
             new OperationDef('ship.create_waybill', 'shipping', 'ship assembled sales orders on a new waybill',

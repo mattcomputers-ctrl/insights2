@@ -30,7 +30,7 @@ $mfRefused = static function (callable $fn, string $needle, string $label): void
 };
 
 t_section('Manufacturing registry and arithmetic');
-t_same(7, count($mfPerms), 'seven manufacturing write permissions');
+t_same(13, count($mfPerms), 'thirteen manufacturing write permissions, the floor ones included');
 t_same('4.34', ManufacturingState::qty(0.434 * 10), 'a scaled quantity is written to fifteen significant digits');
 t_same('0.050000001', ManufacturingState::qty(0.0050000001 * 10), 'small recipe fractions survive scaling');
 
