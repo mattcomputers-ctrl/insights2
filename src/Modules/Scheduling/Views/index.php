@@ -87,6 +87,8 @@ $nextMonday = date('Y-m-d', strtotime('next monday'));
     // Server-decided: export controls are not rendered at all without the
     // permission (the POST endpoint is enforced server-side regardless).
     const CAN_EXPORT = <?= user_can('export') ? 'true' : 'false' ?>;
+    // Holders of the ticket-cutting permission get a link on each suggested run.
+    const CAN_CUT = <?= \PII\Cms\Write\CmsWriter::forCurrentUser()->allowed('mf.create_ticket') ? 'true' : 'false' ?>;
 
     let schedule = null;   // current (possibly edited) schedule JSON
 
@@ -162,7 +164,7 @@ $nextMonday = date('Y-m-d', strtotime('next monday'));
                 h += '<div class="sched-util" style="height:100%;width:' + pct.toFixed(0) + '%;background:' + (pct > 97 ? 'var(--bad)' : 'var(--primary)') + ';"></div></div>';
 
                 (day.runs || []).forEach((run, ri) => {
-                    h += runCard(run, mi, di, ri);
+                    h += runCard(run, mi, di, ri, day.date);
                 });
                 h += '</div>';
             });
@@ -201,7 +203,20 @@ $nextMonday = date('Y-m-d', strtotime('next monday'));
         return (schedule.days || []).filter(d => d.enabled).length || 1;
     }
 
-    function runCard(run, mi, di, ri) {
+    function cutTicketLink(run, date) {
+        // A suggested run (no ticket yet) hands over to the prefilled new-ticket form; nothing is sent from here.
+        if (!CAN_CUT || run.carryover || run.source === 'ticket' || !run.bulk || !(run.lbs > 0)) return '';
+        const q = new URLSearchParams({item: run.bulk, qty: String(run.lbs), start: date || '', release: '1'});
+        (run.pack_breakdown || []).filter(p => p.pack && p.lbs > 0).slice(0, 12).forEach((p, i) => {
+            q.set('packs[' + i + '][code]', p.pack);
+            q.set('packs[' + i + '][qty]', String(p.lbs));
+            q.set('packs[' + i + '][by]', 'lb');
+        });
+        return '<div style="margin-top:0.3rem;"><a class="btn btn-sm" draggable="false" href="/batch-tickets/new?' + esc(q.toString()) +
+            '" title="Open a prefilled batch ticket for this run; you check it before anything is saved">Cut ticket…</a></div>';
+    }
+
+    function runCard(run, mi, di, ri, date) {
         const colorDot = '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + colorCss(run.color) + ';margin-right:0.35rem;vertical-align:middle;"></span>';
         let badge = '';
         if (run.carryover) badge = '<span class="pill" style="background:rgba(241,196,15,0.2);color:var(--warn);margin-left:0.3rem;">carryover</span>';
@@ -228,7 +243,7 @@ $nextMonday = date('Y-m-d', strtotime('next monday'));
             (run.carryover ? '<div class="text-dim" style="font-size:0.72rem;">continues previous day\'s batch</div>'
                            : '<div class="text-muted" style="font-size:0.75rem;">' + Number(run.lbs).toLocaleString() + ' lbs · ' + esc(run.color) +
                              (run.passes > 1 ? ' · ' + run.passes + ' passes' : '') + '</div>' +
-                             '<div class="text-dim" style="font-size:0.7rem;margin-top:0.2rem;">' + packs + '</div>') +
+                             '<div class="text-dim" style="font-size:0.7rem;margin-top:0.2rem;">' + packs + '</div>' + cutTicketLink(run, date)) +
             '</div>';
     }
 
