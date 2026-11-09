@@ -64,13 +64,13 @@ reversal, duplicate supplier + invoice number on bills.
 
 | CMS action (program) | Count / failed | What the user is doing | Request sequence | Insights today | Status |
 |---|---|---|---|---|---|
-| `ManufacturingOrderDataSet.SaveChanges` (Batching Order) | 9,059 / 0 | Cutting a bulk ticket, adding pack tickets, editing | 1 request each. Create: `Insert Ordr` + `OrdDetail` rows copied from the recipe and scaled, six-step trailer. Pack ticket: second request, linked by `OrdDetailCommit` | `/batch-tickets` with batch sheet, yield, QC; Scheduling board | researched |
-| `ManufacturingOrderDataSet.ReleaseOrder` (Batching Order) | 4,636 / 182 | Releasing the ticket to the floor | 1 request: `Update Ordr Status=RLS`, in-process-test line and its tests built from the item's tests, `UpdateOrderQtyCommitted`, `CreateLot` | same | researched |
+| `ManufacturingOrderDataSet.SaveChanges` (Batching Order) | 9,059 / 0 | Cutting a bulk ticket, adding pack tickets, editing | 1 request each. Create: `Insert Ordr` + `OrdDetail` rows copied from the recipe and scaled, six-step trailer. Pack ticket: second request, linked by `OrdDetailCommit` | `/batch-tickets` with batch sheet, yield, QC; Scheduling board; **new** `/batch-tickets/new` (bulk item, pounds, dates, overcommit, customer, packaging lines in units or pounds of bulk, optional release) and, on the ticket page, change dates / overcommit / customer and add a packaging ticket before release. Still in the client: hand-built and repack tickets, rescaling, changing or removing a packaging ticket | **live-ready** (`mf.create_ticket`, `mf.add_pack_ticket`, `mf.edit_ticket`) |
+| `ManufacturingOrderDataSet.ReleaseOrder` (Batching Order) | 4,636 / 182 | Releasing the ticket to the floor | 1 request: `Update Ordr Status=RLS`, in-process-test line and its tests built from the item's tests, `UpdateOrderQtyCommitted`, `CreateLot` | "Release to the floor" on the ticket page, or as the last step of a new ticket. Stock shortfalls are left for CMS to refuse | **live-ready** (`mf.release_ticket`) |
 | `ManufacturingOrderDataSet.ReleaseOrder` (Batch Execution Express) | 4,259 / 0 | Automatic release of the pack ticket before first packout | 1 request | same | researched |
-| `ManufacturingOrderDataSet.CloseOrder` | 15 / 0 | Closing a ticket without completing | 1 request: `Update Ordr Status=CLS`, close linked pack tickets, export | same | researched |
-| `ManufacturingOrderDataSet.SaveChanges` (Batching Recipe) | 1,383 / 2 | Creating or editing a recipe draft | 1 request per save | `/recipes` | researched |
-| `ManufacturingOrderDataSet.PublishRecipe` | 1,304 + 623 / 0 | Publishing a recipe version | 1 request; the server retires the old version | same | researched |
-| `ManufacturingOrderDataSet.ChangeActiveState` | 13 / 0 | Activating / deactivating a recipe | 1 request: `Update Recipe Inactive` | same | researched |
+| `ManufacturingOrderDataSet.CloseOrder` | 15 / 0 | Closing a ticket without completing | 1 request: `Update Ordr Status=CLS`, close linked pack tickets, export | "Close this ticket" on a completed ticket, "Cancel this ticket" on one never released. A ticket on the floor is closed in the client | **live-ready** (`mf.close_ticket`) |
+| `ManufacturingOrderDataSet.SaveChanges` (Batching Recipe) | 1,383 / 2 | Creating or editing a recipe draft | 1 request per save | `/recipes` (read only; recipes are drafted in the client) | researched |
+| `ManufacturingOrderDataSet.PublishRecipe` | 1,304 + 623 / 0 | Publishing a recipe version | 1 request; the server retires the old version | "Publish this recipe" on the recipe sheet, for a drafted bulk recipe with one batch and one product | **live-ready** (`mf.publish_recipe`) |
+| `ManufacturingOrderDataSet.ChangeActiveState` | 13 / 0 | Activating / deactivating a recipe | 1 request: `Update Recipe Inactive` | "Retire this recipe" / "Make this recipe active again" on the recipe sheet | **live-ready** (`mf.recipe_active`) |
 | `RecipeReplacementDataSet.SaveChanges` + un-named follow-ups (Recipe Replacement) | 19 + 680 / 0 | Swapping an ingredient across many recipes | Multi-request: save the job → N clone requests → status 1 → N publishes → status 3 → closed | — | researched |
 
 Failure seen: release refuses with "Insufficient inventory for item(s)" when
@@ -147,5 +147,5 @@ Failures seen: duplicate item code, duplicate entity code.
 |---|---|---|---|
 | QC queue | Enter results, approve, reject | QC flow | **live-ready** |
 | Need to Order | Create PO for a vendor group | PO create | **live-ready** (grouped view: "Start a PO" opens the new-PO form filled in with the group's items in the supplier's ordering units; the user checks it, then confirms) |
-| Scheduling board | Create and release ticket for a run | Ticket create + release | not built |
+| Scheduling board | Create and release ticket for a run | Ticket create + release | **live-ready** ("Cut ticket…" on each suggested run opens the new-ticket form filled in with the bulk item, pounds, the day as planned start and required date, the run's packaging split in pounds, and release ticked; the user checks it, then confirms) |
 | Order Readiness | Release / complete an order that is fully covered | Sales order edit | flow built (buttons are on the sales order page; not yet on Order Readiness) |

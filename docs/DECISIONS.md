@@ -548,3 +548,38 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
 91. **Purchasing entry screens** are hidden (404) without the matching write
     permission. Not built for purchasing: reopen a completed PO, the no-bill
     flag, receipt correction, multi-line receipts in one save.
+92. **Tickets are cut only from a plain bulk recipe**: the item's one published
+    bulk recipe, stocked in pounds, one batch and one product, no special
+    lines. Hand-built tickets, repacks, rescaling an existing ticket and
+    changing or removing a packaging ticket stay in the client.
+93. **Ticket quantities** are scaled from the recipe and written to 15
+    significant digits as the client does. The batch volume is worked out from
+    the ingredients' specific gravities; it matches the logged tickets to about
+    ten decimals, and a missing gravity counts as 1 with a warning.
+94. **Ticket dates** are the chosen day with the current time of day, as the
+    client stamps them. Packaging tickets copy the bulk ticket's dates.
+95. **Overcommit defaults to on** for a new ticket, since the logged release
+    failures were all cured by switching it on. Insights does not check stock
+    before a release; CMS refuses and its message is shown.
+96. **A new ticket is a sequence of requests** (ticket, one per packaging
+    ticket, release), as the client sends them. Between requests Insights reads
+    the ticket back from CMS for its number, version and line ids. If a later
+    request fails, the earlier ones stay saved and the user is told which.
+97. **Release builds the in-process-test lines from the item's specification
+    tests.** An item with none is released with its lot approved, the shape the
+    logs show for such items.
+98. **Close** is offered for a completed ticket and for one never released
+    (which cancels it). A ticket on the floor is closed in the client.
+99. **Packaging tickets are added here only before release.** Up to 12 on a new
+    ticket. The quantity is a count of the packaged item or pounds of bulk; the
+    lines may not draw more than the batch, and bulk left unassigned is a warning.
+100. **Customer on a ticket** is typed as the customer number and can be set or
+    changed, not cleared.
+101. **Recipes**: Insights publishes a bulk recipe drafted in the client and
+    retires or reactivates a recipe. Drafting and editing recipes and the
+    recipe-replacement job stay in the client.
+102. **Scheduling hands over to the new-ticket form, not to the confirm page**
+    (as Need to Order does for POs): the run's item, pounds, day and packaging
+    split are filled in with release ticked, and the user goes on from there.
+103. **Ticket and recipe actions** show only to holders of the matching write
+    permission and only when the ticket's state allows them.

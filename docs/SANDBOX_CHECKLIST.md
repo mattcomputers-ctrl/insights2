@@ -155,9 +155,55 @@ Grant `write.po.*` to the test user. Pick a supplier with a current price list.
    the PO reopens.
 7. **Complete PO** with an unreceived line: lines closed, status `CMP`.
 
-### 4.4 onward (not built yet)
+### 4.4 Batch tickets and recipes (built)
 
-Batch tickets, shipping, batch execution, inventory,
+Grant `write.mf.*` to the test user. Pick a bulk item with a published recipe
+(pounds, no special lines) that has specification tests, and one of its
+packaged items.
+
+1. **New ticket, not released** (`/batch-tickets/new`): bulk item, a size the
+   recipe scales to cleanly, required date a few days out, no packaging lines.
+   - Compare the request with a client-cut ticket of the same recipe and size:
+     the `Ordr` header, the batch line (`TotalWeight`, `TotalVolume`), the
+     product line, every ingredient (`QtyEntered`, `QtyReqd`, `StdQty`,
+     `AdjControlValue`, `ExecOrder`), the instructions and the six-step trailer.
+   - `TotalVolume` is computed from specific gravities and may differ from the
+     client in the last digits; note whether CMS minds.
+   - Open the ticket in the client: it loads, prints and saves normally.
+2. **New ticket with two packaging lines and release**, one line in units and
+   one in pounds of bulk. This is three or four requests in a row.
+   - After the first request, check the confirm result names the new ticket
+     number (Insights reads the ticket back from CMS between requests; if the
+     log result does not carry the new `Ordr`, this is where it shows).
+   - Packaging tickets: `OrdDetailCommit` links to the bulk product line, dates
+     match the bulk ticket, component quantities match a client-made one.
+   - Release: status `RLS`, the in-process-test line and its tests, the lot
+     created with today's prefix and on hold; quantities committed.
+   - Repeat with an item that has no specification tests: the lot is created
+     approved. Compare with a client release of such an item.
+3. **Stop part way.** Open the same new ticket in the client between the
+   Insights preview and confirm of an "add packaging ticket", so the version
+   moves: Insights should stop and say which steps are already saved.
+4. **From Scheduling.** "Cut ticket…" on a suggested run: the form opens with
+   the run's item, pounds, date and packaging split. Check two by hand.
+5. **Change a ticket** (ticket page): required date, planned start, overcommit
+   and customer, each as its own save, on an unreleased ticket and then on a
+   released one (the released save carries the packaging-lot step; compare with
+   a client edit of a released ticket).
+6. **Add a packaging ticket** to an unreleased ticket; try one that overdraws
+   the batch (Insights refuses).
+7. **Release** an unreleased ticket from its page. Then one with overcommit off
+   and short stock: expect the CMS refusal in plain words; switch overcommit on
+   and release again.
+8. **Close**: a completed ticket (status `CLS`, packaging tickets closed with
+   it), and a never-released ticket (cancelled; its open lines closed).
+9. **Recipes** (`/recipes`, open a recipe): publish a bulk recipe drafted in
+   the client and compare with a client publish (the old version retires, the
+   item's costing recipe moves). Retire a recipe and make it active again.
+
+### 4.5 onward (not built yet)
+
+Shipping, batch execution, inventory,
 master data and bills are researched (`docs/research/`) with fixtures stored, but
 have no templates yet. Each gets its section here when it is built, following
 the same pattern: do it in Insights, do it in the client, compare the request
