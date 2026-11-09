@@ -1,0 +1,1 @@
+<request Application="Chemical Management System" AppVersion="7.15.0.680" Program="PrintShippingLabel" Action="PrintShippingLabel.UpdateShippingLabelAddress" TransDate="2026-10-30T11:24:13"><action Object="AddressReference" Step="1" Operation="Insert"><keys TableID="118880" TableName="Location" Reference="ShipToAddress"/><data Address="100668"/></action></request>

@@ -1,0 +1,1 @@
+<request Application="Chemical Management System" AppVersion="7.15.0.680" Program="Ship To Update" Action="EntityUpdateDataSet.SaveChanges" Workstation="WS1" Owner="4" User="pic\user1" TransDate="2026-11-05T13:15:45"><action Object="Entity" Step="1" Operation="Update"><keys Entity="101529" Version="1"/><data ShipVia="100752" FreightAccount="ACCT"/></action></request>

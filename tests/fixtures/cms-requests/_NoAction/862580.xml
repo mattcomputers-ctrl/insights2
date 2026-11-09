@@ -1,0 +1,1 @@
+<request Application="Chemical Management System" AppVersion="7.15.0.680" Program="RecipeReplacement" Workstation="WS1" Owner="4" User="pic\user1" TransDate="2026-11-02T14:50:31"><action Object="RecipeReplacement" Step="1" Operation="Update"><keys RecipeReplacement="63"/><data Closed="true"/></action></request>

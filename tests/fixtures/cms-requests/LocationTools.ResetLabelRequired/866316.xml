@@ -1,0 +1,1 @@
+<request Application="Chemical Management System" AppVersion="7.15.0.680" Program="PrintContainerLabel" Action="LocationTools.ResetLabelRequired" Workstation="WS1" Owner="4" User="pic\user1" TransDate="2026-11-09T12:24:48"><action Object="ResetLabelReqd" Step="1" Operation="Execute"><data Location="119590"/></action></request>

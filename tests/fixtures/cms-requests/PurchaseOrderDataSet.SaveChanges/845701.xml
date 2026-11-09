@@ -1,0 +1,1 @@
+<request Application="Chemical Management System" AppVersion="7.15.0.680" Program="Purchase Order" Action="PurchaseOrderDataSet.SaveChanges" Workstation="WS1" Owner="4" User="pic\user1" TransDate="2026-09-09T13:10:02"><action Object="Ordr" Step="1" Operation="Update"><keys Ordr="180911" Version="4"/><data NoBill="true"/></action></request>
