@@ -13,7 +13,8 @@ use PII\Cms\Write\WriteRefused;
 
 /**
  * Add one packaging ticket to a bulk ticket that has not been released.
- * Input: ordr (int), code (packaged item), qty (units of the packaged item).
+ * Input: ordr (int), code (packaged item), qty, by ('units' of the packaged
+ * item, the default, or 'lb' of bulk).
  */
 final class AddPackTicket implements Flow
 {
@@ -28,7 +29,7 @@ final class AddPackTicket implements Flow
         if ($t['DateRequired'] === null || $t['PlanStartDate'] === null) {
             throw new WriteRefused("Ticket {$t['Ordr']} has no required or start date. Set them first.");
         }
-        $pack = ManufacturingInput::pack($ctx->cms, $input['code'] ?? '', $input['qty'] ?? '', (int) $product['item'], $product['code'], 1);
+        $pack = ManufacturingInput::pack($ctx->cms, $input['code'] ?? '', $input['qty'] ?? '', (int) $product['item'], $product['code'], 1, $input['by'] ?? 'units');
         foreach ($t['packs'] as $p) {
             if (strcasecmp($p['code'], $pack['code']) === 0 && $p['status'] !== 'CLS') {
                 throw new WriteRefused("Ticket {$t['Ordr']} already has a packaging ticket for {$pack['code']} ({$p['ordr']}). Change it in CMS.");

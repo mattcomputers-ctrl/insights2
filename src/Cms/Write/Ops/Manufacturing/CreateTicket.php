@@ -24,7 +24,8 @@ use PII\Cms\Write\WriteRefused;
  *
  * Input: item (code), qty (pounds), required (Y-m-d), start (Y-m-d, default
  * the required date), overcommit (bool, default on), bill_to (customer
- * number, optional), packs (list of code + qty), release (bool).
+ * number, optional), packs (list of code + qty + by: 'units' of the packaged
+ * item, the default, or 'lb' of bulk), release (bool).
  */
 final class CreateTicket implements Flow
 {
@@ -131,7 +132,7 @@ final class CreateTicket implements Flow
         $drawn = 0.0;
         $seen  = [];
         foreach ($rawPacks as $i => $p) {
-            $pack = ManufacturingInput::pack($cms, $p['code'] ?? '', $p['qty'] ?? '', $recipe['item']['id'], $code, $i + 1);
+            $pack = ManufacturingInput::pack($cms, $p['code'] ?? '', $p['qty'] ?? '', $recipe['item']['id'], $code, $i + 1, $p['by'] ?? 'units');
             if (isset($seen[$pack['code']])) {
                 throw new WriteRefused("Packaging item {$pack['code']} is listed twice.");
             }

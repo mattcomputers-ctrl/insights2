@@ -186,6 +186,16 @@ t_check(str_contains($mfX, 'QtyEntered="10.85 lb" QtyReqd="10.85" StdQty="0.434"
 t_check(count($mfP->plan->warnings) === 1 && str_contains($mfP->plan->warnings[0], '5 lb of the batch is not assigned'), 'warns about bulk left unpacked: ' . json_encode($mfP->plan->warnings));
 t_check(str_contains($mfP->rendered->stages[1]['xml'], 'QtyEntered="4.3 ea" QtyReqd="4.3" StdQty="0.215"') && str_contains($mfP->rendered->stages[1]['xml'], 'SrcOrdDetail="{stage 1: new OrdDetail}" Qty="20"'),
     'the packaging ticket claims its share of the bulk');
+$mfLb = $mfWriter($mfCms(), new FakeTransport())->preview('mf.create_ticket',
+    ['item' => 'B121303', 'qty' => '25', 'required' => '2026-11-12', 'start' => '2026-11-10', 'overcommit' => '0',
+     'packs' => [['code' => 'P121304', 'qty' => '20', 'by' => 'lb']]], $mfNow);
+t_same($mfP->rendered->stages[1]['xml'], $mfLb->rendered->stages[1]['xml'], 'a packaging quantity given in pounds of bulk becomes units of the packaged item');
+$mfR2 = $mfRecipes;
+$mfR2[19255]['lines'][2]['QtyReqd'] = '5.0e+000';
+$mfLb = $mfWriter($mfCms(null, null, [], null, $mfR2), new FakeTransport())->preview('mf.create_ticket',
+    ['item' => 'B121303', 'qty' => '25', 'required' => '2026-11-12', 'packs' => [['code' => 'P121304', 'qty' => '20', 'by' => 'lb']]], $mfNow);
+t_check(str_contains(json_encode($mfLb->plan->summary), '4 ea of P121304') && str_contains($mfLb->rendered->stages[1]['xml'], 'Qty="20"'),
+    'twenty pounds into a five-pound pack is four of them: ' . json_encode($mfLb->plan->summary));
 
 $mfP = $mfWriter($mfCms(null, null, [], []), new FakeTransport())->preview('mf.create_ticket', ['packs' => []] + $mfIn, $mfNow);
 t_check(str_contains($mfP->rendered->stages[1]['xml'], 'Status="Approved"') && str_contains($mfP->rendered->stages[1]['xml'], 'ManfDate="2026-11-09T12:07:44"')

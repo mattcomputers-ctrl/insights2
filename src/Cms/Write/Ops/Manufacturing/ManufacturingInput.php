@@ -79,11 +79,12 @@ final class ManufacturingInput
 
     /**
      * Everything one packaging ticket needs except its dates and the ids of the bulk ticket.
+     * The quantity is in units of the packaged item, or in pounds of bulk when $by is 'lb'.
      *
      * @return array{code:string,qty:float,header:array<string,mixed>,product:array<string,mixed>,
      *               ingredients:list<array<string,mixed>>,draws:float,text:string}
      */
-    public static function pack(CmsReader $cms, mixed $code, mixed $qty, int $bulkItem, string $bulkCode, int $n): array
+    public static function pack(CmsReader $cms, mixed $code, mixed $qty, int $bulkItem, string $bulkCode, int $n, mixed $by = 'units'): array
     {
         $code = trim((string) $code);
         if ($code === '') {
@@ -93,6 +94,10 @@ final class ManufacturingInput
         $recipe = ManufacturingState::recipeForItem($cms, $code);
         $code   = $recipe['item']['code'];
         $parts  = ManufacturingState::packParts($recipe, $code, $bulkItem, $bulkCode);
+        if ($by === 'lb') {
+            // The quantity was given as pounds of bulk to pack; turn it into units of the packaged item.
+            $qty = (float) ManufacturingState::qty($qty / $parts['components'][$parts['bulk']]['qty']);
+        }
 
         $ingredients = [];
         $draws       = 0.0;
