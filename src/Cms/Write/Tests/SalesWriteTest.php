@@ -31,7 +31,7 @@ $lineOf = static function (array $detail, array $pricing): array {
 };
 
 t_section('Sales golden: ShippingOrderDataSet.SaveChanges');
-$seen = ['create' => 0, 'edit' => 0];
+$seen = ['create' => 0, 'edit' => 0, 'mixed' => 0];
 foreach (cms_fixture_ids(SalesRequests::SAVE) as $log) {
     $xml   = cms_fixture(SalesRequests::SAVE, $log);
     $f     = cms_fixture_parse($xml);
@@ -106,10 +106,21 @@ foreach (cms_fixture_ids(SalesRequests::SAVE) as $log) {
         }
         $req = SalesRequests::editOrder((int) $head['keys']['Ordr'], (int) $head['keys']['Version'],
             $head['operation'] === 'Update' ? $head['data'] : [], $changes, $credit, $event);
+        // The client's order: removed lines, changed lines, new lines, memos, address.
+        $salesRank  = ['deleteLine' => 1, 'updateLine' => 2, 'addLine' => 3, 'addMemo' => 4, 'updateMemo' => 4, 'updateAddress' => 5];
+        $salesRanks = array_map(static fn (array $c): int => $salesRank[$c['op']], $changes);
+        $salesInOrder = $salesRanks;
+        sort($salesInOrder);
+        t_same($salesInOrder, $salesRanks, "log {$log}: removed lines, changed lines, new lines, memos");
+        $salesOps = array_unique(array_column($changes, 'op'));
+        if (in_array('deleteLine', $salesOps, true) && in_array('updateLine', $salesOps, true)) {
+            $seen['mixed']++;
+        }
     }
     t_xml_same($xml, $req->toXml($f['env']), "log {$log}");
 }
 t_check($seen['create'] >= 7 && $seen['edit'] >= 15, 'both create and edit fixtures were exercised');
+t_check($seen['mixed'] >= 2, 'fixtures with both a removed and a changed line were exercised');
 
 t_section('Sales golden: ShippingOrderDataSet.CompleteSale');
 foreach (cms_fixture_ids('ShippingOrderDataSet.CompleteSale') as $log) {
@@ -294,6 +305,50 @@ $fake = $newFake();
 $res  = $salesWriter($orderCms([], $two), $fake)->execute('sales.edit_order', ['ordr' => 194480, 'remove' => ['1']], $nowE);
 t_check($res->ok() && str_contains($fake->sent[0], 'Object="OrdDetailPricing" Step="2" Operation="Delete"><keys OrdDetailPricing="11"/>')
     && str_contains($fake->sent[0], 'Object="OrdDetail" Step="3" Operation="Delete"><keys OrdDetail="1"/>'), 'removing a line deletes its pricing row, then the line');
+
+/** Log 847291: one line removed and one changed in the same save. The removal goes first. */
+$salesMixLines = [
+    $orderLine(['OrdDetail' => 551108, 'OrdDetailPricing' => 53008, 'ManualPrice' => 1, 'Price' => '104.1600', 'QtyReqd' => '4.0000', 'AliasCode' => 'A']),
+    $orderLine(['OrdDetail' => 551111, 'OrdDetailPricing' => 53011, 'ManualPrice' => 1, 'Price' => '19.8400', 'QtyReqd' => '1.0000', 'AliasCode' => 'B']),
+];
+$fake = $newFake();
+$res  = $salesWriter($orderCms(['Ordr' => 192565, 'Version' => 4, 'ReserveAmount' => '416.6400'], $salesMixLines), $fake)
+    ->execute('sales.edit_order', ['ordr' => 192565, 'lines' => [551108 => ['qty' => '2', 'price' => '104.16'],
+        551111 => ['qty' => '1', 'price' => '19.84']], 'remove' => ['551111']], $nowE);
+t_check($res->ok(), 'remove and change in one save committed');
+t_xml_same($salesNorm(cms_fixture('ShippingOrderDataSet.SaveChanges', 847291)), $salesNorm($fake->sent[0] ?? ''), 'remove then change matches log 847291');
+
+/** Log 856662: the same on an order on credit hold, which is saved without the credit check. */
+$salesHeldLines = [];
+foreach ([558882 => '100.0000', 558883 => '100.0000', 558884 => '100.0000', 558885 => '1.0000'] as $id => $qty) {
+    $salesHeldLines[] = $orderLine(['OrdDetail' => $id, 'OrdDetailPricing' => $id === 558885 ? 53715 : $id - 505170,
+        'ManualPrice' => 1, 'Price' => '5.0000', 'QtyReqd' => $qty, 'AliasCode' => "L{$id}"]);
+}
+$salesHeldCms = $orderCms(['Ordr' => 193703, 'Version' => 2, 'Status' => 'CSH', 'CreditHold' => 1, 'ReserveAmount' => '1505.0000'], $salesHeldLines);
+$salesInHeld  = ['ordr' => 193703, 'remove' => [558885], 'lines' => [
+    558882 => ['qty' => '98.2', 'price' => '5'], 558883 => ['qty' => '95.95', 'price' => '5'],
+    558884 => ['qty' => '90', 'price' => '5'], 558885 => ['qty' => '1', 'price' => '5']]];
+$fake = $newFake();
+$w    = $salesWriter($salesHeldCms, $fake);
+$p    = $w->preview('sales.edit_order', $salesInHeld, $nowE);
+t_check(count($p->plan->warnings) === 1 && str_contains($p->plan->warnings[0], 'stays on hold'), 'warns that an order on credit hold stays on hold');
+$res  = $w->execute('sales.edit_order', $salesInHeld, $nowE, $p->hash);
+t_check($res->ok(), 'edit of an order on credit hold committed');
+t_xml_same($salesNorm(cms_fixture('ShippingOrderDataSet.SaveChanges', 856662)), $salesNorm($fake->sent[0] ?? ''), 'remove then changes on a held order matches log 856662');
+
+$fake = $newFake();
+$res  = $salesWriter($orderCms([], $salesMixLines, [['Reference' => 'InternalMemo', 'Data' => 'Old note']]), $fake)->execute('sales.edit_order', [
+    'ordr' => 194480, 'lines' => [551108 => ['qty' => '3', 'price' => '104.16']], 'remove' => [551111],
+    'add' => [['code' => 'OSPOW', 'qty' => '2', 'price' => '3.5']], 'internal_memo' => 'New note'], $nowE);
+$x    = $fake->sent[0] ?? '';
+$salesAt   = array_map(static fn (string $needle): int => (int) strpos($x, $needle), [
+    'Object="OrdDetailPricing" Step="2" Operation="Delete"', 'Object="OrdDetail" Step="3" Operation="Delete"',
+    'Object="OrdDetail" Step="4" Operation="Update"', 'Object="OrdDetail" Step="5" Operation="Insert"',
+    'Object="MemoRef" Step="7" Operation="Update"', 'Object="UpdateOrderTaxes" Step="8"', 'Object="CheckOrderCredit" Step="9"']);
+$salesSorted = $salesAt;
+sort($salesSorted);
+t_check($res->ok() && !in_array(0, $salesAt, true) && $salesAt === $salesSorted, 'one save sends removed lines, changed lines, new lines, memos, taxes, credit check');
+
 foreach ([
     'shipped line removal'  => [$orderCms([], $two), ['ordr' => 194480, 'remove' => [2]], 'has shipped'],
     'shipped line quantity' => [$orderCms([], $two), ['ordr' => 194480, 'lines' => [2 => ['qty' => '7', 'price' => '3']]], 'already shipped'],
@@ -343,6 +398,20 @@ t_xml_same(cms_fixture('ShippingOrderDataSet.SaveChanges', 866346), preg_replace
 $p = $salesWriter($orderCms(), $newFake())->preview('sales.complete_order', ['ordr' => 194480], $nowC);
 t_check(count($p->plan->warnings) === 1 && str_contains($p->plan->warnings[0], 'Nothing has shipped'), 'warns when nothing has shipped');
 $refused(fn () => $salesWriter($orderCms(['Status' => 'QUO', 'IsQuote' => 1]), $newFake())->preview('sales.complete_order', ['ordr' => 194480], $nowC), 'a quote', 'a quote cannot be completed');
+
+/** Logs 428696 and 439420: an order on credit hold is completed without the credit check. */
+foreach ([428696 => [144633, [228004, 228005, 228006, 228007]], 439420 => [145729, [236008, 236009]]] as $log => [$salesHeldOrdr, $salesHeldIds]) {
+    $xml   = cms_fixture('ShippingOrderDataSet.SaveChanges', $log);
+    $salesHeldOpen = array_map(static fn (int $id): array => $orderLine(['OrdDetail' => $id]), $salesHeldIds);
+    $fake  = $newFake();
+    $w     = $salesWriter($orderCms(['Ordr' => $salesHeldOrdr, 'Version' => 1, 'Status' => 'CSH', 'CreditHold' => 1], $salesHeldOpen), $fake);
+    $salesHeldNow = new DateTimeImmutable(cms_fixture_parse($xml)['steps'][0]['data']['DateCompleted']);
+    $p     = $w->preview('sales.complete_order', ['ordr' => $salesHeldOrdr], $salesHeldNow);
+    t_check(count(array_filter($p->plan->warnings, static fn (string $m): bool => str_contains($m, 'credit hold'))) === 1, "log {$log}: warns that the order is completed while on credit hold");
+    $res   = $w->execute('sales.complete_order', ['ordr' => $salesHeldOrdr], $salesHeldNow, $p->hash);
+    t_check($res->ok(), "log {$log}: complete of an order on credit hold committed");
+    t_xml_same($xml, preg_replace('/Application="[^"]+"/', 'Application="Chemical Management System"', $fake->sent[0] ?? ''), "complete of a held order matches log {$log}, timestamps included");
+}
 
 $saleId = cms_fixture_ids('ShippingOrderDataSet.CompleteSale')[0];
 $fSale  = cms_fixture_parse(cms_fixture('ShippingOrderDataSet.CompleteSale', $saleId));

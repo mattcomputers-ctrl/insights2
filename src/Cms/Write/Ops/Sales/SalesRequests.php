@@ -105,7 +105,8 @@ final class SalesRequests
      * Save changes to an existing order.
      *
      * @param array<string,string|int|bool> $headerChanges changed Ordr columns only; [] = no header change
-     * @param list<array<string,mixed>> $changes ordered row changes, each one of
+     * @param list<array<string,mixed>> $changes row changes in the order they are sent. The client's
+     *        order is removed lines, changed lines, new lines, memos, address. Each one of
      *        ['op'=>'updateLine','ordDetail'=>int,'changes'=>[col=>value]]
      *        ['op'=>'deleteLine','ordDetail'=>int,'pricing'=>int]
      *        ['op'=>'addLine','line'=>line()]

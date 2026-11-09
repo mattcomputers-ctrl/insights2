@@ -41,11 +41,18 @@ final class CompleteOrder implements Flow
             $warnings[] = 'Nothing has shipped on this order. Completing it closes it without shipping or invoicing anything.';
         }
 
+        // No credit check for an order on credit hold: the client completes it with the
+        // tax step only, as it does for an edit, and the hold flag stays set.
+        $onHold = $o['Status'] === 'CSH' || $o['CreditHold'];
+        if ($onHold) {
+            $warnings[] = 'This order is on credit hold. It is completed without being released, so it keeps its credit hold mark.';
+        }
+
         $request = SalesRequests::editOrder(
             $o['Ordr'], $o['Version'],
             ['DateCompleted' => Fmt::dateTime($ctx->now), 'Status' => 'CMP'],
             $changes,
-            ['mode' => 'check', 'oldReserve' => $o['ReserveAmount']],
+            $onHold ? ['mode' => 'none'] : ['mode' => 'check', 'oldReserve' => $o['ReserveAmount']],
         );
 
         return new Plan(

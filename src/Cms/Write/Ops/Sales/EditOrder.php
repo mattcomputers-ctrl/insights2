@@ -160,12 +160,19 @@ final class EditOrder implements Flow
             $summary[] = [$reference === 'InternalMemo' ? 'Internal memo' : 'Shipping memo', $text === '' ? '(cleared)' : $text];
         }
 
-        $changes = array_merge($updates, $deletes, $inserts, $memos);
+        // The client sends removed lines first, then changed lines, then new lines, then memos.
+        $changes = array_merge($deletes, $updates, $inserts, $memos);
         if ($header === [] && $changes === []) {
             throw new WriteRefused('Nothing was changed.');
         }
 
-        $credit  = $o['IsQuote'] ? ['mode' => 'none'] : ['mode' => 'check', 'oldReserve' => $o['ReserveAmount']];
+        // No credit check for a quote, or for an order on credit hold: the client saves
+        // those with the tax step only, and the order stays on hold until it is released.
+        $onHold = $o['Status'] === 'CSH' || $o['CreditHold'];
+        $credit = $o['IsQuote'] || $onHold ? ['mode' => 'none'] : ['mode' => 'check', 'oldReserve' => $o['ReserveAmount']];
+        if ($onHold && !$o['IsQuote']) {
+            $warnings[] = 'This order is on credit hold. It stays on hold after this change until it is released.';
+        }
         $request = SalesRequests::editOrder($o['Ordr'], $o['Version'], $header, $changes, $credit, $event);
 
         return new Plan(
