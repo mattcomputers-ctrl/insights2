@@ -27,6 +27,13 @@ final class ShippingRequests
     public const REJECT        = 'WaybillDataSet.RejectWaybill';
     public const LABEL         = 'PrintShippingLabel.UpdateShippingLabelAddress';
 
+    public const ASSEMBLY_PROGRAM = 'Shipping Assembly';
+    public const ASSEMBLE         = 'AssembleDataSet.SaveChanges';
+    /** The stock location picks come from, the place new containers are created in, and their package type. */
+    public const STOCK      = '10669';
+    public const ASM_PARENT = '2';
+    public const ASM_PKG    = '1';
+
     public const TODO_SHIP      = 'CreateShipmentsByOrder';
     public const TODO_PALLETS   = 'SaveShippedPallets';
     public const TODO_COMPLETE  = 'MarkCompleted';
@@ -180,6 +187,82 @@ final class ShippingRequests
         $r->add(Step::update('Waybill')->keys(['Waybill' => $waybill, 'Version' => $version])->data(['Status' => 'REJ']));
         $r->add(Step::execute('RejectWaybill')->data(['Waybill' => $waybill]));
         return $r;
+    }
+
+    /**
+     * Pick stock for order lines into a new shipping container. CMS creates
+     * the container and hands its id to each move.
+     *
+     * @param list<array{ordDetail:int|string,item:int|string,qty:string}> $lines
+     */
+    public static function assembleNew(int $ordr, int $version, string $owner, array $lines): Request
+    {
+        $r = self::assembly($ordr, $version, $lines);
+        $made = $r->add(Step::execute('CreateAssembly')->data(['Owner' => $owner, 'Location' => self::ASM_PARENT, 'PkgType' => self::ASM_PKG]));
+        foreach ($lines as $l) {
+            $r->add(Step::execute('MoveInventory')
+                ->subs($made, 'Location', 'Location', 'data', 'TrgLocation')
+                ->data(self::pick($owner, null, $l['qty'], $l['qty'], $l)));
+        }
+        return $r;
+    }
+
+    /**
+     * Pick more stock into a container that already exists.
+     *
+     * @param list<array{ordDetail:int|string,item:int|string,qty:string}> $lines
+     */
+    public static function assembleAdd(int $ordr, int $version, string $owner, int $container, int $containerVersion, array $lines): Request
+    {
+        $r = self::assembly($ordr, $version, $lines);
+        $r->add(Step::updateVersion('Location')->keys(['Location' => $container, 'Version' => $containerVersion]));
+        foreach ($lines as $l) {
+            $r->add(Step::execute('MoveInventory')->data(self::pick($owner, $container, $l['qty'], $l['qty'], $l)));
+        }
+        return $r;
+    }
+
+    /**
+     * Put stock from a container back into the stock location. The client
+     * checks the stock location's version before each move.
+     *
+     * @param list<array{ordDetail:int|string,item:int|string,qty:string}> $lines qty = how much comes out (positive)
+     */
+    public static function assembleRemove(int $ordr, int $version, string $owner, int $container, int $containerVersion,
+        int $stockVersion, array $lines): Request
+    {
+        $r = self::assembly($ordr, $version, $lines);
+        $r->add(Step::updateVersion('Location')->keys(['Location' => $container, 'Version' => $containerVersion]));
+        foreach ($lines as $l) {
+            $r->add(Step::checkVersion('Location')->keys(['Location' => self::STOCK, 'Version' => $stockVersion]));
+            $r->add(Step::execute('MoveInventory')->data(self::pick($owner, $container, '-' . $l['qty'], $l['qty'], $l)));
+        }
+        return $r;
+    }
+
+    /** @param list<array<string,mixed>> $lines */
+    private static function assembly(int $ordr, int $version, array $lines): Request
+    {
+        if ($lines === []) {
+            throw new \InvalidArgumentException('An assembly request needs at least one line.');
+        }
+        foreach ($lines as $l) {
+            if (!is_numeric($l['qty'] ?? null) || (float) $l['qty'] <= 0) {
+                throw new \InvalidArgumentException('An assembly line needs a quantity above zero.');
+            }
+        }
+        $r = new Request(self::PROGRAM, self::ASSEMBLE, self::ASSEMBLY_PROGRAM);
+        $r->add(Step::updateVersion('Ordr')->keys(['Ordr' => $ordr, 'Version' => $version]));
+        return $r;
+    }
+
+    /** @return array<string,string|int> the MoveInventory data, in client order */
+    private static function pick(string $owner, ?int $container, string $quantity, string $entered, array $line): array
+    {
+        return ['Owner' => $owner, 'Context' => 'PICK', 'SrcLocation' => self::STOCK]
+            + ($container === null ? [] : ['TrgLocation' => $container])
+            + ['Quantity' => $quantity, 'QtyEntered' => $entered, 'TrgOrdDetail' => $line['ordDetail'], 'Item' => $line['item'],
+               'Reserve' => 'true', 'ValidateStorageRules' => 'false', 'UseUnreservedInventory' => 'true'];
     }
 
     /**

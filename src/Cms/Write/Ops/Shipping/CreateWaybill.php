@@ -54,7 +54,7 @@ final class CreateWaybill implements Flow
 
             $asm = ShippingState::assemblies($cms, $id);
             if ($asm === []) {
-                throw new WriteRefused("Nothing is assembled for order {$id}. Assemble it in CMS first.");
+                throw new WriteRefused("Nothing is assembled for order {$id}. Assemble it first (Shipping, Assemble orders).");
             }
             $charge = self::amount($freight[$id] ?? '', "Freight charge for order {$id}");
             $orders[] = ['ordr' => $id, 'version' => $o['Version'], 'freight' => $charge];

@@ -3,11 +3,12 @@
  * Ship orders: pick orders that have something assembled, check the
  * containers and weights, then confirm (live CMS).
  * @var array $ready  @var array $unfinished  @var array $chosen  @var int[] $picked
- * @var ?string $problem  @var ?string $error  @var int $maxOrders  @var string $mode
+ * @var ?string $problem  @var ?string $error  @var int $maxOrders  @var string $mode  @var bool $canAssemble
  */
 ?>
 <div class="toolbar" style="margin-bottom:1rem;">
     <a href="/shipping" class="btn btn-sm">← Shipping</a>
+    <?php if (!empty($canAssemble)): ?><a href="/shipping/assemble" class="btn btn-sm">Assemble orders</a><?php endif; ?>
 </div>
 
 <?php if ($mode !== 'live'): ?>
@@ -101,7 +102,7 @@
         <div class="alert alert-danger"><?= e($problem) ?></div>
     <?php endif; ?>
     <?php if ($ready === []): ?>
-        <div class="empty-state"><span class="empty-icon">📦</span>Nothing is assembled and waiting to ship.</div>
+        <div class="empty-state"><span class="empty-icon">📦</span>Nothing is assembled and waiting to ship.<?php if (!empty($canAssemble)): ?> <a href="/shipping/assemble">Assemble an order</a> first.<?php endif; ?></div>
     <?php else: ?>
     <form method="GET" action="/shipping/new">
         <div class="table-scroll">

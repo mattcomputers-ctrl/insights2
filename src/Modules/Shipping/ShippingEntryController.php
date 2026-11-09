@@ -6,6 +6,8 @@ namespace PII\Modules\Shipping;
 
 use PII\Cms\Write\CmsWriter;
 use PII\Cms\Write\LiveCmsReader;
+use PII\Cms\Write\Ops\Sales\SalesState;
+use PII\Cms\Write\Ops\Shipping\AssembleOrder;
 use PII\Cms\Write\Ops\Shipping\CreateWaybill;
 use PII\Cms\Write\Ops\Shipping\ShippingState;
 use PII\Cms\Write\WriteRefused;
@@ -17,7 +19,8 @@ use PII\Services\Settings;
 require_once dirname(__DIR__, 2) . '/Helpers/layout.php';
 
 /**
- * Shipping entry: ship assembled orders on a new waybill, finish or
+ * Shipping entry: assemble orders into containers, ship assembled
+ * orders on a new waybill, finish or
  * reject a waybill, record printed labels, and the packing slip and
  * invoice print pages.
  *
@@ -77,8 +80,106 @@ class ShippingEntryController
             'problem'    => $problem,
             'error'      => $error,
             'maxOrders'  => CreateWaybill::MAX_ORDERS,
+            'canAssemble' => CmsWriter::forCurrentUser()->allowed('ship.assemble'),
             'mode'       => CmsWriter::forCurrentUser()->mode(),
         ], 'shipping');
+    }
+
+    /** Orders waiting to be assembled, then (with one chosen) its lines, stock and containers. */
+    public function assemble(): void
+    {
+        $writer = CmsWriter::forCurrentUser();
+        if (!$writer->allowed('ship.assemble')) {
+            render_not_found();
+        }
+        $raw     = $_GET['order'] ?? '';
+        $id      = is_string($raw) && ctype_digit(trim($raw)) ? (int) trim($raw) : 0;
+        $open    = [];
+        $order   = null;
+        $lines   = [];
+        $boxes   = [];
+        $error   = null;
+        $problem = is_string($raw) && trim($raw) !== '' && $id === 0 ? 'Enter the order number in digits.' : null;
+        try {
+            $cms = new LiveCmsReader();
+            if ($id > 0) {
+                $order = SalesState::order($cms, $id);
+                if ($order === null) {
+                    $problem = "Sales order {$id} was not found in CMS.";
+                } elseif ($order['Status'] !== 'RTS') {
+                    $problem = "Sales order {$id} is not ready to ship, so it cannot be assembled.";
+                    $order   = null;
+                }
+            }
+            if ($order !== null) {
+                $boxes = ShippingState::assemblies($cms, $id);
+                foreach ($boxes as &$b) {
+                    $b['inside'] = ShippingState::contents($cms, $b['location']);
+                }
+                unset($b);
+                $done = AssembleOrder::assembled($cms, $boxes);
+                foreach ($order['lines'] as $l) {
+                    $in      = $done[$l['ordDetail']] ?? 0.0;
+                    $lines[] = $l + [
+                        'assembled' => $in,
+                        'left'      => max(0.0, round((float) $l['qty'] - (float) $l['shipped'] - $in, 6)),
+                        'onHand'    => $l['isOpen'] ? ShippingState::onHand($cms, $l['item']) : 0.0,
+                    ];
+                }
+            } else {
+                $open = ShippingState::openOrders($cms);
+            }
+        } catch (CMSUnavailableException $e) {
+            $error = $e->friendlyMessage();
+        } catch (\Throwable $e) {
+            $error = 'CMS query failed: ' . $e->getMessage();
+        }
+
+        layout('shipping::assemble', [
+            'pageTitle' => $order !== null ? "Assemble order {$id}" : 'Assemble orders',
+            'open'      => $open,
+            'order'     => $order,
+            'lines'     => $lines,
+            'boxes'     => $boxes,
+            'problem'   => $problem,
+            'error'     => $error,
+            'canShip'   => $writer->allowed('ship.create_waybill'),
+            'mode'      => $writer->mode(),
+        ], 'shipping');
+    }
+
+    public function assembleSave(): void
+    {
+        CSRF::validateRequest();
+        [$order, $container, $qty] = self::assemblyInput();
+        CmsWriteController::propose('ship.assemble', ['order' => $order, 'container' => $container, 'qty' => $qty],
+            '/shipping/assemble' . ($order > 0 ? "?order={$order}" : ''));
+    }
+
+    /** Take stock out of a container: the quantities typed, or everything when none are sent. */
+    public function assembleRemove(): void
+    {
+        CSRF::validateRequest();
+        [$order, $container, $qty] = self::assemblyInput();
+        $input = ['order' => $order, 'container' => $container];
+        if (empty($_POST['all'])) {
+            $input['qty'] = $qty;
+        }
+        CmsWriteController::propose('ship.unassemble', $input, '/shipping/assemble' . ($order > 0 ? "?order={$order}" : ''));
+    }
+
+    /** @return array{0:int,1:string,2:array<int,string>} order, container, quantities by order line */
+    private static function assemblyInput(): array
+    {
+        $order     = $_POST['order'] ?? '';
+        $container = $_POST['container'] ?? '';
+        $qty       = [];
+        foreach ((array) ($_POST['qty'] ?? []) as $ordDetail => $text) {
+            if (ctype_digit((string) $ordDetail) && !is_array($text)) {
+                $qty[(int) $ordDetail] = trim((string) $text);
+            }
+        }
+        return [is_string($order) && ctype_digit($order) ? (int) $order : 0, is_string($container) ? trim($container) : '', $qty];
     }
 
     public function create(): void

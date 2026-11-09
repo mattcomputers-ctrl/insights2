@@ -106,6 +106,7 @@ class ShippingController
             'truncated' => $truncated,
             'error'     => $error,
             'canShip'   => CmsWriter::forCurrentUser()->allowed('ship.create_waybill'),
+            'canAssemble' => CmsWriter::forCurrentUser()->allowed('ship.assemble'),
             'asOf'      => SyncSettings::lastSuccessAt(),
         ], 'shipping');
     }

@@ -206,6 +206,70 @@ final class ShippingState
         return $out;
     }
 
+    /**
+     * What is in a shipping container, per order line, from CMS's own
+     * content function.
+     *
+     * @return list<array{ordDetail:int,item:int,code:string,unit:string,qty:float}>
+     */
+    public static function contents(CmsReader $cms, int $container): array
+    {
+        $out = [];
+        foreach ($cms->fetchAll("
+            SELECT ac.OrdDetail, ac.Item, ac.ItemCode, ac.Unit, CONVERT(VARCHAR(40), ac.Qty, 3) AS Qty
+            FROM CMS.dbo.GetAssemblyContent(?) ac
+            WHERE ac.Item IS NOT NULL AND ac.Qty <> 0
+            ORDER BY ac.OrdDetail, ac.Item", [$container]) as $r) {
+            $key = (int) ($r['OrdDetail'] ?? 0) . ':' . (int) $r['Item'];
+            $out[$key] ??= ['ordDetail' => (int) ($r['OrdDetail'] ?? 0), 'item' => (int) $r['Item'],
+                            'code' => trim((string) ($r['ItemCode'] ?? '')), 'unit' => trim((string) ($r['Unit'] ?? '')), 'qty' => 0.0];
+            $out[$key]['qty'] += (float) $r['Qty'];
+        }
+        return array_values($out);
+    }
+
+    /** Stock on hand of an item in the stock location picks come from. */
+    public static function onHand(CmsReader $cms, int $item): float
+    {
+        $r = $cms->fetch("
+            SELECT CONVERT(VARCHAR(40), SUM(v.Qty), 3) AS OnHand /* pick stock */
+            FROM CMS.dbo.Inventory v
+            WHERE v.Item = ? AND v.Location = ?", [$item, (int) ShippingRequests::STOCK]);
+        return (float) ($r['OnHand'] ?? 0);
+    }
+
+    /** A location's current Version (a container, or the stock location), or null. */
+    public static function locationVersion(CmsReader $cms, int $location): ?int
+    {
+        $r = $cms->fetch('SELECT l.Version /* location version */ FROM CMS.dbo.Location l WHERE l.Location = ?', [$location]);
+        return $r === null ? null : (int) $r['Version'];
+    }
+
+    /**
+     * Sales orders that are ready to ship and still have open lines.
+     *
+     * @return list<array{Ordr:int,ShipToName:string,PoNumber:string,DateRequired:string,Lines:int}>
+     */
+    public static function openOrders(CmsReader $cms, int $limit = 200): array
+    {
+        $limit = max(1, min(500, $limit));
+        $out   = [];
+        foreach ($cms->fetchAll("
+            SELECT TOP {$limit} o.Ordr, st.EntityName AS ShipToName, o.PoNumber,
+                   CONVERT(VARCHAR(10), o.DateRequired, 23) AS DateRequired,
+                   (SELECT COUNT(*) FROM CMS.dbo.OrdDetail d WHERE d.Ordr = o.Ordr AND d.Context = 'SH' AND d.IsOpen = 1) AS OpenLines
+            FROM CMS.dbo.Ordr o /* orders to assemble */
+            LEFT JOIN CMS.dbo.Entities st ON st.Entity = o.ShipTo
+            WHERE o.Context = 'SH' AND o.Status = 'RTS'
+              AND EXISTS (SELECT 1 FROM CMS.dbo.OrdDetail d WHERE d.Ordr = o.Ordr AND d.Context = 'SH' AND d.IsOpen = 1)
+            ORDER BY o.DateRequired, o.Ordr") as $r) {
+            $out[] = ['Ordr' => (int) $r['Ordr'], 'ShipToName' => (string) ($r['ShipToName'] ?? ''),
+                      'PoNumber' => (string) ($r['PoNumber'] ?? ''), 'DateRequired' => (string) ($r['DateRequired'] ?? ''),
+                      'Lines' => (int) $r['OpenLines']];
+        }
+        return $out;
+    }
+
     /** @return null|array<string,string|int> */
     private static function address(?array $row): ?array
     {

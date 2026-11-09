@@ -38,7 +38,7 @@ read"). Insights re-reads versions at confirm time and refuses a stale preview.
 | `ShippingOrderDataSet.SaveChanges` (Shipping Order) — create | 5,462 / 8 (all shapes) | Entering a new order | 1 request: `Insert Ordr` → per line `Insert OrdDetail` + `Insert OrdDetailPricing` → `Insert MemoRef` (if notes) → `Insert AddressRef ShipToAddress` → `Execute UpdateOrderTaxes` → `Execute CheckOrderCredit`. Usually followed seconds later by a second request releasing it (Status `RTS`, `CreditHold=false`, `CheckOrderCredit Release=true`) | `/sales-orders` list and detail, Order Readiness coverage; **new** `/sales-orders/new` (customer search, order or quote, price list or typed price, memos, duplicate-PO check). Not sent by Insights: the follow-up release request (see `sales.release_order`) | **live-ready** (`sales.create_order`) |
 | same — edit | (in the above) | Changing header, lines, notes, address | 1 request: `Update` or `UpdateVersion Ordr` → line updates / deletes / inserts → taxes → credit check | **new** `/sales-orders/{order}/edit` (PO, required date, carrier, line quantity/price, add and remove lines, memos) and buttons on the order page: release from credit hold, complete order. Still in the client only: reopen a completed order, change the ship-to address on an order, copy an order, turn a quote into an order | **live-ready** (`sales.edit_order`, `sales.release_order`, `sales.complete_order`) |
 | `ShippingOrderDataSet.CompleteSale` | 12 / 1 | Completing a counter sale without a waybill | 2 requests: `SaveChanges`, then `UpdateVersion Ordr` → `Execute CreateShipmentsByOrder` | "Complete sale" button on the order page (open orders with at least one open line); sends the second request only, since Insights has no unsaved edits at that point | **live-ready** (`sales.complete_sale`) |
-| `AssembleDataSet.SaveChanges` (Shipping Assembly) | 2,886 / 2 | Picking stock into a carton/pallet for an order | 1 request: `UpdateVersion Ordr` → `Execute CreateAssembly` → `Execute MoveInventory` per picked line | Shipping shows assemblies and contents | researched |
+| `AssembleDataSet.SaveChanges` (Shipping Assembly) | 2,886 / 2 | Picking stock into a carton/pallet for an order, or taking it back out | 1 request. New container: `UpdateVersion Ordr` → `Execute CreateAssembly` → `Execute MoveInventory` per picked line (the new container's id is filled in from the create step). Existing container: `UpdateVersion Ordr` → `UpdateVersion Location` → `Execute MoveInventory` per line. Take out: the same with a `CheckVersion` of the stock location before each move and a negative `Quantity` | Shipping shows assemblies and contents; **new** `/shipping/assemble`: orders ready to ship with open lines, per line ordered / shipped / in containers / left / in stock, pick into a new or an existing container, take stock back out | **live-ready** (`ship.assemble`, `ship.unassemble`) |
 | `InvoiceDataSet.SaveChanges` (Invoice) | 444 / 0 | Correcting an issued invoice | 1 request: reverse the invoice and re-issue it | Invoice numbers on order and shipping pages | researched |
 
 Failures seen: order locked by another user ("is currently locked by …"), stale
@@ -119,8 +119,9 @@ view; its detail views are empty here, so lines come from `ShipmentDetails`
 with the container of each line) and invoice `/shipping/invoice/{trans}`
 (`InvoiceReport`, `InvoiceDetailReport`, `InvoiceTaxReport`; needs the
 `shipping.invoice` permission because it shows prices). Still client-only:
-the shipping label itself, assembling an order into containers, and
-tracking numbers and freight cost per container.
+the shipping label itself, choosing the lot that is picked, picking in a
+unit other than the stock unit, and tracking numbers and freight cost per
+container.
 
 ## 7. Inventory (Inventory)
 

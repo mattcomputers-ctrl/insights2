@@ -139,8 +139,8 @@ $shipRefused = static function (callable $fn, string $needle, string $label): vo
 $shipFake = static fn (): \PII\Cms\Write\FakeTransport => new \PII\Cms\Write\FakeTransport();
 
 t_section('Shipping registry');
-t_same(['write.ship.create_waybill', 'write.ship.reject_waybill', 'write.ship.label_address'], $shipPerms,
-    'three shipping write permissions (finishing a waybill goes with creating one)');
+t_same(['write.ship.assemble', 'write.ship.create_waybill', 'write.ship.reject_waybill', 'write.ship.label_address'], $shipPerms,
+    'four shipping write permissions (finishing a waybill goes with creating one)');
 t_check(str_contains(\PII\Cms\Write\OperationRegistry::permissionsFor('shipping')['write.ship.create_waybill'], 'ship assembled'), 'the shared permission is described by the main operation');
 
 /**

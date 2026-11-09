@@ -205,7 +205,7 @@ packaged items.
 
 Grant `write.ship.*` and `shipping.invoice` to the test user. Assemble two
 orders for the same ship-to in the client (one container each is enough), and
-a third with two containers.
+a third with two containers. (Assembling in Insights is checked in 4.8.)
 
 1. **Ready list** (`/shipping/new`): the three orders show with the right
    container counts. This list comes from CMS's shipping-label view; if an
@@ -327,10 +327,51 @@ stock and one with none.
    the planned dates on a few open orders before and after with the client's
    own recalculation.
 
-### 4.8 onward (not built yet)
+### 4.8 Assembling orders (built)
 
-Assembling an order into containers,
-master data and bills are researched (`docs/research/`) with fixtures stored, but
+Grant `write.ship.assemble` (and `write.ship.create_waybill` for the last
+step) to the test user. Use a released sales order with two lines that have
+stock, and one line whose item has less stock than ordered.
+
+1. **List** (`/shipping/assemble`): orders ready to ship with open lines.
+   Open the test order: each line shows ordered, shipped, in containers, left
+   and in stock. Compare "in stock" with the client's assembly screen for the
+   same item; if the client offers stock Insights does not count (or the
+   other way round), note it: Insights reads the stock location only.
+2. **New container.** Leave the quantities offered, Into: a new container,
+   Review: one request (`UpdateVersion Ordr`, `CreateAssembly`, one
+   `MoveInventory` per line). Compare with the client assembling a similar
+   order. Confirm, then check in the client: the container exists under the
+   receiving location, holds the stock, and the stock is reserved to the
+   order line.
+   - Back on the page the container is listed with its contents and the lines
+     show the quantity under "In containers". **This is the first time the
+     contents reader meets a container that holds stock**: if the container
+     shows as Empty or the quantities are wrong, stop and report it.
+   - Check what CMS did to the line's shipped quantity. Insights works out
+     "left" as ordered minus shipped minus in containers; if CMS already
+     counts assembled stock as used, "left" is too low and needs a fix.
+3. **Add to the container.** Assemble a part quantity first, then the rest
+   into the same container: the request carries the container's `Version`.
+4. **Refusals to try**: more than is left on the line, more than is in stock,
+   zero, a closed line, an order that is not ready to ship, a container of
+   another order (edit the form), and an order changed in the client between
+   review and confirm.
+5. **Take out.** Take part of one line out, then "Take out everything": each
+   request has a `CheckVersion` of the stock location before each move and a
+   negative `Quantity`. The stock is back in the stock location and no longer
+   reserved. The emptied container stays in CMS, as it does in the client.
+   - If the stock location's `Version` has moved since the log was captured,
+     CMS may refuse the check; note the message.
+6. **Ship it.** Assemble again, "Ship this order": the order is on
+   `/shipping/new` with the container, and ships as in 4.5.
+7. **Reserved stock.** Assemble an item whose stock is partly reserved to
+   another order. Note whether CMS refuses, and with what message: Insights
+   only compares against the total on hand.
+
+### 4.9 onward (not built yet)
+
+Master data and bills are researched (`docs/research/`) with fixtures stored, but
 have no templates yet. Each gets its section here when it is built, following
 the same pattern: do it in Insights, do it in the client, compare the request
 and the rows, then try the known failure (listed per action in `docs/PARITY.md`).

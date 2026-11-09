@@ -676,3 +676,26 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
 131. **"Repack" is not built.** No request under that name was found in the
     log; moving stock between pack sizes goes through a packaging ticket
     (flow 6). Left as a question for Matt.
+132. **Assembling is one page in Shipping** (`/shipping/assemble`) with one
+    permission, `write.ship.assemble`, for picking into a container and for
+    taking stock back out. It is separate from the permission to ship.
+133. **Picks come from the stock location and go into a container under the
+    receiving location, package type 1**: the only shape in the log (2,886
+    requests). The three ids are constants beside the templates.
+134. **Quantities are in the item's stock unit**, sent as both `Quantity` and
+    `QtyEntered`. Every logged pick has the two equal. Picking in another
+    unit, and choosing the lot, stay in the client; CMS chooses the lot as it
+    does for the client.
+135. **Insights refuses a pick above what is left on the line** (ordered
+    minus shipped minus already in this order's containers) **or above the
+    stock on hand** in the stock location. No shipped line in CMS exceeds its
+    ordered quantity, so over-picking is not offered. Stock reserved to other
+    orders is not subtracted; CMS decides that. Flagged in the checklist.
+136. **A container can only be added to, or emptied, through the order it was
+    assembled for**, and only while that order is ready to ship. Its
+    `Version` is checked, and for a take-out the stock location's too, as the
+    client does.
+137. **An emptied container is left in CMS**, as the client leaves it. Nothing
+    in the log deletes one.
+138. **"Take out everything" sends what the container holds at the review**;
+    the confirm reads it again and asks for a new review if it changed.

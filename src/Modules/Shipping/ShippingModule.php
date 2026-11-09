@@ -12,8 +12,8 @@ use PII\Core\Router;
  * Shipping — browser over every waybill in CMS: when it shipped, how
  * (carrier / ship via), the assemblies (cartons/pallets) with their
  * tracking numbers and actual weights, and what was inside each one.
- * Live CMS. Users with the write permissions can also ship assembled
- * orders on a new waybill, reject a waybill and record printed labels,
+ * Live CMS. Users with the write permissions can also assemble orders
+ * into containers, ship assembled orders on a new waybill, reject a waybill and record printed labels,
  * each through the shared confirm step.
  */
 class ShippingModule extends Module
@@ -47,6 +47,9 @@ class ShippingModule extends Module
             $r->get('',                          $c . '@index');
             $r->get('/new',                      $e . '@newWaybill');
             $r->post('/new',                     $e . '@create');
+            $r->get('/assemble',                 $e . '@assemble');
+            $r->post('/assemble',                $e . '@assembleSave');
+            $r->post('/assemble/remove',         $e . '@assembleRemove');
             $r->get('/packing-slip/{changeSet}', $e . '@packingSlip');
             $r->get('/invoice/{trans}',          $e . '@invoice');
             $r->get('/{waybill}',                $c . '@detail');

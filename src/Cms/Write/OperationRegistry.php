@@ -38,10 +38,12 @@ use PII\Cms\Write\Ops\Sales\CompleteSale;
 use PII\Cms\Write\Ops\Sales\CreateOrder;
 use PII\Cms\Write\Ops\Sales\EditOrder;
 use PII\Cms\Write\Ops\Sales\ReleaseOrder;
+use PII\Cms\Write\Ops\Shipping\AssembleOrder;
 use PII\Cms\Write\Ops\Shipping\CreateWaybill;
 use PII\Cms\Write\Ops\Shipping\RecordLabelAddress;
 use PII\Cms\Write\Ops\Shipping\RejectWaybill;
 use PII\Cms\Write\Ops\Shipping\ResumeWaybill;
+use PII\Cms\Write\Ops\Shipping\UnassembleOrder;
 
 /**
  * The write allowlist. An operation that is not listed here cannot be
@@ -138,6 +140,10 @@ final class OperationRegistry
                 'write.mfx.undo', UndoPackout::class, ['BatchExecutionDataSet.Unpackaging']),
             new OperationDef('mfx.undo_make', 'batch_tickets', 'undo the make of a batch',
                 'write.mfx.undo', UndoMake::class, ['BatchExecutionDataSet.ReverseReceipt']),
+            new OperationDef('ship.unassemble', 'shipping', 'take stock back out of a shipping container',
+                'write.ship.assemble', UnassembleOrder::class, ['AssembleDataSet.SaveChanges']),
+            new OperationDef('ship.assemble', 'shipping', 'assemble a sales order into shipping containers',
+                'write.ship.assemble', AssembleOrder::class, ['AssembleDataSet.SaveChanges']),
             new OperationDef('ship.resume_waybill', 'shipping', 'finish a waybill that stopped part way',
                 'write.ship.create_waybill', ResumeWaybill::class, ['WaybillDataSet.ProcessOutstandingRequests']),
             new OperationDef('ship.create_waybill', 'shipping', 'ship assembled sales orders on a new waybill',
