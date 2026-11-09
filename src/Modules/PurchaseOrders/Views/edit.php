@@ -56,7 +56,7 @@
 
     <div class="card">
         <h2 class="card-title">Lines</h2>
-        <div class="card-subtitle">Quantities are in the supplier's ordering units, as the PO prints them. To change a price, use CMS.</div>
+        <div class="card-subtitle">Quantities are in the supplier's ordering units, as the PO prints them. To change a price or clear a promised date, use CMS.</div>
         <div class="table-scroll">
             <table class="table">
                 <thead>
@@ -86,7 +86,8 @@
                         <td class="text-right tabular"><?= e($l['qty']) ?> <?= e($l['unit']) ?></td>
                         <td class="text-right tabular"><?= e($l['received']) ?></td>
                         <td class="text-right tabular"><?= e($l['price']) ?></td>
-                        <td><input type="date" name="lines[<?= $id ?>][promised]" value="<?= e($l['promised']) ?>"></td>
+                        <td><input type="date" name="lines[<?= $id ?>][promised]" value="<?= e($l['promised']) ?>"
+                                <?= $l['promised'] !== '' ? 'required title="Pick another date to move it. To clear a promised date, use CMS."' : '' ?>></td>
                         <td>
                             <?php if (!$received && $l['pricing'] !== null): ?>
                                 <input type="checkbox" name="remove[]" value="<?= $id ?>" aria-label="Remove <?= e($l['code']) ?>">

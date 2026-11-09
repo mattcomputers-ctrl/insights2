@@ -20,7 +20,8 @@ use PII\Cms\Write\WriteRefused;
  * Input: ordr (int) and any of: lines {ordDetail: {qty, promised}}, remove
  * [ordDetail, …], add [{code, qty, price, promised}, …], memo, incoterms,
  * ship_via (int). A key that is absent is left alone. Line quantities are in
- * the supplier's ordering units, as the PO shows them.
+ * the supplier's ordering units, as the PO shows them. A promised date can be
+ * set or moved; blanking one that exists is refused.
  */
 final class EditPurchaseOrder implements Flow
 {
@@ -91,8 +92,12 @@ final class EditPurchaseOrder implements Flow
                 $typed = trim((string) $in['promised']);
                 $date  = $typed === '' ? '' : SalesInput::date($typed, "{$l['code']}: promised date")->format('Y-m-d');
                 if ($date !== $l['promised']) {
-                    $c['DatePromised'] = $date === '' ? '' : $date . 'T00:00:00';
-                    $said[] = 'promised ' . ($l['promised'] === '' ? '(none)' : $l['promised']) . ' → ' . ($date === '' ? '(none)' : $date);
+                    // No logged request clears a promised date, so that is not sent.
+                    if ($date === '') {
+                        throw new WriteRefused("{$l['code']} has a promised date of {$l['promised']}. Change it to another date here, or clear it in CMS.");
+                    }
+                    $c['DatePromised'] = $date . 'T00:00:00';
+                    $said[] = 'promised ' . ($l['promised'] === '' ? '(none)' : $l['promised']) . ' → ' . $date;
                 }
             }
             if ($c !== []) {

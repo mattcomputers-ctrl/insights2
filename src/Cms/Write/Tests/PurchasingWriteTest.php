@@ -332,6 +332,18 @@ t_xml_same($poNorm(cms_fixture(PurchasingRequests::SAVE, 863605)), $poNorm($x), 
     ['ordr' => 193230, 'lines' => [555461 => ['promised' => '2026-10-06']]], '2026-10-01T14:10:36');
 t_xml_same($poNorm(cms_fixture(PurchasingRequests::SAVE, 852597)), $poNorm($x), 'promised date change matches log 852597');
 
+// A line that already has a promised date: moving it sends the same shape, the same date sends nothing.
+$poDated = [$poLine(['OrdDetail' => 555461, 'DatePromised' => '2026-10-02T00:00:00'])];
+[$res, $x] = $poRun($poOrderCms(['Ordr' => 193230, 'Version' => 1], $poDated), 'po.edit_order',
+    ['ordr' => 193230, 'lines' => [555461 => ['promised' => '2026-10-06']]], '2026-10-01T14:10:36');
+t_xml_same($poNorm(cms_fixture(PurchasingRequests::SAVE, 852597)), $poNorm($x), 'moving a promised date matches log 852597');
+$poRefused(fn () => $poWriter($poOrderCms(['Ordr' => 193230, 'Version' => 1], $poDated), $poFake())->preview('po.edit_order',
+    ['ordr' => 193230, 'lines' => [555461 => ['promised' => '2026-10-02']]], $nowE), 'Nothing was changed', 'an unchanged promised date');
+$fake = $poFake();
+$poE = t_throws(\PII\Cms\Write\WriteRefused::class, fn () => $poWriter($poOrderCms(['Ordr' => 193230, 'Version' => 1], $poDated), $fake)->execute('po.edit_order',
+    ['ordr' => 193230, 'lines' => [555461 => ['promised' => '']]], $nowE));
+t_check($poE !== null && $fake->sent === [], 'blanking a promised date is refused and sends nothing to CMS');
+
 $two = [$poLine(['OrdDetail' => 551752, 'OrdDetailPricing' => 53081]), $poLine(['OrdDetail' => 551753, 'OrdDetailPricing' => 53082, 'QtyUsed' => '4.4092e+002'])];
 [$res, $x] = $poRun($poOrderCms(['Ordr' => 192671, 'Version' => 3], $two), 'po.edit_order', ['ordr' => 192671, 'remove' => ['551752']], '2026-09-18T11:57:22');
 t_xml_same($poNorm(cms_fixture(PurchasingRequests::SAVE, 848643)), $poNorm($x), 'line removal matches log 848643');
@@ -360,7 +372,9 @@ foreach ([
     'received line removal' => [$poOrderCms([], $two), ['ordr' => 194531, 'remove' => [551753]], 'has been received'],
     'last line removal'     => [$poOrderCms(), ['ordr' => 194531, 'remove' => [564550]], 'at least one line'],
     'bad promised date'     => [$poOrderCms(), ['ordr' => 194531, 'lines' => [564550 => ['promised' => 'soon']]], 'not a valid date'],
-    'unknown carrier'       => [$poOrderCms()->when('/* carrier */', []), ['ordr' => 194531, 'ship_via' => 7], 'carrier was not found'],
+    'cleared promised date' => [$poOrderCms([], [$poLine(['DatePromised' => '2026-11-10T00:00:00'])]), ['ordr' => 194531, 'lines' => [564550 => ['promised' => '']]], 'clear it in CMS'],
+    'cleared date with qty' => [$poOrderCms([], [$poLine(['DatePromised' => '2026-11-10T00:00:00'])]), ['ordr' => 194531, 'lines' => [564550 => ['qty' => '3', 'promised' => '']]], 'clear it in CMS'],
+    'unknown carrier'      => [$poOrderCms()->when('/* carrier */', []), ['ordr' => 194531, 'ship_via' => 7], 'carrier was not found'],
 ] as $name => [$cms, $in, $needle]) {
     $poRefused(fn () => $poWriter($cms, $poFake())->preview('po.edit_order', $in, $nowE), $needle, $name);
 }
