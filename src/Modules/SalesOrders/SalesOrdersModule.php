@@ -15,7 +15,9 @@ use PII\Core\Router;
  * becoming the front-end (Matt, 2026-11-04). Queries CMS LIVE.
  * Holders of a sales write permission also get order entry: new order or
  * quote, changes to an open order, release, complete and complete sale,
- * each through the shared check-then-confirm step.
+ * each through the shared check-then-confirm step. Holders of a customer
+ * write permission get the customer pages: address, carrier and freight
+ * account, and new ship-tos.
  */
 class SalesOrdersModule extends Module
 {
@@ -47,6 +49,12 @@ class SalesOrdersModule extends Module
             $r->get('',                       $c . '@index');
             $r->get('/new',                   $e . '@create');   // before /{ordr}
             $r->post('/new',                  $e . '@store');
+            $k = CustomersController::class;                     // all before /{ordr}
+            $r->get('/customers',             $k . '@index');
+            $r->get('/customers/new',         $k . '@newShipTo');
+            $r->post('/customers/new',        $k . '@create');
+            $r->post('/customers/address',    $k . '@address');
+            $r->post('/customers/shipping',   $k . '@shipping');
             $r->get('/{ordr}',                $c . '@detail');
             $r->get('/{ordr}/edit',           $e . '@edit');
             $r->post('/{ordr}/edit',          $e . '@update');

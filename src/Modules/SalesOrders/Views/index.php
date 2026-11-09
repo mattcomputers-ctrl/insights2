@@ -28,6 +28,9 @@ $tabs = ['open' => 'Open', 'completed' => 'Completed', 'all' => 'All'];
             <?php if (!empty($can['sales.create_order'])): ?>
                 <a href="/sales-orders/new?clear=1" class="btn btn-sm btn-primary">New order…</a>
             <?php endif; ?>
+            <?php if (\PII\Modules\SalesOrders\CustomersController::canAny()): ?>
+                <a href="/sales-orders/customers" class="btn btn-sm">Customers…</a>
+            <?php endif; ?>
         </div>
         <form method="GET" action="/sales-orders" class="flex gap-1 items-center">
             <input type="hidden" name="tab" value="<?= e($tab) ?>">

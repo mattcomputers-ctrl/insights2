@@ -423,7 +423,38 @@ Grant `write.item.settings` and `write.item.create` to the test user.
    posting by hand), and an item changed in the client between review and
    confirm (CMS refuses on `Version`; note the message).
 
-### 4.11 onward (not built yet)
+### 4.11 Customers: address, carrier and freight account, new ship-to (built)
+
+Grant `write.customer.edit` and `write.customer.create_shipto` to the test
+user. The pages are under Sales Orders → Customers.
+
+1. **Address.** Open a ship-to, change the first address line and the zip
+   code, Change address: one request (`UpdateVersion Entity`, `Update
+   AddressRef` with only the two changed fields). Compare with the client
+   making the same change on its Ship To screen. Confirm; the client shows
+   the new address, and a new order for the customer picks it up.
+2. **Address of a bill-to account.** Change the email of a bill-to: the
+   request carries `Program="Bill To Update"` in the logged copy of the
+   client; ours is the same two steps.
+3. **Removing a field.** Empty the second address line of a customer that
+   has one: the field is sent as `AddrLine2=""`. Check that the line is
+   gone in the client afterwards.
+4. **Carrier and freight account.** Pick another carrier and type an
+   account, Change shipping: one request (`Update Entity` with `ShipVia`
+   and `FreightAccount`, or only the one that changed). A new order for the
+   customer starts with the new carrier.
+5. **New ship-to.** Open a bill-to account, New ship-to: code, name,
+   address, carrier. One request: `Insert Entity`, six `Insert
+   EntityDocument`, `Insert AddressRef`. Create a ship-to the same way in
+   the client and compare the two requests attribute by attribute. Open the
+   new ship-to in the client: every tab opens. Enter a sales order for it
+   in Insights and ship it.
+6. **Refusals to try**: a ship-to code that exists (also try the code of a
+   supplier), a state CMS does not know, an inactive carrier (only
+   reachable by posting by hand), and a customer changed in the client
+   between review and confirm (CMS refuses on `Version`; note the message).
+
+### 4.12 onward (not built yet)
 
 Master data and bills are researched (`docs/research/`) with fixtures stored, but
 have no templates yet. Each gets its section here when it is built, following

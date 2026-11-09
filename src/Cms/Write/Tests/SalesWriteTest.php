@@ -143,7 +143,7 @@ $refused = static function (callable $fn, string $needle, string $label): void {
 $newFake = static fn (): \PII\Cms\Write\FakeTransport => new \PII\Cms\Write\FakeTransport();
 
 t_section('Sales registry');
-t_same(5, count($salesPerms), 'five sales write permissions');
+t_same(5, count(array_filter($salesPerms, static fn (string $p): bool => str_starts_with($p, 'write.sales.'))), 'five sales write permissions');
 
 /** CMS as it stood just before log 866306: customer 101427 ordering 10 lb of an alias item at no charge. */
 $f306    = cms_fixture_parse(cms_fixture('ShippingOrderDataSet.SaveChanges', 866306));

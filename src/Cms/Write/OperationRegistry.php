@@ -27,7 +27,10 @@ use PII\Cms\Write\Ops\Manufacturing\ReleaseTicket;
 use PII\Cms\Write\Ops\Manufacturing\SetRecipeActive;
 use PII\Cms\Write\Ops\MasterData\CreateAlias;
 use PII\Cms\Write\Ops\MasterData\CreateItem;
+use PII\Cms\Write\Ops\MasterData\CreateShipTo;
 use PII\Cms\Write\Ops\MasterData\EditAlias;
+use PII\Cms\Write\Ops\MasterData\EditCustomerAddress;
+use PII\Cms\Write\Ops\MasterData\SetCustomerShipping;
 use PII\Cms\Write\Ops\MasterData\SetItemSupplier;
 use PII\Cms\Write\Ops\MasterData\SetMinimumStock;
 use PII\Cms\Write\Ops\Purchasing\CompletePurchaseOrder;
@@ -181,6 +184,12 @@ final class OperationRegistry
                 'write.item.settings', SetItemSupplier::class, ['ItemUpdateDataSet.SaveChanges']),
             new OperationDef('item.create', 'items', 'create raw material and packaging items',
                 'write.item.create', CreateItem::class, ['ItemUpdateDataSet.SaveChanges']),
+            new OperationDef('customer.shipto_create', 'sales_orders', 'add ship-to addresses to customers',
+                'write.customer.create_shipto', CreateShipTo::class, ['EntityUpdateDataSet.SaveChanges']),
+            new OperationDef('customer.shipping', 'sales_orders', 'change the carrier and freight account of a customer',
+                'write.customer.edit', SetCustomerShipping::class, ['EntityUpdateDataSet.SaveChanges']),
+            new OperationDef('customer.address', 'sales_orders', 'change the address, carrier and freight account of customers',
+                'write.customer.edit', EditCustomerAddress::class, ['EntityUpdateDataSet.SaveChanges']),
             new OperationDef('mf.publish_recipe', 'recipes', 'publish a recipe',
                 'write.mf.publish_recipe', PublishRecipe::class, ['ManufacturingOrderDataSet.PublishRecipe']),
             new OperationDef('mf.recipe_active', 'recipes', 'retire or reactivate a recipe',

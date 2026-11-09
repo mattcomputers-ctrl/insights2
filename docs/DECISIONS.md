@@ -743,3 +743,31 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
     those in later saves too (logs 864641 then 864642).
 153. **`ConcentrationPercent` is not sent on a new item.** One of the last 517
     creates carried it.
+154. **Three customer changes are built: address, carrier and freight
+    account, and a new ship-to under an existing bill-to account.** Each has
+    an exact logged shape. New bill-to accounts and new suppliers carry
+    terms, credit limits and currencies that are decided case by case, so
+    they stay in the client, as do memos, second addresses and sales reps.
+155. **The customer pages live under Sales Orders** (`/sales-orders/customers`)
+    and are shown only to users who hold a customer write permission. There
+    was no customer page before; order entry already reads the same data.
+156. **A new ship-to needs a name, first address line, city, state, zip code
+    and carrier.** Every ship-to created in the logged period had a carrier
+    and nearly all had a state. Phone, email, second line and freight
+    account are optional and left out of the request when blank, as the
+    client does.
+157. **A new ship-to is created without a sales rep, country, contact or
+    memo.** The client sent a sales rep in 6 of 126 creates and a country in
+    1; positions of contact and country in the request were not seen.
+158. **Customer codes are sent in upper case** and refused when any entity
+    has the code: customers, suppliers and carriers share one code space.
+159. **An address change sends only the fields that differ**, compared after
+    tidying spaces, so stray spaces in CMS alone are not a change. The
+    second line, email and phone can be emptied (sent as an empty value, as
+    the client does); name, first line, city, state and zip code cannot.
+    The third address line and the country are shown but not changed.
+160. **The state is checked against the CMS state table** before the request
+    is built, because CMS refuses an unknown one.
+161. **A change to a bill-to account is sent as the Bill To screen sends it,
+    a change to a ship-to as the Ship To screen does.** The steps are the
+    same; only the program name in the client's log differs.
