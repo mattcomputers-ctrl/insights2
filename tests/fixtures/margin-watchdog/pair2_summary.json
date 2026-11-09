@@ -1,0 +1,77 @@
+{
+  "meta": {
+    "generated_at": "2026-10-29 10:08:00",
+    "source": "live CMS (10.10.10.11) via sds_readonly",
+    "app_commit": "0edeea0",
+    "note": "Historical date ranges chosen for stability. replacement_cost / Description are as-of capture; raw rows are the fixture inputs, expected metrics the oracle outputs."
+  },
+  "case": "pair2_summary",
+  "inputs": {
+    "baseline_start": "2026-01-01",
+    "baseline_end": "2026-03-31",
+    "comparison_start": "2026-04-01",
+    "comparison_end": "2026-06-30"
+  },
+  "raw": {
+    "baseline_revenue": 1619798.1635,
+    "baseline_cost": 679863.0261000001,
+    "baseline_qty": 172924.43999999994,
+    "comparison_revenue": 1764829.0895,
+    "comparison_cost": 782013.3626999984,
+    "comparison_qty": 203161.22000000003
+  },
+  "expected_metrics": {
+    "in_both_periods": true,
+    "qty": {
+      "baseline": 172924.43999999994,
+      "comparison": 203161.22000000003,
+      "diff_units": 30236.780000000086,
+      "diff_pct": 17.48554455344779
+    },
+    "revenue": {
+      "baseline": 1619798.1635,
+      "comparison": 1764829.0895,
+      "diff_dollars": 145030.92599999998,
+      "diff_pct": 8.953641834401301
+    },
+    "packed_cost": {
+      "baseline": 679863.0261000001,
+      "comparison": 782013.3626999984,
+      "diff_dollars": 102150.33659999829,
+      "diff_pct": 15.025134869589618
+    },
+    "dollars_over_cost": {
+      "baseline": 939935.1373999999,
+      "comparison": 982815.7268000016,
+      "diff_dollars": 42880.589400001685,
+      "diff_pct": 4.562079625900119
+    },
+    "cost_pct_revenue": {
+      "baseline": 41.972082782892976,
+      "comparison": 44.3109968751452,
+      "diff_pp": 2.3389140922522245
+    },
+    "avg_sale": {
+      "baseline": 9.367086361534556,
+      "comparison": 8.686840379773264,
+      "diff_dollars": -0.680245981761292,
+      "diff_pct": -7.262087222283828
+    },
+    "avg_cost": {
+      "baseline": 3.931561242008361,
+      "comparison": 3.849225569230182,
+      "diff_dollars": -0.08233567277817899,
+      "diff_pct": -2.094223330376495
+    },
+    "avg_cost_pct": {
+      "baseline": 41.97208278289297,
+      "comparison": 44.3109968751452,
+      "diff_pp": 2.3389140922522316
+    },
+    "expected_packed_cost": null,
+    "expected_cost_pct_of_comparison_sale": {
+      "value": null,
+      "horizon_delta_pp": null
+    }
+  }
+}

@@ -1,0 +1,2504 @@
+{
+  "meta": {
+    "generated_at": "2026-10-29 10:08:00",
+    "source": "live CMS (10.10.10.11) via sds_readonly",
+    "app_commit": "0edeea0",
+    "note": "Historical date ranges chosen for stability. replacement_cost / Description are as-of capture; raw rows are the fixture inputs, expected metrics the oracle outputs."
+  },
+  "case": "pair1_items_GRAPHIC_PACKAGING",
+  "inputs": {
+    "bill_to": "GRAPHIC PACKAGING",
+    "baseline_start": "2025-01-01",
+    "baseline_end": "2025-06-30",
+    "comparison_start": "2025-07-01",
+    "comparison_end": "2025-12-31",
+    "view_mode": "either"
+  },
+  "row_count": 36,
+  "rows": [
+    {
+      "raw": {
+        "item_name": "B1284HS-84",
+        "description": "O/S S/F FRESHPAK HS PROCESS CYAN 90985253",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.454,
+        "baseline_revenue": 4449.28,
+        "baseline_cost": 4045.4089,
+        "baseline_qty": 1264.0,
+        "comparison_revenue": 4784.736,
+        "comparison_cost": 4477.686,
+        "comparison_qty": 1359.3
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 1264.0,
+          "comparison": 1359.3,
+          "diff_units": 95.29999999999995,
+          "diff_pct": 7.539556962025312
+        },
+        "revenue": {
+          "baseline": 4449.28,
+          "comparison": 4784.736,
+          "diff_dollars": 335.45600000000013,
+          "diff_pct": 7.539556962025319
+        },
+        "packed_cost": {
+          "baseline": 4045.4089,
+          "comparison": 4477.686,
+          "diff_dollars": 432.2770999999998,
+          "diff_pct": 10.685621915747499
+        },
+        "dollars_over_cost": {
+          "baseline": 403.87109999999984,
+          "comparison": 307.0500000000002,
+          "diff_dollars": -96.82109999999966,
+          "diff_pct": -23.97326770843462
+        },
+        "cost_pct_revenue": {
+          "baseline": 90.92277626941888,
+          "comparison": 93.58271804337794,
+          "diff_pp": 2.659941773959062
+        },
+        "avg_sale": {
+          "baseline": 3.52,
+          "comparison": 3.52,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 3.200481724683544,
+          "comparison": 3.2941116751269033,
+          "diff_dollars": 0.09362995044335909,
+          "diff_pct": 2.9254955502867928
+        },
+        "avg_cost_pct": {
+          "baseline": 90.92277626941888,
+          "comparison": 93.58271804337794,
+          "diff_pp": 2.659941773959062
+        },
+        "expected_packed_cost": 3.454,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 98.125,
+          "horizon_delta_pp": 4.5422819566220625
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "B1697HS-84",
+        "description": "O/S S/F FRESHPAK HS LM BARILLA GLUTEN FREE BLUE (CRB/SUS) 10019743/10022874/10042696",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 2.7262,
+        "baseline_revenue": 8930.627,
+        "baseline_cost": 3532.7909,
+        "baseline_qty": 1388.9,
+        "comparison_revenue": 6884.601,
+        "comparison_cost": 2743.7939000000006,
+        "comparison_qty": 1070.7
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 1388.9,
+          "comparison": 1070.7,
+          "diff_units": -318.20000000000005,
+          "diff_pct": -22.910216718266255
+        },
+        "revenue": {
+          "baseline": 8930.627,
+          "comparison": 6884.601,
+          "diff_dollars": -2046.0260000000007,
+          "diff_pct": -22.91021671826626
+        },
+        "packed_cost": {
+          "baseline": 3532.7909,
+          "comparison": 2743.7939000000006,
+          "diff_dollars": -788.9969999999994,
+          "diff_pct": -22.333532392194495
+        },
+        "dollars_over_cost": {
+          "baseline": 5397.8361,
+          "comparison": 4140.807099999999,
+          "diff_dollars": -1257.0290000000014,
+          "diff_pct": -23.28764669234772
+        },
+        "cost_pct_revenue": {
+          "baseline": 39.55815084428003,
+          "comparison": 39.854072879459544,
+          "diff_pp": 0.2959220351795153
+        },
+        "avg_sale": {
+          "baseline": 6.43,
+          "comparison": 6.43,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 2.5435890992872054,
+          "comparison": 2.5626168861492484,
+          "diff_dollars": 0.019027786862042984,
+          "diff_pct": 0.7480684229766189
+        },
+        "avg_cost_pct": {
+          "baseline": 39.55815084428003,
+          "comparison": 39.85407287945954,
+          "diff_pp": 0.2959220351795082
+        },
+        "expected_packed_cost": 2.7262,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 42.39813374805599,
+          "horizon_delta_pp": 2.5440608685964534
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "B2391HS-3G",
+        "description": "O/S S/F FRESHPAK HS LM 2022 BARILLA DARK BLUE (SUS/CRB)    10039690/10039822",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.1619,
+        "baseline_revenue": 57462.6,
+        "baseline_cost": 21854.2267,
+        "baseline_qty": 8340.0,
+        "comparison_revenue": 0.0,
+        "comparison_cost": 0.0,
+        "comparison_qty": 0.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 8340.0,
+          "comparison": 0.0,
+          "diff_units": -8340.0,
+          "diff_pct": -100.0
+        },
+        "revenue": {
+          "baseline": 57462.6,
+          "comparison": 0.0,
+          "diff_dollars": -57462.6,
+          "diff_pct": -100.0
+        },
+        "packed_cost": {
+          "baseline": 21854.2267,
+          "comparison": 0.0,
+          "diff_dollars": -21854.2267,
+          "diff_pct": -100.0
+        },
+        "dollars_over_cost": {
+          "baseline": 35608.3733,
+          "comparison": 0.0,
+          "diff_dollars": -35608.3733,
+          "diff_pct": -100.0
+        },
+        "cost_pct_revenue": {
+          "baseline": 38.03208817561335,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": 6.89,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": 2.62041087529976,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": 38.03208817561335,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 3.1619,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "B2391HS-55M",
+        "description": "O/S S/F FRESHPAK LM 2022 BARILLA DARK BLUE (SUS/CRB)    10039690/10039822",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.0496,
+        "baseline_revenue": 307043.204,
+        "baseline_cost": 117425.8141,
+        "baseline_qty": 44563.6,
+        "comparison_revenue": 400389.613,
+        "comparison_cost": 157266.87039999999,
+        "comparison_qty": 58111.7
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 44563.6,
+          "comparison": 58111.7,
+          "diff_units": 13548.099999999999,
+          "diff_pct": 30.401717994057933
+        },
+        "revenue": {
+          "baseline": 307043.204,
+          "comparison": 400389.613,
+          "diff_dollars": 93346.40899999999,
+          "diff_pct": 30.401717994057925
+        },
+        "packed_cost": {
+          "baseline": 117425.8141,
+          "comparison": 157266.87039999999,
+          "diff_dollars": 39841.05629999998,
+          "diff_pct": 33.9287035013198
+        },
+        "dollars_over_cost": {
+          "baseline": 189617.3899,
+          "comparison": 243122.74260000003,
+          "diff_dollars": 53505.35270000002,
+          "diff_pct": 28.217534651340547
+        },
+        "cost_pct_revenue": {
+          "baseline": 38.24406877281022,
+          "comparison": 39.278459104282504,
+          "diff_pp": 1.0343903314722809
+        },
+        "avg_sale": {
+          "baseline": 6.890000000000001,
+          "comparison": 6.890000000000001,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 2.6350163384466248,
+          "comparison": 2.7062858322850647,
+          "diff_dollars": 0.07126949383843995,
+          "diff_pct": 2.704707853176129
+        },
+        "avg_cost_pct": {
+          "baseline": 38.24406877281022,
+          "comparison": 39.278459104282504,
+          "diff_pp": 1.0343903314722809
+        },
+        "expected_packed_cost": 3.0496,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 44.26124818577648,
+          "horizon_delta_pp": 4.982789081493976
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "B2391HS-84",
+        "description": "O/S S/F FRESHPAK HS LM 2022 BARILLA DARK BLUE (SUS/CRB)    10039690/10039822",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.521,
+        "baseline_revenue": 2227.68,
+        "baseline_cost": 996.2833,
+        "baseline_qty": 312.0,
+        "comparison_revenue": 1713.6,
+        "comparison_cost": 809.0133,
+        "comparison_qty": 240.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 312.0,
+          "comparison": 240.0,
+          "diff_units": -72.0,
+          "diff_pct": -23.076923076923077
+        },
+        "revenue": {
+          "baseline": 2227.68,
+          "comparison": 1713.6,
+          "diff_dollars": -514.0799999999999,
+          "diff_pct": -23.076923076923077
+        },
+        "packed_cost": {
+          "baseline": 996.2833,
+          "comparison": 809.0133,
+          "diff_dollars": -187.2700000000001,
+          "diff_pct": -18.79686229810337
+        },
+        "dollars_over_cost": {
+          "baseline": 1231.3966999999998,
+          "comparison": 904.5867,
+          "diff_dollars": -326.80999999999983,
+          "diff_pct": -26.539782021504514
+        },
+        "cost_pct_revenue": {
+          "baseline": 44.72290903540904,
+          "comparison": 47.21132703081232,
+          "diff_pp": 2.4884179954032817
+        },
+        "avg_sale": {
+          "baseline": 7.14,
+          "comparison": 7.14,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 3.1932157051282055,
+          "comparison": 3.3708887499999998,
+          "diff_dollars": 0.17767304487179425,
+          "diff_pct": 5.56407901246561
+        },
+        "avg_cost_pct": {
+          "baseline": 44.72290903540904,
+          "comparison": 47.21132703081232,
+          "diff_pp": 2.4884179954032817
+        },
+        "expected_packed_cost": 3.521,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 49.31372549019608,
+          "horizon_delta_pp": 2.102398459383757
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "B2667HS-84",
+        "description": "O/S FRESHPAK LM BARILLA PANTONE 2145 BLUE   10045753",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 4.3052,
+        "baseline_revenue": 1934.4,
+        "baseline_cost": 1005.8855,
+        "baseline_qty": 248.0,
+        "comparison_revenue": 5417.1,
+        "comparison_cost": 2799.5483,
+        "comparison_qty": 694.5
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 248.0,
+          "comparison": 694.5,
+          "diff_units": 446.5,
+          "diff_pct": 180.04032258064515
+        },
+        "revenue": {
+          "baseline": 1934.4,
+          "comparison": 5417.1,
+          "diff_dollars": 3482.7000000000003,
+          "diff_pct": 180.04032258064518
+        },
+        "packed_cost": {
+          "baseline": 1005.8855,
+          "comparison": 2799.5483,
+          "diff_dollars": 1793.6628,
+          "diff_pct": 178.3167964942332
+        },
+        "dollars_over_cost": {
+          "baseline": 928.5145000000001,
+          "comparison": 2617.5517000000004,
+          "diff_dollars": 1689.0372000000002,
+          "diff_pct": 181.90746617311845
+        },
+        "cost_pct_revenue": {
+          "baseline": 51.99987076095947,
+          "comparison": 51.679834228646314,
+          "diff_pp": -0.32003653231315354
+        },
+        "avg_sale": {
+          "baseline": 7.800000000000001,
+          "comparison": 7.800000000000001,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 4.055989919354839,
+          "comparison": 4.031027069834413,
+          "diff_dollars": -0.024962849520425934,
+          "diff_pct": -0.6154563994674972
+        },
+        "avg_cost_pct": {
+          "baseline": 51.99987076095947,
+          "comparison": 51.679834228646314,
+          "diff_pp": -0.32003653231315354
+        },
+        "expected_packed_cost": 4.3052,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 55.194871794871794,
+          "horizon_delta_pp": 3.5150375662254802
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "B2694HS-84",
+        "description": "O/S S/F FRESHPAK LM BARILLA PANTONE 2377 BLUE     10045853",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.296,
+        "baseline_revenue": 2003.118,
+        "baseline_cost": 774.9462,
+        "baseline_qty": 252.6,
+        "comparison_revenue": 5570.825,
+        "comparison_cost": 2149.102,
+        "comparison_qty": 702.5
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 252.6,
+          "comparison": 702.5,
+          "diff_units": 449.9,
+          "diff_pct": 178.1076801266825
+        },
+        "revenue": {
+          "baseline": 2003.118,
+          "comparison": 5570.825,
+          "diff_dollars": 3567.707,
+          "diff_pct": 178.1076801266825
+        },
+        "packed_cost": {
+          "baseline": 774.9462,
+          "comparison": 2149.102,
+          "diff_dollars": 1374.1558,
+          "diff_pct": 177.32273543634386
+        },
+        "dollars_over_cost": {
+          "baseline": 1228.1718,
+          "comparison": 3421.723,
+          "diff_dollars": 2193.5512,
+          "diff_pct": 178.6029609212652
+        },
+        "cost_pct_revenue": {
+          "baseline": 38.686996971721086,
+          "comparison": 38.57780490322349,
+          "diff_pp": -0.10919206849759888
+        },
+        "avg_sale": {
+          "baseline": 7.93,
+          "comparison": 7.93,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 3.067878859857482,
+          "comparison": 3.0592199288256228,
+          "diff_dollars": -0.008658931031859218,
+          "diff_pct": -0.2822448808249706
+        },
+        "avg_cost_pct": {
+          "baseline": 38.686996971721086,
+          "comparison": 38.57780490322349,
+          "diff_pp": -0.10919206849759888
+        },
+        "expected_packed_cost": 3.296,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 41.563682219419924,
+          "horizon_delta_pp": 2.9858773161964365
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "B2741-84",
+        "description": "O/S S/F FRESHPAK LMX PROCESS CYAN",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.6057,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 254.375,
+        "comparison_cost": 237.4322,
+        "comparison_qty": 62.5
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 62.5,
+          "diff_units": 62.5,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 254.375,
+          "diff_dollars": 254.375,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 237.4322,
+          "diff_dollars": 237.4322,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 16.942800000000005,
+          "diff_dollars": 16.942800000000005,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 93.3394398034398,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 4.07,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 3.7989151999999997,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 93.33943980343979,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 3.6057,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 88.59213759213759,
+          "horizon_delta_pp": -4.747302211302198
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "B2742-84",
+        "description": "O/S S/F FRESHPAK LMX 2022 BARILLA DARK BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.603,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 852.0,
+        "comparison_cost": 445.037,
+        "comparison_qty": 120.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 120.0,
+          "diff_units": 120.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 852.0,
+          "diff_dollars": 852.0,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 445.037,
+          "diff_dollars": 445.037,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 406.963,
+          "diff_dollars": 406.963,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 52.234389671361505,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 7.1,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 3.7086416666666664,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 52.234389671361505,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 3.603,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 50.74647887323944,
+          "horizon_delta_pp": -1.4879107981220656
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "BK1069HS-84",
+        "description": "O/S S/F FRESHPAK HS PROCESS BLACK 90985234",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 2.9072,
+        "baseline_revenue": 2811.84,
+        "baseline_cost": 2176.8821,
+        "baseline_qty": 808.0,
+        "comparison_revenue": 0.0,
+        "comparison_cost": 0.0,
+        "comparison_qty": 0.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 808.0,
+          "comparison": 0.0,
+          "diff_units": -808.0,
+          "diff_pct": -100.0
+        },
+        "revenue": {
+          "baseline": 2811.84,
+          "comparison": 0.0,
+          "diff_dollars": -2811.84,
+          "diff_pct": -100.0
+        },
+        "packed_cost": {
+          "baseline": 2176.8821,
+          "comparison": 0.0,
+          "diff_dollars": -2176.8821,
+          "diff_pct": -100.0
+        },
+        "dollars_over_cost": {
+          "baseline": 634.9579000000003,
+          "comparison": 0.0,
+          "diff_dollars": -634.9579000000003,
+          "diff_pct": -100.0
+        },
+        "cost_pct_revenue": {
+          "baseline": 77.4184199669967,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": 3.48,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": 2.6941610148514847,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": 77.4184199669967,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 2.9072,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "BN1163HS-84",
+        "description": "O/S S/F FRESHPAK HS LM WHOLE GRAIN BROWN (CRB/SUS/EVEREST) 10019378/10022872/10029185",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.6114,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 2473.12,
+        "comparison_cost": 1129.4198,
+        "comparison_qty": 328.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 328.0,
+          "diff_units": 328.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 2473.12,
+          "diff_dollars": 2473.12,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 1129.4198,
+          "diff_dollars": 1129.4198,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 1343.7002,
+          "diff_dollars": 1343.7002,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 45.6678123180436,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 7.54,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 3.4433530487804873,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 45.6678123180436,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 3.6114,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 47.89655172413793,
+          "horizon_delta_pp": 2.228739406094327
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "BN1202HS-84",
+        "description": "O/S S/F FRESHPAK HS LM BARILLA LEGUME DK BROWN (SUS) 10030053",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.0575,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 1268.8,
+        "comparison_cost": 458.37980000000005,
+        "comparison_qty": 160.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 160.0,
+          "diff_units": 160.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 1268.8,
+          "diff_dollars": 1268.8,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 458.37980000000005,
+          "diff_dollars": 458.37980000000005,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 810.4201999999999,
+          "diff_dollars": 810.4201999999999,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 36.127033417402274,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 7.93,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 2.86487375,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 36.127033417402274,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 3.0575,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 38.55611601513241,
+          "horizon_delta_pp": 2.4290825977301367
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "BN1329HS-84",
+        "description": "O/S FRESHPAK HS LM BARILLA PANTONE 7585 BROWN     10046410",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.2689,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 2132.77,
+        "comparison_cost": 813.6564,
+        "comparison_qty": 271.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 271.0,
+          "diff_units": 271.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 2132.77,
+          "diff_dollars": 2132.77,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 813.6564,
+          "diff_dollars": 813.6564,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 1319.1136000000001,
+          "diff_dollars": 1319.1136000000001,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 38.15021779188567,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 7.87,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 3.002422140221402,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 38.15021779188567,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 3.2689,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 41.53621346886912,
+          "horizon_delta_pp": 3.3859956769834483
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "G1905HS-84",
+        "description": "O/S FRESHPAK LM BARILLA PANTONE 554 GREEN   10045797",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.1472,
+        "baseline_revenue": 2121.6,
+        "baseline_cost": 784.1548,
+        "baseline_qty": 272.0,
+        "comparison_revenue": 5179.2,
+        "comparison_cost": 1943.1109,
+        "comparison_qty": 664.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 272.0,
+          "comparison": 664.0,
+          "diff_units": 392.0,
+          "diff_pct": 144.11764705882354
+        },
+        "revenue": {
+          "baseline": 2121.6,
+          "comparison": 5179.2,
+          "diff_dollars": 3057.6,
+          "diff_pct": 144.11764705882354
+        },
+        "packed_cost": {
+          "baseline": 784.1548,
+          "comparison": 1943.1109,
+          "diff_dollars": 1158.9560999999999,
+          "diff_pct": 147.79685082588284
+        },
+        "dollars_over_cost": {
+          "baseline": 1337.4451999999999,
+          "comparison": 3236.0891,
+          "diff_dollars": 1898.6439000000003,
+          "diff_pct": 141.96050051246962
+        },
+        "cost_pct_revenue": {
+          "baseline": 36.960539215686275,
+          "comparison": 37.51758765832561,
+          "diff_pp": 0.557048442639335
+        },
+        "avg_sale": {
+          "baseline": 7.8,
+          "comparison": 7.8,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 2.8829220588235294,
+          "comparison": 2.9263718373493974,
+          "diff_dollars": 0.043449778525868066,
+          "diff_pct": 1.5071437118074282
+        },
+        "avg_cost_pct": {
+          "baseline": 36.960539215686275,
+          "comparison": 37.51758765832561,
+          "diff_pp": 0.557048442639335
+        },
+        "expected_packed_cost": 3.1472,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 40.348717948717955,
+          "horizon_delta_pp": 2.8311302903923448
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "MS1209HS-84",
+        "description": "O/S S/F FRESHPAK LM SIZING VARNISH",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 2.4702,
+        "baseline_revenue": 23684.76,
+        "baseline_cost": 13734.930599999998,
+        "baseline_qty": 5981.0,
+        "comparison_revenue": 16336.98,
+        "comparison_cost": 9575.3049,
+        "comparison_qty": 4125.5
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 5981.0,
+          "comparison": 4125.5,
+          "diff_units": -1855.5,
+          "diff_pct": -31.023240260825947
+        },
+        "revenue": {
+          "baseline": 23684.76,
+          "comparison": 16336.98,
+          "diff_dollars": -7347.779999999999,
+          "diff_pct": -31.023240260825947
+        },
+        "packed_cost": {
+          "baseline": 13734.930599999998,
+          "comparison": 9575.3049,
+          "diff_dollars": -4159.625699999999,
+          "diff_pct": -30.285014326901656
+        },
+        "dollars_over_cost": {
+          "baseline": 9949.8294,
+          "comparison": 6761.6751,
+          "diff_dollars": -3188.1543,
+          "diff_pct": -32.04230114739455
+        },
+        "cost_pct_revenue": {
+          "baseline": 57.99058381845541,
+          "comparison": 58.61122986010878,
+          "diff_pp": 0.6206460416533659
+        },
+        "avg_sale": {
+          "baseline": 3.9599999999999995,
+          "comparison": 3.96,
+          "diff_dollars": 4.440892098500626E-16,
+          "diff_pct": 1.1214373986112692E-14
+        },
+        "avg_cost": {
+          "baseline": 2.296427119210834,
+          "comparison": 2.3210047024603075,
+          "diff_dollars": 0.024577583249473456,
+          "diff_pct": 1.070253135571728
+        },
+        "avg_cost_pct": {
+          "baseline": 57.99058381845541,
+          "comparison": 58.61122986010878,
+          "diff_pp": 0.6206460416533659
+        },
+        "expected_packed_cost": 2.4702,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 62.37878787878789,
+          "horizon_delta_pp": 3.767558018679111
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "MS1331UV-2G",
+        "description": "UV MATTE OVERPRINT VARNISH",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.3754,
+        "baseline_revenue": 1920.6,
+        "baseline_cost": 1305.5720000000001,
+        "baseline_qty": 220.0,
+        "comparison_revenue": 0.0,
+        "comparison_cost": 0.0,
+        "comparison_qty": 0.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 220.0,
+          "comparison": 0.0,
+          "diff_units": -220.0,
+          "diff_pct": -100.0
+        },
+        "revenue": {
+          "baseline": 1920.6,
+          "comparison": 0.0,
+          "diff_dollars": -1920.6,
+          "diff_pct": -100.0
+        },
+        "packed_cost": {
+          "baseline": 1305.5720000000001,
+          "comparison": 0.0,
+          "diff_dollars": -1305.5720000000001,
+          "diff_pct": -100.0
+        },
+        "dollars_over_cost": {
+          "baseline": 615.0279999999998,
+          "comparison": 0.0,
+          "diff_dollars": -615.0279999999998,
+          "diff_pct": -100.0
+        },
+        "cost_pct_revenue": {
+          "baseline": 67.97729876080393,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": 8.73,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": 5.934418181818183,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": 67.97729876080392,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 6.3754,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "MS1331UV-3G",
+        "description": "UV MATTE OVERPRINT VARNISH",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.4244,
+        "baseline_revenue": 523.8,
+        "baseline_cost": 364.5113,
+        "baseline_qty": 60.0,
+        "comparison_revenue": 0.0,
+        "comparison_cost": 0.0,
+        "comparison_qty": 0.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 60.0,
+          "comparison": 0.0,
+          "diff_units": -60.0,
+          "diff_pct": -100.0
+        },
+        "revenue": {
+          "baseline": 523.8,
+          "comparison": 0.0,
+          "diff_dollars": -523.8,
+          "diff_pct": -100.0
+        },
+        "packed_cost": {
+          "baseline": 364.5113,
+          "comparison": 0.0,
+          "diff_dollars": -364.5113,
+          "diff_pct": -100.0
+        },
+        "dollars_over_cost": {
+          "baseline": 159.28869999999995,
+          "comparison": 0.0,
+          "diff_dollars": -159.28869999999995,
+          "diff_pct": -100.0
+        },
+        "cost_pct_revenue": {
+          "baseline": 69.5897861779305,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": 8.729999999999999,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": 6.075188333333333,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": 69.5897861779305,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 6.4244,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "MS1426UV-2G",
+        "description": "UV MATTE OPV WITH OPTICAL BRIGHTENER",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.5686,
+        "baseline_revenue": 6426.095,
+        "baseline_cost": 4149.36,
+        "baseline_qty": 708.5,
+        "comparison_revenue": 0.0,
+        "comparison_cost": 0.0,
+        "comparison_qty": 0.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 708.5,
+          "comparison": 0.0,
+          "diff_units": -708.5,
+          "diff_pct": -100.0
+        },
+        "revenue": {
+          "baseline": 6426.095,
+          "comparison": 0.0,
+          "diff_dollars": -6426.095,
+          "diff_pct": -100.0
+        },
+        "packed_cost": {
+          "baseline": 4149.36,
+          "comparison": 0.0,
+          "diff_dollars": -4149.36,
+          "diff_pct": -100.0
+        },
+        "dollars_over_cost": {
+          "baseline": 2276.7350000000006,
+          "comparison": 0.0,
+          "diff_dollars": -2276.7350000000006,
+          "diff_pct": -100.0
+        },
+        "cost_pct_revenue": {
+          "baseline": 64.57047398147708,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": 9.07,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": 5.856541990119971,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": 64.57047398147708,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 6.5686,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "MS1432-3G",
+        "description": "S/F GLOSS OVERPRINT",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 2.8944,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 109.5,
+        "comparison_cost": 85.1247,
+        "comparison_qty": 30.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 30.0,
+          "diff_units": 30.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 109.5,
+          "diff_dollars": 109.5,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 85.1247,
+          "diff_dollars": 85.1247,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 24.375299999999996,
+          "diff_dollars": 24.375299999999996,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 77.73945205479453,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 3.65,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 2.8374900000000003,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 77.73945205479453,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 2.8944,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 79.2986301369863,
+          "horizon_delta_pp": 1.559178082191778
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "OR1211HS-84",
+        "description": "O/S S/F FRESHPAK HS LM BARILLA 7584 PLUS BROWN (SUS)  10030265",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.6475,
+        "baseline_revenue": 2315.04,
+        "baseline_cost": 1067.6395,
+        "baseline_qty": 312.0,
+        "comparison_revenue": 0.0,
+        "comparison_cost": 0.0,
+        "comparison_qty": 0.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 312.0,
+          "comparison": 0.0,
+          "diff_units": -312.0,
+          "diff_pct": -100.0
+        },
+        "revenue": {
+          "baseline": 2315.04,
+          "comparison": 0.0,
+          "diff_dollars": -2315.04,
+          "diff_pct": -100.0
+        },
+        "packed_cost": {
+          "baseline": 1067.6395,
+          "comparison": 0.0,
+          "diff_dollars": -1067.6395,
+          "diff_pct": -100.0
+        },
+        "dollars_over_cost": {
+          "baseline": 1247.4005,
+          "comparison": 0.0,
+          "diff_dollars": -1247.4005,
+          "diff_pct": -100.0
+        },
+        "cost_pct_revenue": {
+          "baseline": 46.11754008570046,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": 7.42,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": 3.4219214743589745,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": 46.11754008570046,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 3.6475,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "OR1312HS-84",
+        "description": "O/S S/F FRESHPAK HS LM BARILLA WHOLE GRAIN 2428 ORANGE (SUS)   10042694",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.3723,
+        "baseline_revenue": 5308.8,
+        "baseline_cost": 2103.0883000000003,
+        "baseline_qty": 672.0,
+        "comparison_revenue": 5221.9,
+        "comparison_cost": 1997.5509,
+        "comparison_qty": 661.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 672.0,
+          "comparison": 661.0,
+          "diff_units": -11.0,
+          "diff_pct": -1.636904761904762
+        },
+        "revenue": {
+          "baseline": 5308.8,
+          "comparison": 5221.9,
+          "diff_dollars": -86.90000000000055,
+          "diff_pct": -1.636904761904772
+        },
+        "packed_cost": {
+          "baseline": 2103.0883000000003,
+          "comparison": 1997.5509,
+          "diff_dollars": -105.53740000000039,
+          "diff_pct": -5.018210600097028
+        },
+        "dollars_over_cost": {
+          "baseline": 3205.7117,
+          "comparison": 3224.3490999999995,
+          "diff_dollars": 18.637399999999616,
+          "diff_pct": 0.5813810393492221
+        },
+        "cost_pct_revenue": {
+          "baseline": 39.615135247136834,
+          "comparison": 38.253334993010206,
+          "diff_pp": -1.3618002541266279
+        },
+        "avg_sale": {
+          "baseline": 7.9,
+          "comparison": 7.8999999999999995,
+          "diff_dollars": -8.881784197001252E-16,
+          "diff_pct": -1.1242764806330698E-14
+        },
+        "avg_cost": {
+          "baseline": 3.12959568452381,
+          "comparison": 3.0220134644478063,
+          "diff_dollars": -0.10758222007600393,
+          "diff_pct": -3.437575678162188
+        },
+        "avg_cost_pct": {
+          "baseline": 39.615135247136834,
+          "comparison": 38.253334993010206,
+          "diff_pp": -1.3618002541266279
+        },
+        "expected_packed_cost": 3.3723,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 42.6873417721519,
+          "horizon_delta_pp": 4.434006779141697
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "OR1325HS-84",
+        "description": "O/S S/F FRESHPAK HS LM PANTONE 109 ORANGE (SUS) 10042609",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.8902,
+        "baseline_revenue": 12617.18,
+        "baseline_cost": 7534.008400000001,
+        "baseline_qty": 2380.6,
+        "comparison_revenue": 12130.11,
+        "comparison_cost": 8124.7831,
+        "comparison_qty": 2288.7
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 2380.6,
+          "comparison": 2288.7,
+          "diff_units": -91.90000000000009,
+          "diff_pct": -3.8603713349575774
+        },
+        "revenue": {
+          "baseline": 12617.18,
+          "comparison": 12130.11,
+          "diff_dollars": -487.0699999999997,
+          "diff_pct": -3.8603713349575712
+        },
+        "packed_cost": {
+          "baseline": 7534.008400000001,
+          "comparison": 8124.7831,
+          "diff_dollars": 590.774699999999,
+          "diff_pct": 7.841439359159713
+        },
+        "dollars_over_cost": {
+          "baseline": 5083.1716,
+          "comparison": 4005.326900000001,
+          "diff_dollars": -1077.8446999999987,
+          "diff_pct": -21.204176935517953
+        },
+        "cost_pct_revenue": {
+          "baseline": 59.71230021288434,
+          "comparison": 66.98029201713751,
+          "diff_pp": 7.267991804253178
+        },
+        "avg_sale": {
+          "baseline": 5.300000000000001,
+          "comparison": 5.300000000000001,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 3.1647519112828704,
+          "comparison": 3.5499554769082886,
+          "diff_dollars": 0.38520356562541824,
+          "diff_pct": 12.171682849834234
+        },
+        "avg_cost_pct": {
+          "baseline": 59.71230021288434,
+          "comparison": 66.98029201713751,
+          "diff_pp": 7.267991804253178
+        },
+        "expected_packed_cost": 3.8902,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 73.39999999999999,
+          "horizon_delta_pp": 6.419707982862477
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "P1486HS-84",
+        "description": "O/S FRESHPAK HS LM BARILLA PANTONE 2593 PURPLE     10046409",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 4.7198,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 2232.56,
+        "comparison_cost": 1209.9262,
+        "comparison_qty": 259.6
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 259.6,
+          "diff_units": 259.6,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 2232.56,
+          "diff_dollars": 2232.56,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 1209.9262,
+          "diff_dollars": 1209.9262,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 1022.6337999999998,
+          "diff_dollars": 1022.6337999999998,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 54.19456587952845,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 8.6,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 4.660732665639445,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 54.19456587952843,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 4.7198,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 54.881395348837216,
+          "horizon_delta_pp": 0.6868294693087833
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "R1363HS-84",
+        "description": "O/S S/F FRESHPAK HS NEW PROCESS MAGENTA 90984629",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.5517,
+        "baseline_revenue": 19332.59,
+        "baseline_cost": 16639.774299999997,
+        "baseline_qty": 5183.0,
+        "comparison_revenue": 20315.445,
+        "comparison_cost": 17815.931,
+        "comparison_qty": 5446.5
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 5183.0,
+          "comparison": 5446.5,
+          "diff_units": 263.5,
+          "diff_pct": 5.083928226895621
+        },
+        "revenue": {
+          "baseline": 19332.59,
+          "comparison": 20315.445,
+          "diff_dollars": 982.8549999999996,
+          "diff_pct": 5.083928226895618
+        },
+        "packed_cost": {
+          "baseline": 16639.774299999997,
+          "comparison": 17815.931,
+          "diff_dollars": 1176.1567000000032,
+          "diff_pct": 7.06834527196684
+        },
+        "dollars_over_cost": {
+          "baseline": 2692.815700000003,
+          "comparison": 2499.513999999999,
+          "diff_dollars": -193.30170000000362,
+          "diff_pct": -7.178422942201482
+        },
+        "cost_pct_revenue": {
+          "baseline": 86.07110738912891,
+          "comparison": 87.69648412820887,
+          "diff_pp": 1.6253767390799538
+        },
+        "avg_sale": {
+          "baseline": 3.73,
+          "comparison": 3.73,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 3.2104523056145085,
+          "comparison": 3.2710788579821903,
+          "diff_dollars": 0.060626552367681885,
+          "diff_pct": 1.8884115568905
+        },
+        "avg_cost_pct": {
+          "baseline": 86.07110738912891,
+          "comparison": 87.69648412820885,
+          "diff_pp": 1.6253767390799396
+        },
+        "expected_packed_cost": 3.5517,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 95.21983914209115,
+          "horizon_delta_pp": 7.523355013882295
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "R1955HS-84",
+        "description": "O/S S/F FRESHPAK HS LM 2022 BARILLA LOGO RED (SUS/CRB)    10039691/10039823",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.7322,
+        "baseline_revenue": 28566.915,
+        "baseline_cost": 11790.264,
+        "baseline_qty": 3724.5,
+        "comparison_revenue": 27997.034,
+        "comparison_cost": 11542.553199999998,
+        "comparison_qty": 3650.2
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 3724.5,
+          "comparison": 3650.2,
+          "diff_units": -74.30000000000018,
+          "diff_pct": -1.9948986441133087
+        },
+        "revenue": {
+          "baseline": 28566.915,
+          "comparison": 27997.034,
+          "diff_dollars": -569.8810000000012,
+          "diff_pct": -1.994898644113308
+        },
+        "packed_cost": {
+          "baseline": 11790.264,
+          "comparison": 11542.553199999998,
+          "diff_dollars": -247.71080000000075,
+          "diff_pct": -2.100977552326231
+        },
+        "dollars_over_cost": {
+          "baseline": 16776.651,
+          "comparison": 16454.4808,
+          "diff_dollars": -322.1702000000005,
+          "diff_pct": -1.9203487036834732
+        },
+        "cost_pct_revenue": {
+          "baseline": 41.272444014343165,
+          "comparison": 41.22777148465083,
+          "diff_pp": -0.044672529692334706
+        },
+        "avg_sale": {
+          "baseline": 7.67,
+          "comparison": 7.67,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 3.1655964559001206,
+          "comparison": 3.162170072872719,
+          "diff_dollars": -0.003426383027401503,
+          "diff_pct": -0.108238149591535
+        },
+        "avg_cost_pct": {
+          "baseline": 41.272444014343165,
+          "comparison": 41.22777148465084,
+          "diff_pp": -0.0446725296923276
+        },
+        "expected_packed_cost": 3.7322,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 48.65971316818774,
+          "horizon_delta_pp": 7.431941683536905
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "R2172-84",
+        "description": "O/S S/F FRESHPAK LMX PROCESS MAGENTA",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.5386,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 260.205,
+        "comparison_cost": 233.2279,
+        "comparison_qty": 62.7
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 62.7,
+          "diff_units": 62.7,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 260.205,
+          "diff_dollars": 260.205,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 233.2279,
+          "diff_dollars": 233.2279,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 26.97709999999998,
+          "diff_dollars": 26.97709999999998,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 89.63236678772508,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 4.1499999999999995,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 3.71974322169059,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 89.63236678772508,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 3.5386,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 85.26746987951809,
+          "horizon_delta_pp": -4.364896908206987
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "R2173-84",
+        "description": "O/S S/F FRESHPAK LMX 2022 BARILLA LOGO RED",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.7744,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 496.418,
+        "comparison_cost": 247.1941,
+        "comparison_qty": 62.6
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 62.6,
+          "diff_units": 62.6,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 496.418,
+          "diff_dollars": 496.418,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 247.1941,
+          "diff_dollars": 247.1941,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 249.22390000000001,
+          "diff_dollars": 249.22390000000001,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 49.79555535858893,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 7.93,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 3.948787539936102,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 49.79555535858893,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 3.7744,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 47.59646910466583,
+          "horizon_delta_pp": -2.199086253923099
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "T1868HS-84",
+        "description": "O/S S/F FRESHPAK HS LM BARILLA CATELLI BEIGE (SUS)     10040885",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 2.3861,
+        "baseline_revenue": 1815.36,
+        "baseline_cost": 579.1565,
+        "baseline_qty": 248.0,
+        "comparison_revenue": 4684.8,
+        "comparison_cost": 1479.3319000000001,
+        "comparison_qty": 640.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 248.0,
+          "comparison": 640.0,
+          "diff_units": 392.0,
+          "diff_pct": 158.06451612903226
+        },
+        "revenue": {
+          "baseline": 1815.36,
+          "comparison": 4684.8,
+          "diff_dollars": 2869.4400000000005,
+          "diff_pct": 158.06451612903228
+        },
+        "packed_cost": {
+          "baseline": 579.1565,
+          "comparison": 1479.3319000000001,
+          "diff_dollars": 900.1754000000001,
+          "diff_pct": 155.42869673395705
+        },
+        "dollars_over_cost": {
+          "baseline": 1236.2034999999998,
+          "comparison": 3205.4681,
+          "diff_dollars": 1969.2646000000002,
+          "diff_pct": 159.29938719636374
+        },
+        "cost_pct_revenue": {
+          "baseline": 31.90312114401552,
+          "comparison": 31.57726904030055,
+          "diff_pp": -0.3258521037149684
+        },
+        "avg_sale": {
+          "baseline": 7.319999999999999,
+          "comparison": 7.32,
+          "diff_dollars": 8.881784197001252E-16,
+          "diff_pct": 1.2133584968580947E-14
+        },
+        "avg_cost": {
+          "baseline": 2.335308467741936,
+          "comparison": 2.3114560937500004,
+          "diff_dollars": -0.023852373991935405,
+          "diff_pct": -1.021380015591637
+        },
+        "avg_cost_pct": {
+          "baseline": 31.90312114401552,
+          "comparison": 31.57726904030055,
+          "diff_pp": -0.3258521037149684
+        },
+        "expected_packed_cost": 2.3861,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 32.59699453551912,
+          "horizon_delta_pp": 1.019725495218573
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "T1925HS-84",
+        "description": "O/S S/F FRESHPAK LM BARILLA LEGUME BEIGE (SUS)   10042695",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": null,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 2172.8,
+        "comparison_cost": 764.9948,
+        "comparison_qty": 320.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 320.0,
+          "diff_units": 320.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 2172.8,
+          "diff_dollars": 2172.8,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 764.9948,
+          "diff_dollars": 764.9948,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 1407.8052000000002,
+          "diff_dollars": 1407.8052000000002,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 35.20778718703976,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 6.790000000000001,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 2.39060875,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 35.20778718703976,
+          "diff_pp": null
+        },
+        "expected_packed_cost": null,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15711-10",
+        "description": "OS VINYLCURE XLT INVISIBLE BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 17.4655,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 97.631,
+        "baseline_qty": 5.8,
+        "comparison_revenue": 0.0,
+        "comparison_cost": 0.0,
+        "comparison_qty": 0.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 5.8,
+          "comparison": 0.0,
+          "diff_units": -5.8,
+          "diff_pct": -100.0
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 0.0,
+          "diff_dollars": 0.0,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 97.631,
+          "comparison": 0.0,
+          "diff_dollars": -97.631,
+          "diff_pct": -100.0
+        },
+        "dollars_over_cost": {
+          "baseline": -97.631,
+          "comparison": 0.0,
+          "diff_dollars": 97.631,
+          "diff_pct": 100.0
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": 0.0,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": 16.83293103448276,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 17.4655,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV25587-2G",
+        "description": "UV MATTE OPV",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.8416,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 2764.8684000000003,
+        "baseline_qty": 418.0,
+        "comparison_revenue": 5132.4,
+        "comparison_cost": 5826.099499999999,
+        "comparison_qty": 940.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 418.0,
+          "comparison": 940.0,
+          "diff_units": 522.0,
+          "diff_pct": 124.88038277511961
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 5132.4,
+          "diff_dollars": 5132.4,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 2764.8684000000003,
+          "comparison": 5826.099499999999,
+          "diff_dollars": 3061.231099999999,
+          "diff_pct": 110.71887182767898
+        },
+        "dollars_over_cost": {
+          "baseline": -2764.8684000000003,
+          "comparison": -693.6994999999997,
+          "diff_dollars": 2071.1689000000006,
+          "diff_pct": 74.91021634158068
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 113.51608409321175,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": 0.0,
+          "comparison": 5.46,
+          "diff_dollars": 5.46,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": 6.614517703349283,
+          "comparison": 6.197978191489361,
+          "diff_dollars": -0.4165395118599218,
+          "diff_pct": -6.297352740457638
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 113.51608409321175,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 6.8416,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 125.30402930402931,
+          "horizon_delta_pp": 11.787945210817568
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV25607-2G",
+        "description": "UV VINYLCURE LOW TACK OPAQUE WHITE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 4.3305,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 9968.4,
+        "comparison_cost": 1794.6885,
+        "comparison_qty": 852.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 852.0,
+          "diff_units": 852.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 9968.4,
+          "diff_dollars": 9968.4,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 1794.6885,
+          "diff_dollars": 1794.6885,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 8173.711499999999,
+          "diff_dollars": 8173.711499999999,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 18.003776935114963,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 11.7,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 2.106441901408451,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 18.003776935114963,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 4.3305,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 37.01282051282052,
+          "horizon_delta_pp": 19.009043577705555
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL011-50",
+        "description": "UV VINYLCURE XLT OPAQUE WHITE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 4.1599,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 1281.6,
+        "comparison_cost": 372.883,
+        "comparison_qty": 96.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 96.0,
+          "diff_units": 96.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 1281.6,
+          "diff_dollars": 1281.6,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 372.883,
+          "diff_dollars": 372.883,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 908.7169999999999,
+          "diff_dollars": 908.7169999999999,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 29.09511548064919,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 13.35,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 3.8841979166666665,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 29.095115480649188,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 4.1599,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 31.16029962546817,
+          "horizon_delta_pp": 2.065184144818982
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "X102931-84",
+        "description": "OS GLOW IN THE DARK GREEN",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 79.5967,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 4382.141,
+        "comparison_cost": 2272.3399,
+        "comparison_qty": 32.3
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 32.3,
+          "diff_units": 32.3,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 4382.141,
+          "diff_dollars": 4382.141,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 2272.3399,
+          "diff_dollars": 2272.3399,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 2109.8010999999997,
+          "diff_dollars": 2109.8010999999997,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 51.8545592211661,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 135.67,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 70.35108049535604,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 51.8545592211661,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 79.5967,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 58.669344733544634,
+          "horizon_delta_pp": 6.814785512378535
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "Y1209HS-84",
+        "description": "O/S S/F FRESHPAK HS PROCESS YELLOW 90985250",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.3597,
+        "baseline_revenue": 20345.089,
+        "baseline_cost": 16175.3528,
+        "baseline_qty": 5230.099999999999,
+        "comparison_revenue": 16773.291,
+        "comparison_cost": 13793.6649,
+        "comparison_qty": 4311.9
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 5230.099999999999,
+          "comparison": 4311.9,
+          "diff_units": -918.1999999999998,
+          "diff_pct": -17.556069673620005
+        },
+        "revenue": {
+          "baseline": 20345.089,
+          "comparison": 16773.291,
+          "diff_dollars": -3571.797999999999,
+          "diff_pct": -17.55606967362
+        },
+        "packed_cost": {
+          "baseline": 16175.3528,
+          "comparison": 13793.6649,
+          "diff_dollars": -2381.687900000001,
+          "diff_pct": -14.724178999050954
+        },
+        "dollars_over_cost": {
+          "baseline": 4169.736199999999,
+          "comparison": 2979.6261000000013,
+          "diff_dollars": -1190.110099999998,
+          "diff_pct": -28.54161613389351
+        },
+        "cost_pct_revenue": {
+          "baseline": 79.50494981860243,
+          "comparison": 82.23588859216716,
+          "diff_pp": 2.7309387735647306
+        },
+        "avg_sale": {
+          "baseline": 3.8900000000000006,
+          "comparison": 3.8900000000000006,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 3.0927425479436343,
+          "comparison": 3.1989760662353026,
+          "diff_dollars": 0.10623351829166827,
+          "diff_pct": 3.434929246286697
+        },
+        "avg_cost_pct": {
+          "baseline": 79.50494981860241,
+          "comparison": 82.23588859216716,
+          "diff_pp": 2.730938773564745
+        },
+        "expected_packed_cost": 3.3597,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 86.3676092544987,
+          "horizon_delta_pp": 4.131720662331546
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "Y1677-84",
+        "description": "O/S S/F FRESHPAK LMX PROCESS YELLOW",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.5274,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 309.6,
+        "comparison_cost": 277.3891,
+        "comparison_qty": 72.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 72.0,
+          "diff_units": 72.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 309.6,
+          "diff_dollars": 309.6,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 277.3891,
+          "diff_dollars": 277.3891,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 32.21090000000004,
+          "diff_dollars": 32.21090000000004,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 89.59596253229974,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 4.300000000000001,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 3.8526263888888885,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 89.59596253229972,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 3.5274,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 82.03255813953487,
+          "horizon_delta_pp": -7.563404392764852
+        }
+      }
+    }
+  ]
+}

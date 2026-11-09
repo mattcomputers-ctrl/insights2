@@ -1,0 +1,14 @@
+/vendor/
+/config/config.php
+/storage/cache/*
+/storage/logs/*
+/storage/exports/*
+!/storage/cache/.gitkeep
+!/storage/logs/.gitkeep
+!/storage/exports/.gitkeep
+composer.lock
+.env
+.idea/
+.vscode/
+*.log
+/config/cms.local.php

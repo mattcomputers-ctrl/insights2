@@ -1,0 +1,37 @@
+#!/bin/bash
+# Precision Ink Insights — uninstall (SPEC §5).
+#   sudo bash /var/www/precision-ink-insights/bin/uninstall [--purge]
+# Removes services, vhost, cron, helper and code. Keeps the database
+# and backups unless --purge is given.
+set -u
+INSTALL_DIR="/var/www/precision-ink-insights"
+PURGE=0
+[ "${1:-}" = "--purge" ] && PURGE=1
+[ "$(id -u)" -eq 0 ] || { echo "Run as root."; exit 1; }
+
+read -rp "Uninstall Precision Ink Insights$([ $PURGE -eq 1 ] && echo ' AND DELETE ITS DATABASE')? Type yes: " ANSWER
+[ "$ANSWER" = "yes" ] || { echo "Aborted."; exit 0; }
+
+systemctl disable --now insights-sync-worker insights-backup.timer 2>/dev/null
+rm -f /etc/systemd/system/insights-sync-worker.service \
+      /etc/systemd/system/insights-backup.service /etc/systemd/system/insights-backup.timer
+systemctl daemon-reload 2>/dev/null
+
+a2dissite precision-ink-insights.conf 2>/dev/null
+rm -f /etc/apache2/sites-available/precision-ink-insights.conf
+systemctl reload apache2 2>/dev/null
+
+crontab -u www-data -l 2>/dev/null | grep -v 'Precision Ink Insights' | grep -v 'snapshot-inventory' | crontab -u www-data - 2>/dev/null
+rm -f /etc/logrotate.d/precision-ink-insights /etc/sudoers.d/insights \
+      /usr/local/sbin/insights-helper /usr/local/sbin/insights-update
+
+if [ $PURGE -eq 1 ]; then
+    DBN=$(php -r '$c=@require "'"$INSTALL_DIR"'/config/config.php"; echo $c["db"]["name"] ?? "";' 2>/dev/null)
+    if [ -n "$DBN" ]; then
+        mariadb -e "DROP DATABASE IF EXISTS \`$DBN\`;" && echo "Database $DBN dropped."
+    fi
+    rm -rf /var/backups/insights
+fi
+
+rm -rf "$INSTALL_DIR"
+echo "Uninstalled.$([ $PURGE -eq 0 ] && echo ' Database and /var/backups/insights kept.')"

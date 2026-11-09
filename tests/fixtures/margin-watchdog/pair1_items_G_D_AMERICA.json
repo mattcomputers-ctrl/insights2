@@ -1,0 +1,3953 @@
+{
+  "meta": {
+    "generated_at": "2026-10-29 10:08:00",
+    "source": "live CMS (10.10.10.11) via sds_readonly",
+    "app_commit": "0edeea0",
+    "note": "Historical date ranges chosen for stability. replacement_cost / Description are as-of capture; raw rows are the fixture inputs, expected metrics the oracle outputs."
+  },
+  "case": "pair1_items_G_D_AMERICA",
+  "inputs": {
+    "bill_to": "G+D AMERICA",
+    "baseline_start": "2025-01-01",
+    "baseline_end": "2025-06-30",
+    "comparison_start": "2025-07-01",
+    "comparison_end": "2025-12-31",
+    "view_mode": "either"
+  },
+  "row_count": 57,
+  "rows": [
+    {
+      "raw": {
+        "item_name": "2GP",
+        "description": "2 GALLON BLACK PLASTIC PAIL",
+        "unit": "ea",
+        "unit_mixed": false,
+        "replacement_cost": 2.673,
+        "baseline_revenue": 319.0,
+        "baseline_cost": 250.29880000000003,
+        "baseline_qty": 100.0,
+        "comparison_revenue": 446.6,
+        "comparison_cost": 357.4569,
+        "comparison_qty": 140.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 100.0,
+          "comparison": 140.0,
+          "diff_units": 40.0,
+          "diff_pct": 40.0
+        },
+        "revenue": {
+          "baseline": 319.0,
+          "comparison": 446.6,
+          "diff_dollars": 127.60000000000002,
+          "diff_pct": 40.00000000000001
+        },
+        "packed_cost": {
+          "baseline": 250.29880000000003,
+          "comparison": 357.4569,
+          "diff_dollars": 107.15809999999999,
+          "diff_pct": 42.81207101272558
+        },
+        "dollars_over_cost": {
+          "baseline": 68.70119999999997,
+          "comparison": 89.1431,
+          "diff_dollars": 20.441900000000032,
+          "diff_pct": 29.754793220496932
+        },
+        "cost_pct_revenue": {
+          "baseline": 78.4635736677116,
+          "comparison": 80.03961038961039,
+          "diff_pp": 1.576036721898788
+        },
+        "avg_sale": {
+          "baseline": 3.19,
+          "comparison": 3.19,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 2.502988,
+          "comparison": 2.5532635714285714,
+          "diff_dollars": 0.0502755714285712,
+          "diff_pct": 2.008622151946841
+        },
+        "avg_cost_pct": {
+          "baseline": 78.4635736677116,
+          "comparison": 80.03961038961039,
+          "diff_pp": 1.576036721898788
+        },
+        "expected_packed_cost": 2.673,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 83.79310344827586,
+          "horizon_delta_pp": 3.7534930586654696
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "2GP LID",
+        "description": "2 GALLON BLACK PLASTIC COVER",
+        "unit": "ea",
+        "unit_mixed": false,
+        "replacement_cost": 0.755,
+        "baseline_revenue": 70.0,
+        "baseline_cost": 50.91329999999999,
+        "baseline_qty": 100.0,
+        "comparison_revenue": 98.0,
+        "comparison_cost": 70.7491,
+        "comparison_qty": 140.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 100.0,
+          "comparison": 140.0,
+          "diff_units": 40.0,
+          "diff_pct": 40.0
+        },
+        "revenue": {
+          "baseline": 70.0,
+          "comparison": 98.0,
+          "diff_dollars": 28.0,
+          "diff_pct": 40.0
+        },
+        "packed_cost": {
+          "baseline": 50.91329999999999,
+          "comparison": 70.7491,
+          "diff_dollars": 19.835800000000006,
+          "diff_pct": 38.959957417806365
+        },
+        "dollars_over_cost": {
+          "baseline": 19.086700000000008,
+          "comparison": 27.2509,
+          "diff_dollars": 8.164199999999994,
+          "diff_pct": 42.77428785489367
+        },
+        "cost_pct_revenue": {
+          "baseline": 72.7332857142857,
+          "comparison": 72.19295918367347,
+          "diff_pp": -0.5403265306122336
+        },
+        "avg_sale": {
+          "baseline": 0.7,
+          "comparison": 0.7,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 0.509133,
+          "comparison": 0.5053507142857143,
+          "diff_dollars": -0.003782285714285627,
+          "diff_pct": -0.7428875587097334
+        },
+        "avg_cost_pct": {
+          "baseline": 72.73328571428571,
+          "comparison": 72.19295918367348,
+          "diff_pp": -0.5403265306122336
+        },
+        "expected_packed_cost": 0.755,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 107.85714285714288,
+          "horizon_delta_pp": 35.664183673469395
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "3.5GP",
+        "description": "3.5 GALLON BLACK PLASTIC PAIL TALL",
+        "unit": "ea",
+        "unit_mixed": false,
+        "replacement_cost": 4.8,
+        "baseline_revenue": 236.4,
+        "baseline_cost": 208.6951,
+        "baseline_qty": 60.0,
+        "comparison_revenue": 197.0,
+        "comparison_cost": 176.2489,
+        "comparison_qty": 50.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 60.0,
+          "comparison": 50.0,
+          "diff_units": -10.0,
+          "diff_pct": -16.666666666666664
+        },
+        "revenue": {
+          "baseline": 236.4,
+          "comparison": 197.0,
+          "diff_dollars": -39.400000000000006,
+          "diff_pct": -16.666666666666668
+        },
+        "packed_cost": {
+          "baseline": 208.6951,
+          "comparison": 176.2489,
+          "diff_dollars": -32.446200000000005,
+          "diff_pct": -15.547178635243474
+        },
+        "dollars_over_cost": {
+          "baseline": 27.70490000000001,
+          "comparison": 20.751100000000008,
+          "diff_dollars": -6.953800000000001,
+          "diff_pct": -25.099531129872325
+        },
+        "cost_pct_revenue": {
+          "baseline": 88.28049915397631,
+          "comparison": 89.4664467005076,
+          "diff_pp": 1.1859475465312954
+        },
+        "avg_sale": {
+          "baseline": 3.94,
+          "comparison": 3.94,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 3.4782516666666665,
+          "comparison": 3.524978,
+          "diff_dollars": 0.046726333333333425,
+          "diff_pct": 1.3433856377078357
+        },
+        "avg_cost_pct": {
+          "baseline": 88.28049915397631,
+          "comparison": 89.46644670050762,
+          "diff_pp": 1.1859475465313096
+        },
+        "expected_packed_cost": 4.8,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 121.82741116751268,
+          "horizon_delta_pp": 32.36096446700506
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "3.5GP LID",
+        "description": "3.5 GALLON BLACK PLASTIC TEAR TAB COVER",
+        "unit": "ea",
+        "unit_mixed": false,
+        "replacement_cost": 1.309,
+        "baseline_revenue": 90.0,
+        "baseline_cost": 72.0,
+        "baseline_qty": 60.0,
+        "comparison_revenue": 75.0,
+        "comparison_cost": 60.0,
+        "comparison_qty": 50.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 60.0,
+          "comparison": 50.0,
+          "diff_units": -10.0,
+          "diff_pct": -16.666666666666664
+        },
+        "revenue": {
+          "baseline": 90.0,
+          "comparison": 75.0,
+          "diff_dollars": -15.0,
+          "diff_pct": -16.666666666666664
+        },
+        "packed_cost": {
+          "baseline": 72.0,
+          "comparison": 60.0,
+          "diff_dollars": -12.0,
+          "diff_pct": -16.666666666666664
+        },
+        "dollars_over_cost": {
+          "baseline": 18.0,
+          "comparison": 15.0,
+          "diff_dollars": -3.0,
+          "diff_pct": -16.666666666666664
+        },
+        "cost_pct_revenue": {
+          "baseline": 80.0,
+          "comparison": 80.0,
+          "diff_pp": 0.0
+        },
+        "avg_sale": {
+          "baseline": 1.5,
+          "comparison": 1.5,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 1.2,
+          "comparison": 1.2,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost_pct": {
+          "baseline": 80.0,
+          "comparison": 80.0,
+          "diff_pp": 0.0
+        },
+        "expected_packed_cost": 1.309,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 87.26666666666667,
+          "horizon_delta_pp": 7.266666666666666
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "5LBPT",
+        "description": "5LB PLASTIC TALL SLIP COVER CAN W/LID",
+        "unit": "ea",
+        "unit_mixed": false,
+        "replacement_cost": 1.075,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 77.28,
+        "comparison_cost": 51.599999999999994,
+        "comparison_qty": 48.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 48.0,
+          "diff_units": 48.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 77.28,
+          "diff_dollars": 77.28,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 51.599999999999994,
+          "diff_dollars": 51.599999999999994,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 25.680000000000007,
+          "diff_dollars": 25.680000000000007,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 66.77018633540371,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 1.61,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 1.075,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 66.77018633540372,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 1.075,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 66.77018633540372,
+          "horizon_delta_pp": 0.0
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "B2683UV-50",
+        "description": "O/S VINYLCURE NON-CARBON OHIO DL 7682 BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.2863,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 475.8,
+        "comparison_cost": 121.1428,
+        "comparison_qty": 20.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 20.0,
+          "diff_units": 20.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 475.8,
+          "diff_dollars": 475.8,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 121.1428,
+          "diff_dollars": 121.1428,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 354.6572,
+          "diff_dollars": 354.6572,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 25.460865910046238,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 23.79,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.0571399999999995,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 25.460865910046238,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.2863,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 30.627574611181167,
+          "horizon_delta_pp": 5.1667087011349295
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "B2684UV-50",
+        "description": "O/S VINYLCURE NON-CARBON OHIO DL 293 BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 8.3641,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 505.2,
+        "comparison_cost": 141.969,
+        "comparison_qty": 20.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 20.0,
+          "diff_units": 20.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 505.2,
+          "diff_dollars": 505.2,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 141.969,
+          "diff_dollars": 141.969,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 363.231,
+          "diff_dollars": 363.231,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 28.101543942992873,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 25.259999999999998,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 7.09845,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 28.101543942992873,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 8.3641,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 33.11203483768805,
+          "horizon_delta_pp": 5.010490894695177
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "B2686UV-50",
+        "description": "O/S VINYLCURE NON-CARBON OHIO DL 301 BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.9982,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 492.4,
+        "comparison_cost": 131.3423,
+        "comparison_qty": 20.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 20.0,
+          "diff_units": 20.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 492.4,
+          "diff_dollars": 492.4,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 131.3423,
+          "diff_dollars": 131.3423,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 361.05769999999995,
+          "diff_dollars": 361.05769999999995,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 26.67390333062551,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 24.619999999999997,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.567114999999999,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 26.67390333062551,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.9982,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 32.48659626320065,
+          "horizon_delta_pp": 5.812692932575143
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "G1914UV-50",
+        "description": "O/S VINYLCURE NON-CARBON OHIO DL 555 GREEN",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.4727,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 479.8,
+        "comparison_cost": 123.7001,
+        "comparison_qty": 20.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 20.0,
+          "diff_units": 20.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 479.8,
+          "diff_dollars": 479.8,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 123.7001,
+          "diff_dollars": 123.7001,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 356.0999,
+          "diff_dollars": 356.0999,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 25.78159649854106,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 23.990000000000002,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.185005,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 25.78159649854106,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.4727,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 31.149228845352226,
+          "horizon_delta_pp": 5.367632346811167
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "G1916UV-50",
+        "description": "O/S VINYLCURE NON-CARBON OHIO DL 3115 GREEN",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.7019,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 474.012,
+        "comparison_cost": 118.1425,
+        "comparison_qty": 19.8
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 19.8,
+          "diff_units": 19.8,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 474.012,
+          "diff_dollars": 474.012,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 118.1425,
+          "diff_dollars": 118.1425,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 355.8695,
+          "diff_dollars": 355.8695,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 24.92394707306988,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 23.939999999999998,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 5.966792929292929,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 24.92394707306988,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.7019,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 32.17167919799499,
+          "horizon_delta_pp": 7.247732124925111
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "G1971UV-50",
+        "description": "O/S VINYLCURE NON-CARBON STRONG 621 GREEN W/ FLUOR RED 190 REV",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 54.5621,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 3223.0,
+        "comparison_cost": 1096.0378,
+        "comparison_qty": 20.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 20.0,
+          "diff_units": 20.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 3223.0,
+          "diff_dollars": 3223.0,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 1096.0378,
+          "diff_dollars": 1096.0378,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 2126.9622,
+          "diff_dollars": 2126.9622,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 34.006757679180886,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 161.15,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 54.80189,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 34.006757679180886,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 54.5621,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 33.857958423828734,
+          "horizon_delta_pp": -0.14879925535215222
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "GG1504C",
+        "description": "PANTONE PASTELS & NEONS GUIDE COATED & UNCOATED",
+        "unit": "ea",
+        "unit_mixed": false,
+        "replacement_cost": 101.6,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 215.76,
+        "comparison_cost": 185.76,
+        "comparison_qty": 2.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 2.0,
+          "diff_units": 2.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 215.76,
+          "diff_dollars": 215.76,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 185.76,
+          "diff_dollars": 185.76,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 30.0,
+          "diff_dollars": 30.0,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 86.09566184649611,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 107.88,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 92.88,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 86.09566184649611,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 101.6,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 94.17871709306637,
+          "horizon_delta_pp": 8.083055246570254
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "GG1507C",
+        "description": "PANTONE METALLICS GUIDE",
+        "unit": "ea",
+        "unit_mixed": false,
+        "replacement_cost": 145.46,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 296.16,
+        "comparison_cost": 266.16,
+        "comparison_qty": 2.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 2.0,
+          "diff_units": 2.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 296.16,
+          "diff_dollars": 296.16,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 266.16,
+          "diff_dollars": 266.16,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 30.0,
+          "diff_dollars": 30.0,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 89.87034035656401,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 148.08,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 133.08,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 89.87034035656401,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 145.46,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 98.23068611561318,
+          "horizon_delta_pp": 8.360345759049167
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "IR LASER PEN",
+        "description": "IR LASER PEN",
+        "unit": "ea",
+        "unit_mixed": false,
+        "replacement_cost": 100.0,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 1550.0,
+        "comparison_cost": 1000.0,
+        "comparison_qty": 10.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 10.0,
+          "diff_units": 10.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 1550.0,
+          "diff_dollars": 1550.0,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 1000.0,
+          "diff_dollars": 1000.0,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 550.0,
+          "diff_dollars": 550.0,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 64.51612903225806,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 155.0,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 100.0,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 64.51612903225806,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 100.0,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 64.51612903225806,
+          "horizon_delta_pp": 0.0
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "MS1423UV-85",
+        "description": "UV REDUCER (UVM-3009)",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 3.3605,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 92.8,
+        "comparison_cost": 17.5475,
+        "comparison_qty": 8.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 8.0,
+          "diff_units": 8.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 92.8,
+          "diff_dollars": 92.8,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 17.5475,
+          "diff_dollars": 17.5475,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 75.2525,
+          "diff_dollars": 75.2525,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 18.908943965517242,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 11.6,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 2.1934375,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 18.908943965517242,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 3.3605,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 28.969827586206897,
+          "horizon_delta_pp": 10.060883620689655
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "R2157UV-50",
+        "description": "O/S VINYLCURE INVISIBLE RED",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 19.6152,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 3080.2,
+        "comparison_cost": 368.45849999999996,
+        "comparison_qty": 20.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 20.0,
+          "diff_units": 20.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 3080.2,
+          "diff_dollars": 3080.2,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 368.45849999999996,
+          "diff_dollars": 368.45849999999996,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 2711.7415,
+          "diff_dollars": 2711.7415,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 11.96216154795143,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 154.01,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 18.422925,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 11.962161547951432,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 19.6152,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 12.736315823647818,
+          "horizon_delta_pp": 0.774154275696386
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "S1803-55P",
+        "description": "OG DIAMOND ETCH",
+        "unit": "ea",
+        "unit_mixed": false,
+        "replacement_cost": 597.3,
+        "baseline_revenue": 2742.92,
+        "baseline_cost": 1212.315,
+        "baseline_qty": 2.0,
+        "comparison_revenue": 2742.92,
+        "comparison_cost": 1175.62,
+        "comparison_qty": 2.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 2.0,
+          "comparison": 2.0,
+          "diff_units": 0.0,
+          "diff_pct": 0.0
+        },
+        "revenue": {
+          "baseline": 2742.92,
+          "comparison": 2742.92,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "packed_cost": {
+          "baseline": 1212.315,
+          "comparison": 1175.62,
+          "diff_dollars": -36.695000000000164,
+          "diff_pct": -3.0268535817836257
+        },
+        "dollars_over_cost": {
+          "baseline": 1530.605,
+          "comparison": 1567.3000000000002,
+          "diff_dollars": 36.695000000000164,
+          "diff_pct": 2.3974180144452792
+        },
+        "cost_pct_revenue": {
+          "baseline": 44.197971504819684,
+          "comparison": 42.860163621250344,
+          "diff_pp": -1.33780788356934
+        },
+        "avg_sale": {
+          "baseline": 1371.46,
+          "comparison": 1371.46,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 606.1575,
+          "comparison": 587.81,
+          "diff_dollars": -18.347500000000082,
+          "diff_pct": -3.0268535817836257
+        },
+        "avg_cost_pct": {
+          "baseline": 44.197971504819684,
+          "comparison": 42.860163621250344,
+          "diff_pp": -1.33780788356934
+        },
+        "expected_packed_cost": 597.3,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 43.55212693042451,
+          "horizon_delta_pp": 0.691963309174163
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "S1820-55P",
+        "description": "OG DIAMOND SUB",
+        "unit": "ea",
+        "unit_mixed": false,
+        "replacement_cost": 1372.25,
+        "baseline_revenue": 2959.44,
+        "baseline_cost": 2744.5,
+        "baseline_qty": 2.0,
+        "comparison_revenue": 1479.72,
+        "comparison_cost": 1372.25,
+        "comparison_qty": 1.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 2.0,
+          "comparison": 1.0,
+          "diff_units": -1.0,
+          "diff_pct": -50.0
+        },
+        "revenue": {
+          "baseline": 2959.44,
+          "comparison": 1479.72,
+          "diff_dollars": -1479.72,
+          "diff_pct": -50.0
+        },
+        "packed_cost": {
+          "baseline": 2744.5,
+          "comparison": 1372.25,
+          "diff_dollars": -1372.25,
+          "diff_pct": -50.0
+        },
+        "dollars_over_cost": {
+          "baseline": 214.94000000000005,
+          "comparison": 107.47000000000003,
+          "diff_dollars": -107.47000000000003,
+          "diff_pct": -50.0
+        },
+        "cost_pct_revenue": {
+          "baseline": 92.73713945881653,
+          "comparison": 92.73713945881653,
+          "diff_pp": 0.0
+        },
+        "avg_sale": {
+          "baseline": 1479.72,
+          "comparison": 1479.72,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 1372.25,
+          "comparison": 1372.25,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost_pct": {
+          "baseline": 92.73713945881653,
+          "comparison": 92.73713945881653,
+          "diff_pp": 0.0
+        },
+        "expected_packed_cost": 1372.25,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 92.73713945881653,
+          "horizon_delta_pp": 0.0
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "T2095UV-50",
+        "description": "O/S VINYLCURE PAYPAL LT BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.7395,
+        "baseline_revenue": 4762.7,
+        "baseline_cost": 1408.1471,
+        "baseline_qty": 242.5,
+        "comparison_revenue": 0.0,
+        "comparison_cost": 0.0,
+        "comparison_qty": 0.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 242.5,
+          "comparison": 0.0,
+          "diff_units": -242.5,
+          "diff_pct": -100.0
+        },
+        "revenue": {
+          "baseline": 4762.7,
+          "comparison": 0.0,
+          "diff_dollars": -4762.7,
+          "diff_pct": -100.0
+        },
+        "packed_cost": {
+          "baseline": 1408.1471,
+          "comparison": 0.0,
+          "diff_dollars": -1408.1471,
+          "diff_pct": -100.0
+        },
+        "dollars_over_cost": {
+          "baseline": 3354.5528999999997,
+          "comparison": 0.0,
+          "diff_dollars": -3354.5528999999997,
+          "diff_pct": -100.0
+        },
+        "cost_pct_revenue": {
+          "baseline": 29.5661515526907,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": 19.64,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": 5.806792164948453,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": 29.566151552690695,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.7395,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "T2130UV-50",
+        "description": "O/S VINYLCURE NON-CARBON 7499 YELLOW 190225 FACE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.7827,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 474.6,
+        "comparison_cost": 122.86590000000001,
+        "comparison_qty": 20.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 20.0,
+          "diff_units": 20.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 474.6,
+          "diff_dollars": 474.6,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 122.86590000000001,
+          "diff_dollars": 122.86590000000001,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 351.7341,
+          "diff_dollars": 351.7341,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 25.88830594184577,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 23.73,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.143295,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 25.88830594184576,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.7827,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 32.796881584492205,
+          "horizon_delta_pp": 6.9085756426464435
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "T2131UV-50",
+        "description": "O/S VINYLCURE NON-CARBON 621 GREEN 190225 FACE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.7435,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 498.54,
+        "comparison_cost": 133.014,
+        "comparison_qty": 21.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 21.0,
+          "diff_units": 21.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 498.54,
+          "diff_dollars": 498.54,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 133.014,
+          "diff_dollars": 133.014,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 365.526,
+          "diff_dollars": 365.526,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 26.68070766638585,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 23.740000000000002,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.3340000000000005,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 26.680707666385846,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.7435,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 32.61794439764111,
+          "horizon_delta_pp": 5.937236731255265
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "T2132UV-50",
+        "description": "O/S VINYLCURE NON-CARBON 7542 GREEN 190225 FACE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.6922,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 474.8,
+        "comparison_cost": 124.1435,
+        "comparison_qty": 20.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 20.0,
+          "diff_units": 20.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 474.8,
+          "diff_dollars": 474.8,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 124.1435,
+          "diff_dollars": 124.1435,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 350.6565,
+          "diff_dollars": 350.6565,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 26.146482729570348,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 23.740000000000002,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.207175,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 26.146482729570348,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.6922,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 32.401853411962925,
+          "horizon_delta_pp": 6.255370682392577
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "T2133UV-50",
+        "description": "O/S VINYLCURE NON-CARBON 5455 BLUE 190225 FACE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.7046,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 476.4,
+        "comparison_cost": 124.02879999999999,
+        "comparison_qty": 20.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 20.0,
+          "diff_units": 20.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 476.4,
+          "diff_dollars": 476.4,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 124.02879999999999,
+          "diff_dollars": 124.02879999999999,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 352.3712,
+          "diff_dollars": 352.3712,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 26.034592779177164,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 23.82,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.20144,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 26.034592779177164,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.7046,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 32.34508816120907,
+          "horizon_delta_pp": 6.310495382031906
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "T2134UV-50",
+        "description": "O/S VINYLCURE NON-CARBON 656 BLUE 190225 REV",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.8331,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 474.8,
+        "comparison_cost": 127.6769,
+        "comparison_qty": 20.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 20.0,
+          "diff_units": 20.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 474.8,
+          "diff_dollars": 474.8,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 127.6769,
+          "diff_dollars": 127.6769,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 347.1231,
+          "diff_dollars": 347.1231,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 26.890669755686602,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 23.740000000000002,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.383845,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 26.890669755686602,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.8331,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 32.99536647009267,
+          "horizon_delta_pp": 6.104696714406067
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "T2135UV-50",
+        "description": "O/S VINYLCURE NON-CARBON 649 BLUE 190225 FACE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.7422,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 470.052,
+        "comparison_cost": 122.39920000000001,
+        "comparison_qty": 19.8
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 19.8,
+          "diff_units": 19.8,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 470.052,
+          "diff_dollars": 470.052,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 122.39920000000001,
+          "diff_dollars": 122.39920000000001,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 347.6528,
+          "diff_dollars": 347.6528,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 26.03950201254329,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 23.74,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.181777777777778,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 26.03950201254329,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.7422,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 32.61246840775063,
+          "horizon_delta_pp": 6.572966395207342
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "T2139UV-50",
+        "description": "O/S VINYLCURE NON-CARBON 621 GREEN W/FLUOR RED 190 REV",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 54.5937,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 4988.2,
+        "comparison_cost": 1518.196,
+        "comparison_qty": 40.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 40.0,
+          "diff_units": 40.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 4988.2,
+          "diff_dollars": 4988.2,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 1518.196,
+          "diff_dollars": 1518.196,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 3470.004,
+          "diff_dollars": 3470.004,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 30.4357483661441,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 124.705,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 37.954899999999995,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 30.435748366144093,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 54.5937,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 43.778276733090095,
+          "horizon_delta_pp": 13.342528366946002
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV11467-50",
+        "description": "OS VINYLCURE NON-CARBON BLACK",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.1842,
+        "baseline_revenue": 1025.464,
+        "baseline_cost": 271.6599,
+        "baseline_qty": 47.3,
+        "comparison_revenue": 112.736,
+        "comparison_cost": 31.983499999999996,
+        "comparison_qty": 5.2
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 47.3,
+          "comparison": 5.2,
+          "diff_units": -42.099999999999994,
+          "diff_pct": -89.00634249471459
+        },
+        "revenue": {
+          "baseline": 1025.464,
+          "comparison": 112.736,
+          "diff_dollars": -912.728,
+          "diff_pct": -89.00634249471459
+        },
+        "packed_cost": {
+          "baseline": 271.6599,
+          "comparison": 31.983499999999996,
+          "diff_dollars": -239.6764,
+          "diff_pct": -88.22663926475714
+        },
+        "dollars_over_cost": {
+          "baseline": 753.8041,
+          "comparison": 80.75250000000001,
+          "diff_dollars": -673.0515999999999,
+          "diff_pct": -89.28733605985958
+        },
+        "cost_pct_revenue": {
+          "baseline": 26.49141266782647,
+          "comparison": 28.370263269940388,
+          "diff_pp": 1.8788506021139177
+        },
+        "avg_sale": {
+          "baseline": 21.68,
+          "comparison": 21.68,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 5.743338266384778,
+          "comparison": 6.150673076923076,
+          "diff_dollars": 0.40733481053829834,
+          "diff_pct": 7.092300534035944
+        },
+        "avg_cost_pct": {
+          "baseline": 26.491412667826463,
+          "comparison": 28.370263269940388,
+          "diff_pp": 1.8788506021139249
+        },
+        "expected_packed_cost": 7.1842,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 33.13745387453875,
+          "horizon_delta_pp": 4.767190604598362
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15578-50",
+        "description": "UV VINYLCURE XLT 2/D PROCESS CYAN",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.0223,
+        "baseline_revenue": 11055.0,
+        "baseline_cost": 3520.9512999999997,
+        "baseline_qty": 660.0,
+        "comparison_revenue": 10698.225,
+        "comparison_cost": 3858.2010999999998,
+        "comparison_qty": 638.7
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 660.0,
+          "comparison": 638.7,
+          "diff_units": -21.299999999999955,
+          "diff_pct": -3.2272727272727204
+        },
+        "revenue": {
+          "baseline": 11055.0,
+          "comparison": 10698.225,
+          "diff_dollars": -356.77499999999964,
+          "diff_pct": -3.227272727272724
+        },
+        "packed_cost": {
+          "baseline": 3520.9512999999997,
+          "comparison": 3858.2010999999998,
+          "diff_dollars": 337.24980000000005,
+          "diff_pct": 9.57837161792042
+        },
+        "dollars_over_cost": {
+          "baseline": 7534.0487,
+          "comparison": 6840.0239,
+          "diff_dollars": -694.0248000000001,
+          "diff_pct": -9.211843825750691
+        },
+        "cost_pct_revenue": {
+          "baseline": 31.849401175938485,
+          "comparison": 36.06393677455839,
+          "diff_pp": 4.214535598619907
+        },
+        "avg_sale": {
+          "baseline": 16.75,
+          "comparison": 16.75,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 5.3347746969696965,
+          "comparison": 6.040709409738531,
+          "diff_dollars": 0.7059347127688342,
+          "diff_pct": 13.232699652148858
+        },
+        "avg_cost_pct": {
+          "baseline": 31.849401175938485,
+          "comparison": 36.06393677455839,
+          "diff_pp": 4.214535598619907
+        },
+        "expected_packed_cost": 7.0223,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 41.924179104477616,
+          "horizon_delta_pp": 5.860242329919224
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15579-50",
+        "description": "UV VINYLCURE XLT 3/D PROCESS MAGENTA",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.9407,
+        "baseline_revenue": 6954.0,
+        "baseline_cost": 2189.6254999999996,
+        "baseline_qty": 380.0,
+        "comparison_revenue": 8235.0,
+        "comparison_cost": 2609.5298000000003,
+        "comparison_qty": 450.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 380.0,
+          "comparison": 450.0,
+          "diff_units": 70.0,
+          "diff_pct": 18.421052631578945
+        },
+        "revenue": {
+          "baseline": 6954.0,
+          "comparison": 8235.0,
+          "diff_dollars": 1281.0,
+          "diff_pct": 18.421052631578945
+        },
+        "packed_cost": {
+          "baseline": 2189.6254999999996,
+          "comparison": 2609.5298000000003,
+          "diff_dollars": 419.9043000000006,
+          "diff_pct": 19.17699168191093
+        },
+        "dollars_over_cost": {
+          "baseline": 4764.3745,
+          "comparison": 5625.4702,
+          "diff_dollars": 861.0956999999999,
+          "diff_pct": 18.073635899109103
+        },
+        "cost_pct_revenue": {
+          "baseline": 31.487280701754383,
+          "comparison": 31.688279295689135,
+          "diff_pp": 0.20099859393475228
+        },
+        "avg_sale": {
+          "baseline": 18.3,
+          "comparison": 18.3,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 5.7621723684210515,
+          "comparison": 5.798955111111112,
+          "diff_dollars": 0.03678274269006021,
+          "diff_pct": 0.6383485313914586
+        },
+        "avg_cost_pct": {
+          "baseline": 31.48728070175438,
+          "comparison": 31.68827929568913,
+          "diff_pp": 0.20099859393475228
+        },
+        "expected_packed_cost": 6.9407,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 37.92732240437158,
+          "horizon_delta_pp": 6.2390431086824485
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15580-50",
+        "description": "UV VINYLCURE XLT 4/D PROCESS YELLOW",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.9484,
+        "baseline_revenue": 5046.0,
+        "baseline_cost": 1684.1882999999998,
+        "baseline_qty": 300.0,
+        "comparison_revenue": 5634.7,
+        "comparison_cost": 2047.5775000000003,
+        "comparison_qty": 335.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 300.0,
+          "comparison": 335.0,
+          "diff_units": 35.0,
+          "diff_pct": 11.666666666666666
+        },
+        "revenue": {
+          "baseline": 5046.0,
+          "comparison": 5634.7,
+          "diff_dollars": 588.6999999999998,
+          "diff_pct": 11.666666666666663
+        },
+        "packed_cost": {
+          "baseline": 1684.1882999999998,
+          "comparison": 2047.5775000000003,
+          "diff_dollars": 363.3892000000005,
+          "diff_pct": 21.576518492617517
+        },
+        "dollars_over_cost": {
+          "baseline": 3361.8117,
+          "comparison": 3587.1224999999995,
+          "diff_dollars": 225.3107999999993,
+          "diff_pct": 6.702064842001689
+        },
+        "cost_pct_revenue": {
+          "baseline": 33.37670035671819,
+          "comparison": 36.3387136848457,
+          "diff_pp": 2.9620133281275116
+        },
+        "avg_sale": {
+          "baseline": 16.82,
+          "comparison": 16.82,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 5.613961,
+          "comparison": 6.112171641791046,
+          "diff_dollars": 0.49821064179104635,
+          "diff_pct": 8.874494172493295
+        },
+        "avg_cost_pct": {
+          "baseline": 33.37670035671819,
+          "comparison": 36.3387136848457,
+          "diff_pp": 2.9620133281275116
+        },
+        "expected_packed_cost": 6.9484,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 41.310344827586206,
+          "horizon_delta_pp": 4.971631142740506
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15711-10",
+        "description": "OS VINYLCURE XLT INVISIBLE BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 17.4655,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 218.35,
+        "comparison_cost": 73.4856,
+        "comparison_qty": 5.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 5.0,
+          "diff_units": 5.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 218.35,
+          "diff_dollars": 218.35,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 73.4856,
+          "diff_dollars": 73.4856,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 144.8644,
+          "diff_dollars": 144.8644,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 33.65495763682162,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 43.67,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 14.697120000000002,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 33.65495763682162,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 17.4655,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 39.99427524616441,
+          "horizon_delta_pp": 6.3393176093427925
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15817-50",
+        "description": "OS VINYLCURE XLT MIXING B/S RED",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 9.8386,
+        "baseline_revenue": 957.2,
+        "baseline_cost": 365.02,
+        "baseline_qty": 40.0,
+        "comparison_revenue": 957.2,
+        "comparison_cost": 366.4558,
+        "comparison_qty": 40.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 40.0,
+          "comparison": 40.0,
+          "diff_units": 0.0,
+          "diff_pct": 0.0
+        },
+        "revenue": {
+          "baseline": 957.2,
+          "comparison": 957.2,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "packed_cost": {
+          "baseline": 365.02,
+          "comparison": 366.4558,
+          "diff_dollars": 1.4358000000000288,
+          "diff_pct": 0.3933483096816692
+        },
+        "dollars_over_cost": {
+          "baseline": 592.1800000000001,
+          "comparison": 590.7442000000001,
+          "diff_dollars": -1.435799999999972,
+          "diff_pct": -0.2424600628187328
+        },
+        "cost_pct_revenue": {
+          "baseline": 38.134141245298785,
+          "comparison": 38.284141245298784,
+          "diff_pp": 0.14999999999999858
+        },
+        "avg_sale": {
+          "baseline": 23.93,
+          "comparison": 23.93,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 9.125499999999999,
+          "comparison": 9.161395,
+          "diff_dollars": 0.03589500000000179,
+          "diff_pct": 0.3933483096816809
+        },
+        "avg_cost_pct": {
+          "baseline": 38.134141245298785,
+          "comparison": 38.28414124529879,
+          "diff_pp": 0.15000000000000568
+        },
+        "expected_packed_cost": 9.8386,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 41.11408274132887,
+          "horizon_delta_pp": 2.829941496030081
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV16063-50",
+        "description": "UV PLASTICK MQ SPEC 1/D BLACK",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.2125,
+        "baseline_revenue": 12291.5,
+        "baseline_cost": 3567.0623,
+        "baseline_qty": 650.0,
+        "comparison_revenue": 5011.15,
+        "comparison_cost": 1441.0094,
+        "comparison_qty": 265.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 650.0,
+          "comparison": 265.0,
+          "diff_units": -385.0,
+          "diff_pct": -59.23076923076923
+        },
+        "revenue": {
+          "baseline": 12291.5,
+          "comparison": 5011.15,
+          "diff_dollars": -7280.35,
+          "diff_pct": -59.23076923076923
+        },
+        "packed_cost": {
+          "baseline": 3567.0623,
+          "comparison": 1441.0094,
+          "diff_dollars": -2126.0529,
+          "diff_pct": -59.6023484086611
+        },
+        "dollars_over_cost": {
+          "baseline": 8724.4377,
+          "comparison": 3570.1405999999997,
+          "diff_dollars": -5154.297100000001,
+          "diff_pct": -59.07884584928609
+        },
+        "cost_pct_revenue": {
+          "baseline": 29.020561363543912,
+          "comparison": 28.75606198178063,
+          "diff_pp": -0.264499381763283
+        },
+        "avg_sale": {
+          "baseline": 18.91,
+          "comparison": 18.91,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 5.487788153846154,
+          "comparison": 5.437771320754717,
+          "diff_dollars": -0.05001683309143701,
+          "diff_pct": -0.9114206250177929
+        },
+        "avg_cost_pct": {
+          "baseline": 29.020561363543912,
+          "comparison": 28.75606198178063,
+          "diff_pp": -0.264499381763283
+        },
+        "expected_packed_cost": 6.2125,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 32.852987837123216,
+          "horizon_delta_pp": 4.096925855342587
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV25576-50",
+        "description": "UV VINYLCURE XLT 1/D PROCESS BLACK",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.4451,
+        "baseline_revenue": 189.1,
+        "baseline_cost": 61.43169999999999,
+        "baseline_qty": 10.0,
+        "comparison_revenue": 1607.35,
+        "comparison_cost": 492.8418,
+        "comparison_qty": 85.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 10.0,
+          "comparison": 85.0,
+          "diff_units": 75.0,
+          "diff_pct": 750.0
+        },
+        "revenue": {
+          "baseline": 189.1,
+          "comparison": 1607.35,
+          "diff_dollars": 1418.25,
+          "diff_pct": 750.0
+        },
+        "packed_cost": {
+          "baseline": 61.43169999999999,
+          "comparison": 492.8418,
+          "diff_dollars": 431.4101,
+          "diff_pct": 702.2597453757588
+        },
+        "dollars_over_cost": {
+          "baseline": 127.6683,
+          "comparison": 1114.5082,
+          "diff_dollars": 986.8399,
+          "diff_pct": 772.9717557138302
+        },
+        "cost_pct_revenue": {
+          "baseline": 32.48635642517186,
+          "comparison": 30.661760039817093,
+          "diff_pp": -1.82459638535477
+        },
+        "avg_sale": {
+          "baseline": 18.91,
+          "comparison": 18.91,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 6.14317,
+          "comparison": 5.798138823529412,
+          "diff_dollars": -0.345031176470588,
+          "diff_pct": -5.616500544028376
+        },
+        "avg_cost_pct": {
+          "baseline": 32.48635642517186,
+          "comparison": 30.66176003981709,
+          "diff_pp": -1.8245963853547735
+        },
+        "expected_packed_cost": 6.4451,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 34.0830248545743,
+          "horizon_delta_pp": 3.4212648147572082
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV25583-50",
+        "description": "UV VINYLCURE DENSE BLACK",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.861,
+        "baseline_revenue": 6409.86,
+        "baseline_cost": 1728.2779,
+        "baseline_qty": 282.0,
+        "comparison_revenue": 16058.0631,
+        "comparison_cost": 4437.072,
+        "comparison_qty": 706.47
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 282.0,
+          "comparison": 706.47,
+          "diff_units": 424.47,
+          "diff_pct": 150.52127659574467
+        },
+        "revenue": {
+          "baseline": 6409.86,
+          "comparison": 16058.0631,
+          "diff_dollars": 9648.203099999999,
+          "diff_pct": 150.52127659574467
+        },
+        "packed_cost": {
+          "baseline": 1728.2779,
+          "comparison": 4437.072,
+          "diff_dollars": 2708.7941,
+          "diff_pct": 156.73371163283406
+        },
+        "dollars_over_cost": {
+          "baseline": 4681.5821,
+          "comparison": 11620.9911,
+          "diff_dollars": 6939.409,
+          "diff_pct": 148.22786083362715
+        },
+        "cost_pct_revenue": {
+          "baseline": 26.962802619714004,
+          "comparison": 27.63142710530263,
+          "diff_pp": 0.6686244855886265
+        },
+        "avg_sale": {
+          "baseline": 22.73,
+          "comparison": 22.729999999999997,
+          "diff_dollars": -3.552713678800501E-15,
+          "diff_pct": -1.5630064578972726E-14
+        },
+        "avg_cost": {
+          "baseline": 6.128645035460993,
+          "comparison": 6.280623381035288,
+          "diff_dollars": 0.15197834557429513,
+          "diff_pct": 2.4798033610191523
+        },
+        "avg_cost_pct": {
+          "baseline": 26.962802619714004,
+          "comparison": 27.631427105302635,
+          "diff_pp": 0.6686244855886301
+        },
+        "expected_packed_cost": 7.861,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 34.584249890013204,
+          "horizon_delta_pp": 6.95282278471057
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVV874-50",
+        "description": "O/S VINYLCURE PANTONE 874 GOLD",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": null,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 150.0,
+        "comparison_cost": 30.8542,
+        "comparison_qty": 5.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 5.0,
+          "diff_units": 5.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 150.0,
+          "diff_dollars": 150.0,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 30.8542,
+          "diff_dollars": 30.8542,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 119.14580000000001,
+          "diff_dollars": 119.14580000000001,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 20.569466666666667,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 30.0,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.17084,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 20.569466666666667,
+          "diff_pp": null
+        },
+        "expected_packed_cost": null,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVV877-50",
+        "description": "OS VINYLCURE P877 SILVER (2-PART ITEM - 1 CAN OF PASTE FOR EACH CAN OF INK)",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": null,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 266.7,
+        "comparison_cost": 51.8398,
+        "comparison_qty": 10.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 10.0,
+          "diff_units": 10.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 266.7,
+          "diff_dollars": 266.7,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 51.8398,
+          "diff_dollars": 51.8398,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 214.8602,
+          "diff_dollars": 214.8602,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 19.437495313085865,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 26.669999999999998,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 5.18398,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 19.437495313085865,
+          "diff_pp": null
+        },
+        "expected_packed_cost": null,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL001-50",
+        "description": "UV VINYLCURE XLT MIXING YELLOW",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.839,
+        "baseline_revenue": 5478.4,
+        "baseline_cost": 1925.4285,
+        "baseline_qty": 320.0,
+        "comparison_revenue": 4793.6,
+        "comparison_cost": 1699.6057,
+        "comparison_qty": 280.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 320.0,
+          "comparison": 280.0,
+          "diff_units": -40.0,
+          "diff_pct": -12.5
+        },
+        "revenue": {
+          "baseline": 5478.4,
+          "comparison": 4793.6,
+          "diff_dollars": -684.7999999999993,
+          "diff_pct": -12.499999999999988
+        },
+        "packed_cost": {
+          "baseline": 1925.4285,
+          "comparison": 1699.6057,
+          "diff_dollars": -225.82279999999992,
+          "diff_pct": -11.728443824322737
+        },
+        "dollars_over_cost": {
+          "baseline": 3552.9714999999997,
+          "comparison": 3093.9943000000003,
+          "diff_dollars": -458.97719999999936,
+          "diff_pct": -12.918122197152423
+        },
+        "cost_pct_revenue": {
+          "baseline": 35.14581812207944,
+          "comparison": 35.45572638518024,
+          "diff_pp": 0.30990826310080166
+        },
+        "avg_sale": {
+          "baseline": 17.119999999999997,
+          "comparison": 17.12,
+          "diff_dollars": 3.552713678800501E-15,
+          "diff_pct": 2.0751832235984236E-14
+        },
+        "avg_cost": {
+          "baseline": 6.0169640625,
+          "comparison": 6.070020357142857,
+          "diff_dollars": 0.05305629464285744,
+          "diff_pct": 0.8817784864883003
+        },
+        "avg_cost_pct": {
+          "baseline": 35.14581812207944,
+          "comparison": 35.455726385180235,
+          "diff_pp": 0.30990826310079456
+        },
+        "expected_packed_cost": 7.839,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 45.78855140186916,
+          "horizon_delta_pp": 10.332825016688922
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL002-50",
+        "description": "UV VINYLCURE XLT MIXING WARM RED",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 13.3027,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 220.6,
+        "comparison_cost": 111.8661,
+        "comparison_qty": 10.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 10.0,
+          "diff_units": 10.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 220.6,
+          "diff_dollars": 220.6,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 111.8661,
+          "diff_dollars": 111.8661,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 108.73389999999999,
+          "diff_dollars": 108.73389999999999,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 50.70992747053491,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 22.06,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 11.18661,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 50.70992747053491,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 13.3027,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 60.3023572076156,
+          "horizon_delta_pp": 9.592429737080693
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL003-50",
+        "description": "UV VINYLCURE XLT MIXING RUBINE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.2855,
+        "baseline_revenue": 2122.8,
+        "baseline_cost": 693.1275,
+        "baseline_qty": 120.0,
+        "comparison_revenue": 2299.7,
+        "comparison_cost": 746.0056,
+        "comparison_qty": 130.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 120.0,
+          "comparison": 130.0,
+          "diff_units": 10.0,
+          "diff_pct": 8.333333333333332
+        },
+        "revenue": {
+          "baseline": 2122.8,
+          "comparison": 2299.7,
+          "diff_dollars": 176.89999999999964,
+          "diff_pct": 8.333333333333314
+        },
+        "packed_cost": {
+          "baseline": 693.1275,
+          "comparison": 746.0056,
+          "diff_dollars": 52.878099999999904,
+          "diff_pct": 7.628913872267354
+        },
+        "dollars_over_cost": {
+          "baseline": 1429.6725000000001,
+          "comparison": 1553.6943999999999,
+          "diff_dollars": 124.02189999999973,
+          "diff_pct": 8.674846861781264
+        },
+        "cost_pct_revenue": {
+          "baseline": 32.65156868287168,
+          "comparison": 32.43925729442971,
+          "diff_pp": -0.21231138844196806
+        },
+        "avg_sale": {
+          "baseline": 17.69,
+          "comparison": 17.689999999999998,
+          "diff_dollars": -3.552713678800501E-15,
+          "diff_pct": -2.0083175120409842E-14
+        },
+        "avg_cost": {
+          "baseline": 5.7760625,
+          "comparison": 5.738504615384615,
+          "diff_dollars": -0.03755788461538501,
+          "diff_pct": -0.6502333486762826
+        },
+        "avg_cost_pct": {
+          "baseline": 32.65156868287168,
+          "comparison": 32.439257294429716,
+          "diff_pp": -0.21231138844196096
+        },
+        "expected_packed_cost": 6.2855,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 35.53137365743358,
+          "horizon_delta_pp": 3.0921163630038677
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL004-50",
+        "description": "UV VINYLCURE XLT MIXING RHODAMINE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 9.8386,
+        "baseline_revenue": 838.0,
+        "baseline_cost": 365.02,
+        "baseline_qty": 40.0,
+        "comparison_revenue": 209.5,
+        "comparison_cost": 91.614,
+        "comparison_qty": 10.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 40.0,
+          "comparison": 10.0,
+          "diff_units": -30.0,
+          "diff_pct": -75.0
+        },
+        "revenue": {
+          "baseline": 838.0,
+          "comparison": 209.5,
+          "diff_dollars": -628.5,
+          "diff_pct": -75.0
+        },
+        "packed_cost": {
+          "baseline": 365.02,
+          "comparison": 91.614,
+          "diff_dollars": -273.40599999999995,
+          "diff_pct": -74.90164922470001
+        },
+        "dollars_over_cost": {
+          "baseline": 472.98,
+          "comparison": 117.886,
+          "diff_dollars": -355.09400000000005,
+          "diff_pct": -75.07590172946003
+        },
+        "cost_pct_revenue": {
+          "baseline": 43.55847255369928,
+          "comparison": 43.729832935560864,
+          "diff_pp": 0.1713603818615823
+        },
+        "avg_sale": {
+          "baseline": 20.95,
+          "comparison": 20.95,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 9.125499999999999,
+          "comparison": 9.1614,
+          "diff_dollars": 0.0359000000000016,
+          "diff_pct": 0.3934031011999518
+        },
+        "avg_cost_pct": {
+          "baseline": 43.55847255369928,
+          "comparison": 43.729832935560864,
+          "diff_pp": 0.1713603818615823
+        },
+        "expected_packed_cost": 9.8386,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 46.96229116945108,
+          "horizon_delta_pp": 3.2324582338902133
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL005-50",
+        "description": "O/S VINYLCURE XLT MIXING PURPLE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 10.0966,
+        "baseline_revenue": 798.8,
+        "baseline_cost": 381.5018,
+        "baseline_qty": 40.0,
+        "comparison_revenue": 199.7,
+        "comparison_cost": 96.01330000000002,
+        "comparison_qty": 10.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 40.0,
+          "comparison": 10.0,
+          "diff_units": -30.0,
+          "diff_pct": -75.0
+        },
+        "revenue": {
+          "baseline": 798.8,
+          "comparison": 199.7,
+          "diff_dollars": -599.0999999999999,
+          "diff_pct": -74.99999999999999
+        },
+        "packed_cost": {
+          "baseline": 381.5018,
+          "comparison": 96.01330000000002,
+          "diff_dollars": -285.4885,
+          "diff_pct": -74.83280550707755
+        },
+        "dollars_over_cost": {
+          "baseline": 417.29819999999995,
+          "comparison": 103.68669999999997,
+          "diff_dollars": -313.6115,
+          "diff_pct": -75.15285232478837
+        },
+        "cost_pct_revenue": {
+          "baseline": 47.75936404606911,
+          "comparison": 48.07876815222835,
+          "diff_pp": 0.3194041061592401
+        },
+        "avg_sale": {
+          "baseline": 19.97,
+          "comparison": 19.97,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 9.537545,
+          "comparison": 9.60133,
+          "diff_dollars": 0.06378500000000109,
+          "diff_pct": 0.6687779716897911
+        },
+        "avg_cost_pct": {
+          "baseline": 47.7593640460691,
+          "comparison": 48.07876815222835,
+          "diff_pp": 0.3194041061592472
+        },
+        "expected_packed_cost": 10.0966,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 50.558838257386086,
+          "horizon_delta_pp": 2.4800701051577363
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL006-50",
+        "description": "UV VINYLCURE XLT REFLEX BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 9.1469,
+        "baseline_revenue": 5729.875,
+        "baseline_cost": 2193.1794,
+        "baseline_qty": 287.5,
+        "comparison_revenue": 7124.975,
+        "comparison_cost": 2980.771,
+        "comparison_qty": 357.5
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 287.5,
+          "comparison": 357.5,
+          "diff_units": 70.0,
+          "diff_pct": 24.347826086956523
+        },
+        "revenue": {
+          "baseline": 5729.875,
+          "comparison": 7124.975,
+          "diff_dollars": 1395.1000000000004,
+          "diff_pct": 24.347826086956527
+        },
+        "packed_cost": {
+          "baseline": 2193.1794,
+          "comparison": 2980.771,
+          "diff_dollars": 787.5916000000002,
+          "diff_pct": 35.9109519266869
+        },
+        "dollars_over_cost": {
+          "baseline": 3536.6956,
+          "comparison": 4144.204,
+          "diff_dollars": 607.5083999999997,
+          "diff_pct": 17.17728831398438
+        },
+        "cost_pct_revenue": {
+          "baseline": 38.276217194964985,
+          "comparison": 41.835529247471044,
+          "diff_pp": 3.5593120525060584
+        },
+        "avg_sale": {
+          "baseline": 19.93,
+          "comparison": 19.93,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 7.628450086956522,
+          "comparison": 8.337820979020979,
+          "diff_dollars": 0.7093708920644568,
+          "diff_pct": 9.299017283699241
+        },
+        "avg_cost_pct": {
+          "baseline": 38.27621719496499,
+          "comparison": 41.835529247471044,
+          "diff_pp": 3.5593120525060513
+        },
+        "expected_packed_cost": 9.1469,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 45.89513296537883,
+          "horizon_delta_pp": 4.059603717907784
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL007-50",
+        "description": "UV VINYLCURE XLT MIXING BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.6189,
+        "baseline_revenue": 7795.9,
+        "baseline_cost": 2376.3357,
+        "baseline_qty": 430.0,
+        "comparison_revenue": 10968.65,
+        "comparison_cost": 3941.5362999999998,
+        "comparison_qty": 650.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 430.0,
+          "comparison": 650.0,
+          "diff_units": 220.0,
+          "diff_pct": 51.162790697674424
+        },
+        "revenue": {
+          "baseline": 7795.9,
+          "comparison": 10968.65,
+          "diff_dollars": 3172.75,
+          "diff_pct": 40.69767441860465
+        },
+        "packed_cost": {
+          "baseline": 2376.3357,
+          "comparison": 3941.5362999999998,
+          "diff_dollars": 1565.2005999999997,
+          "diff_pct": 65.86614004073581
+        },
+        "dollars_over_cost": {
+          "baseline": 5419.5643,
+          "comparison": 7027.1137,
+          "diff_dollars": 1607.5493999999999,
+          "diff_pct": 29.66196747587255
+        },
+        "cost_pct_revenue": {
+          "baseline": 30.481864826383102,
+          "comparison": 35.934561682613634,
+          "diff_pp": 5.452696856230531
+        },
+        "avg_sale": {
+          "baseline": 18.13,
+          "comparison": 16.874846153846153,
+          "diff_dollars": -1.2551538461538456,
+          "diff_pct": -6.923076923076921
+        },
+        "avg_cost": {
+          "baseline": 5.526362093023256,
+          "comparison": 6.063902,
+          "diff_dollars": 0.5375399069767433,
+          "diff_pct": 9.726831103871374
+        },
+        "avg_cost_pct": {
+          "baseline": 30.481864826383102,
+          "comparison": 35.934561682613634,
+          "diff_pp": 5.452696856230531
+        },
+        "expected_packed_cost": 7.6189,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 45.149448655942166,
+          "horizon_delta_pp": 9.214886973328532
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL008-50",
+        "description": "UV VINYLCURE XLT MIXING GREEN",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 8.1275,
+        "baseline_revenue": 695.2,
+        "baseline_cost": 237.234,
+        "baseline_qty": 40.0,
+        "comparison_revenue": 2259.4,
+        "comparison_cost": 858.9088,
+        "comparison_qty": 130.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 40.0,
+          "comparison": 130.0,
+          "diff_units": 90.0,
+          "diff_pct": 225.0
+        },
+        "revenue": {
+          "baseline": 695.2,
+          "comparison": 2259.4,
+          "diff_dollars": 1564.2,
+          "diff_pct": 225.0
+        },
+        "packed_cost": {
+          "baseline": 237.234,
+          "comparison": 858.9088,
+          "diff_dollars": 621.6748,
+          "diff_pct": 262.051307991266
+        },
+        "dollars_over_cost": {
+          "baseline": 457.966,
+          "comparison": 1400.4912,
+          "diff_dollars": 942.5251999999999,
+          "diff_pct": 205.80680661883193
+        },
+        "cost_pct_revenue": {
+          "baseline": 34.12456846950518,
+          "comparison": 38.014906612374965,
+          "diff_pp": 3.890338142869787
+        },
+        "avg_sale": {
+          "baseline": 17.380000000000003,
+          "comparison": 17.38,
+          "diff_dollars": -3.552713678800501E-15,
+          "diff_pct": -2.0441390556964903E-14
+        },
+        "avg_cost": {
+          "baseline": 5.93085,
+          "comparison": 6.6069907692307694,
+          "diff_dollars": 0.676140769230769,
+          "diff_pct": 11.400402458851074
+        },
+        "avg_cost_pct": {
+          "baseline": 34.12456846950517,
+          "comparison": 38.01490661237497,
+          "diff_pp": 3.890338142869801
+        },
+        "expected_packed_cost": 8.1275,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 46.763521288837744,
+          "horizon_delta_pp": 8.748614676462772
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL009-50",
+        "description": "UV VINYLCURE XLT TINT BASE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.7482,
+        "baseline_revenue": 6206.4,
+        "baseline_cost": 2737.8007,
+        "baseline_qty": 480.0,
+        "comparison_revenue": 9374.25,
+        "comparison_cost": 4247.3712,
+        "comparison_qty": 725.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 480.0,
+          "comparison": 725.0,
+          "diff_units": 245.0,
+          "diff_pct": 51.041666666666664
+        },
+        "revenue": {
+          "baseline": 6206.4,
+          "comparison": 9374.25,
+          "diff_dollars": 3167.8500000000004,
+          "diff_pct": 51.04166666666667
+        },
+        "packed_cost": {
+          "baseline": 2737.8007,
+          "comparison": 4247.3712,
+          "diff_dollars": 1509.5704999999998,
+          "diff_pct": 55.13807122629488
+        },
+        "dollars_over_cost": {
+          "baseline": 3468.5993,
+          "comparison": 5126.8788,
+          "diff_dollars": 1658.2795000000006,
+          "diff_pct": 47.80833289103185
+        },
+        "cost_pct_revenue": {
+          "baseline": 44.11254028100026,
+          "comparison": 45.30891751340107,
+          "diff_pp": 1.1963772324008133
+        },
+        "avg_sale": {
+          "baseline": 12.93,
+          "comparison": 12.93,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 5.703751458333333,
+          "comparison": 5.858443034482758,
+          "diff_dollars": 0.15469157614942564,
+          "diff_pct": 2.712102329133173
+        },
+        "avg_cost_pct": {
+          "baseline": 44.11254028100025,
+          "comparison": 45.30891751340107,
+          "diff_pp": 1.1963772324008204
+        },
+        "expected_packed_cost": 7.7482,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 59.92420726991493,
+          "horizon_delta_pp": 14.61528975651386
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL010-50",
+        "description": "OS VINYLCURE XLT MIXING BLACK",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.7145,
+        "baseline_revenue": 4154.4,
+        "baseline_cost": 1413.8156999999999,
+        "baseline_qty": 240.0,
+        "comparison_revenue": 6664.35,
+        "comparison_cost": 2560.4183000000003,
+        "comparison_qty": 385.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 240.0,
+          "comparison": 385.0,
+          "diff_units": 145.0,
+          "diff_pct": 60.416666666666664
+        },
+        "revenue": {
+          "baseline": 4154.4,
+          "comparison": 6664.35,
+          "diff_dollars": 2509.9500000000007,
+          "diff_pct": 60.416666666666686
+        },
+        "packed_cost": {
+          "baseline": 1413.8156999999999,
+          "comparison": 2560.4183000000003,
+          "diff_dollars": 1146.6026000000004,
+          "diff_pct": 81.09986329901419
+        },
+        "dollars_over_cost": {
+          "baseline": 2740.5842999999995,
+          "comparison": 4103.9317,
+          "diff_dollars": 1363.3474000000006,
+          "diff_pct": 49.74659600874167
+        },
+        "cost_pct_revenue": {
+          "baseline": 34.031766320046216,
+          "comparison": 38.419625319798634,
+          "diff_pp": 4.387858999752417
+        },
+        "avg_sale": {
+          "baseline": 17.31,
+          "comparison": 17.310000000000002,
+          "diff_dollars": 3.552713678800501E-15,
+          "diff_pct": 2.052405360370018E-14
+        },
+        "avg_cost": {
+          "baseline": 5.89089875,
+          "comparison": 6.650437142857143,
+          "diff_dollars": 0.7595383928571433,
+          "diff_pct": 12.89342127730753
+        },
+        "avg_cost_pct": {
+          "baseline": 34.031766320046216,
+          "comparison": 38.41962531979863,
+          "diff_pp": 4.38785899975241
+        },
+        "expected_packed_cost": 7.7145,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 44.56672443674176,
+          "horizon_delta_pp": 6.1470991169431315
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL011-50",
+        "description": "UV VINYLCURE XLT OPAQUE WHITE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 4.1599,
+        "baseline_revenue": 36671.04,
+        "baseline_cost": 9516.077800000001,
+        "baseline_qty": 2448.0,
+        "comparison_revenue": 30559.2,
+        "comparison_cost": 7669.1289,
+        "comparison_qty": 2048.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 2448.0,
+          "comparison": 2048.0,
+          "diff_units": -400.0,
+          "diff_pct": -16.33986928104575
+        },
+        "revenue": {
+          "baseline": 36671.04,
+          "comparison": 30559.2,
+          "diff_dollars": -6111.84,
+          "diff_pct": -16.666666666666664
+        },
+        "packed_cost": {
+          "baseline": 9516.077800000001,
+          "comparison": 7669.1289,
+          "diff_dollars": -1846.9489000000012,
+          "diff_pct": -19.408720050607418
+        },
+        "dollars_over_cost": {
+          "baseline": 27154.9622,
+          "comparison": 22890.0711,
+          "diff_dollars": -4264.891100000001,
+          "diff_pct": -15.705752298929735
+        },
+        "cost_pct_revenue": {
+          "baseline": 25.949844345838024,
+          "comparison": 25.095974043823134,
+          "diff_pp": -0.8538703020148901
+        },
+        "avg_sale": {
+          "baseline": 14.98,
+          "comparison": 14.921484375,
+          "diff_dollars": -0.05851562500000007,
+          "diff_pct": -0.39062500000000044
+        },
+        "avg_cost": {
+          "baseline": 3.8872866830065362,
+          "comparison": 3.744691845703125,
+          "diff_dollars": -0.14259483730341138,
+          "diff_pct": -3.6682356854916742
+        },
+        "avg_cost_pct": {
+          "baseline": 25.949844345838024,
+          "comparison": 25.095974043823134,
+          "diff_pp": -0.8538703020148901
+        },
+        "expected_packed_cost": 4.1599,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 27.878593680462842,
+          "horizon_delta_pp": 2.7826196366397085
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL013-50",
+        "description": "OS VINYLCURE XLT MIXING VIOLET",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 13.2782,
+        "baseline_revenue": 1080.4,
+        "baseline_cost": 499.63070000000005,
+        "baseline_qty": 40.0,
+        "comparison_revenue": 2701.0,
+        "comparison_cost": 1430.9266000000002,
+        "comparison_qty": 100.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 40.0,
+          "comparison": 100.0,
+          "diff_units": 60.0,
+          "diff_pct": 150.0
+        },
+        "revenue": {
+          "baseline": 1080.4,
+          "comparison": 2701.0,
+          "diff_dollars": 1620.6,
+          "diff_pct": 149.99999999999997
+        },
+        "packed_cost": {
+          "baseline": 499.63070000000005,
+          "comparison": 1430.9266000000002,
+          "diff_dollars": 931.2959000000002,
+          "diff_pct": 186.3968527154156
+        },
+        "dollars_over_cost": {
+          "baseline": 580.7693,
+          "comparison": 1270.0733999999998,
+          "diff_dollars": 689.3040999999997,
+          "diff_pct": 118.68810903055649
+        },
+        "cost_pct_revenue": {
+          "baseline": 46.244974083672716,
+          "comparison": 52.97766012587931,
+          "diff_pp": 6.732686042206595
+        },
+        "avg_sale": {
+          "baseline": 27.01,
+          "comparison": 27.01,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 12.4907675,
+          "comparison": 14.309266000000003,
+          "diff_dollars": 1.8184985000000022,
+          "diff_pct": 14.558741086166261
+        },
+        "avg_cost_pct": {
+          "baseline": 46.244974083672716,
+          "comparison": 52.97766012587931,
+          "diff_pp": 6.732686042206595
+        },
+        "expected_packed_cost": 13.2782,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 49.16031099592743,
+          "horizon_delta_pp": -3.8173491299518787
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL021-50",
+        "description": "UV VINYLCURE XLT P021 ORANGE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 14.9125,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 4321.6,
+        "comparison_cost": 3113.3576000000003,
+        "comparison_qty": 185.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 185.0,
+          "diff_units": 185.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 4321.6,
+          "diff_dollars": 4321.6,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 3113.3576000000003,
+          "diff_dollars": 3113.3576000000003,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 1208.2424,
+          "diff_dollars": 1208.2424,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 72.04178082191781,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 23.360000000000003,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 16.828960000000002,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 72.04178082191781,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 14.9125,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 63.83775684931506,
+          "horizon_delta_pp": -8.204023972602748
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL032-50",
+        "description": "O/S VINYLCURE XLT P032 RED",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.1009,
+        "baseline_revenue": 3811.19,
+        "baseline_cost": 986.0489,
+        "baseline_qty": 173.0,
+        "comparison_revenue": 6609.0,
+        "comparison_cost": 1866.4953,
+        "comparison_qty": 300.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 173.0,
+          "comparison": 300.0,
+          "diff_units": 127.0,
+          "diff_pct": 73.41040462427746
+        },
+        "revenue": {
+          "baseline": 3811.19,
+          "comparison": 6609.0,
+          "diff_dollars": 2797.81,
+          "diff_pct": 73.41040462427746
+        },
+        "packed_cost": {
+          "baseline": 986.0489,
+          "comparison": 1866.4953,
+          "diff_dollars": 880.4464,
+          "diff_pct": 89.29033844061892
+        },
+        "dollars_over_cost": {
+          "baseline": 2825.1411,
+          "comparison": 4742.5046999999995,
+          "diff_dollars": 1917.3635999999997,
+          "diff_pct": 67.8678880853066
+        },
+        "cost_pct_revenue": {
+          "baseline": 25.87246765445963,
+          "comparison": 28.24172038129823,
+          "diff_pp": 2.3692527268385994
+        },
+        "avg_sale": {
+          "baseline": 22.03,
+          "comparison": 22.03,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 5.699704624277457,
+          "comparison": 6.2216510000000005,
+          "diff_dollars": 0.5219463757225435,
+          "diff_pct": 9.157428500756913
+        },
+        "avg_cost_pct": {
+          "baseline": 25.87246765445963,
+          "comparison": 28.24172038129823,
+          "diff_pp": 2.3692527268385994
+        },
+        "expected_packed_cost": 7.1009,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 32.23286427598729,
+          "horizon_delta_pp": 3.99114389468906
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL072-50",
+        "description": "UV VINYLCURE XLT P072 BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 8.9217,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 1340.863,
+        "comparison_cost": 475.9594,
+        "comparison_qty": 60.7
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 60.7,
+          "diff_units": 60.7,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 1340.863,
+          "diff_dollars": 1340.863,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 475.9594,
+          "diff_dollars": 475.9594,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 864.9036000000001,
+          "diff_dollars": 864.9036000000001,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 35.496497405029444,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 22.09,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 7.841176276771005,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 35.496497405029444,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 8.9217,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 40.38795835219556,
+          "horizon_delta_pp": 4.891460947166117
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL293-50",
+        "description": "UV VINYLCURE XLT P293 BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 8.1848,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 135.465,
+        "comparison_cost": 37.332,
+        "comparison_qty": 5.5
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 5.5,
+          "diff_units": 5.5,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 135.465,
+          "diff_dollars": 135.465,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 37.332,
+          "diff_dollars": 37.332,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 98.13300000000001,
+          "diff_dollars": 98.13300000000001,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 27.558409921381905,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 24.63,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.787636363636364,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 27.55840992138191,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 8.1848,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 33.23101908241981,
+          "horizon_delta_pp": 5.672609161037904
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL300-50",
+        "description": "O/S VINYLCURE XLT P300 BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.7406,
+        "baseline_revenue": 2649.6,
+        "baseline_cost": 711.5441,
+        "baseline_qty": 120.0,
+        "comparison_revenue": 115.5,
+        "comparison_cost": 31.008500000000005,
+        "comparison_qty": 5.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 120.0,
+          "comparison": 5.0,
+          "diff_units": -115.0,
+          "diff_pct": -95.83333333333334
+        },
+        "revenue": {
+          "baseline": 2649.6,
+          "comparison": 115.5,
+          "diff_dollars": -2534.1,
+          "diff_pct": -95.64085144927536
+        },
+        "packed_cost": {
+          "baseline": 711.5441,
+          "comparison": 31.008500000000005,
+          "diff_dollars": -680.5355999999999,
+          "diff_pct": -95.6420831821949
+        },
+        "dollars_over_cost": {
+          "baseline": 1938.0558999999998,
+          "comparison": 84.4915,
+          "diff_dollars": -1853.5643999999998,
+          "diff_pct": -95.64039922687472
+        },
+        "cost_pct_revenue": {
+          "baseline": 26.854774305555555,
+          "comparison": 26.847186147186154,
+          "diff_pp": -0.007588158369401299
+        },
+        "avg_sale": {
+          "baseline": 22.08,
+          "comparison": 23.1,
+          "diff_dollars": 1.0200000000000031,
+          "diff_pct": 4.619565217391319
+        },
+        "avg_cost": {
+          "baseline": 5.9295341666666666,
+          "comparison": 6.201700000000001,
+          "diff_dollars": 0.2721658333333341,
+          "diff_pct": 4.590003627322621
+        },
+        "avg_cost_pct": {
+          "baseline": 26.854774305555555,
+          "comparison": 26.847186147186147,
+          "diff_pp": -0.007588158369408404
+        },
+        "expected_packed_cost": 7.7406,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 33.50909090909091,
+          "horizon_delta_pp": 6.661904761904761
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL355-50",
+        "description": "UV VINYLCURE XLT P355 GREEN",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.79,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 131.2735,
+        "comparison_cost": 32.568,
+        "comparison_qty": 5.15
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 5.15,
+          "diff_units": 5.15,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 131.2735,
+          "diff_dollars": 131.2735,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 32.568,
+          "diff_dollars": 32.568,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 98.70550000000001,
+          "diff_dollars": 98.70550000000001,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 24.809272244588584,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 25.490000000000002,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.323883495145631,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 24.809272244588584,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.79,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 30.56100431541781,
+          "horizon_delta_pp": 5.751732070829227
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVXL485-50",
+        "description": "UV VINYLCURE XLT PANTONE 485 RED",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.2184,
+        "baseline_revenue": 881.6,
+        "baseline_cost": 234.8626,
+        "baseline_qty": 40.0,
+        "comparison_revenue": 0.0,
+        "comparison_cost": 0.0,
+        "comparison_qty": 0.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 40.0,
+          "comparison": 0.0,
+          "diff_units": -40.0,
+          "diff_pct": -100.0
+        },
+        "revenue": {
+          "baseline": 881.6,
+          "comparison": 0.0,
+          "diff_dollars": -881.6,
+          "diff_pct": -100.0
+        },
+        "packed_cost": {
+          "baseline": 234.8626,
+          "comparison": 0.0,
+          "diff_dollars": -234.8626,
+          "diff_pct": -100.0
+        },
+        "dollars_over_cost": {
+          "baseline": 646.7374,
+          "comparison": 0.0,
+          "diff_dollars": -646.7374,
+          "diff_pct": -100.0
+        },
+        "cost_pct_revenue": {
+          "baseline": 26.6404945553539,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": 22.04,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": 5.8715649999999995,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": 26.6404945553539,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.2184,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "X102115-50",
+        "description": "O/S VINYLCURE IR UPCONVERTER GREEN",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 80.0534,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 3712.5,
+        "comparison_cost": 1179.8353,
+        "comparison_qty": 15.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 15.0,
+          "diff_units": 15.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 3712.5,
+          "diff_dollars": 3712.5,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 1179.8353,
+          "diff_dollars": 1179.8353,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 2532.6647000000003,
+          "diff_dollars": 2532.6647000000003,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 31.78007542087542,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 247.5,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 78.65568666666667,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 31.78007542087542,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 80.0534,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 32.34480808080808,
+          "horizon_delta_pp": 0.564732659932659
+        }
+      }
+    }
+  ]
+}

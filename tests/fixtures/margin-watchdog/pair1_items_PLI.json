@@ -1,0 +1,2711 @@
+{
+  "meta": {
+    "generated_at": "2026-10-29 10:08:00",
+    "source": "live CMS (10.10.10.11) via sds_readonly",
+    "app_commit": "0edeea0",
+    "note": "Historical date ranges chosen for stability. replacement_cost / Description are as-of capture; raw rows are the fixture inputs, expected metrics the oracle outputs."
+  },
+  "case": "pair1_items_PLI",
+  "inputs": {
+    "bill_to": "PLI",
+    "baseline_start": "2025-01-01",
+    "baseline_end": "2025-06-30",
+    "comparison_start": "2025-07-01",
+    "comparison_end": "2025-12-31",
+    "view_mode": "either"
+  },
+  "row_count": 39,
+  "rows": [
+    {
+      "raw": {
+        "item_name": "UV15562-82",
+        "description": "O/S VINYLCURE LED 4/D BLACK",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.8402,
+        "baseline_revenue": 815.4,
+        "baseline_cost": 301.2833,
+        "baseline_qty": 45.0,
+        "comparison_revenue": 3098.52,
+        "comparison_cost": 1162.1905000000002,
+        "comparison_qty": 171.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 45.0,
+          "comparison": 171.0,
+          "diff_units": 126.0,
+          "diff_pct": 280.0
+        },
+        "revenue": {
+          "baseline": 815.4,
+          "comparison": 3098.52,
+          "diff_dollars": 2283.12,
+          "diff_pct": 280.0
+        },
+        "packed_cost": {
+          "baseline": 301.2833,
+          "comparison": 1162.1905000000002,
+          "diff_dollars": 860.9072000000001,
+          "diff_pct": 285.74673737309706
+        },
+        "dollars_over_cost": {
+          "baseline": 514.1167,
+          "comparison": 1936.3294999999998,
+          "diff_dollars": 1422.2127999999998,
+          "diff_pct": 276.6322899061633
+        },
+        "cost_pct_revenue": {
+          "baseline": 36.94914152563159,
+          "comparison": 37.507923137497905,
+          "diff_pp": 0.5587816118663156
+        },
+        "avg_sale": {
+          "baseline": 18.12,
+          "comparison": 18.12,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 6.695184444444444,
+          "comparison": 6.796435672514621,
+          "diff_dollars": 0.1012512280701765,
+          "diff_pct": 1.512299308709757
+        },
+        "avg_cost_pct": {
+          "baseline": 36.94914152563159,
+          "comparison": 37.507923137497905,
+          "diff_pp": 0.5587816118663156
+        },
+        "expected_packed_cost": 6.8402,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 37.74944812362031,
+          "horizon_delta_pp": 0.24152498612240692
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15620-82",
+        "description": "O/S VINYLCURE LED MIXING B/S RED",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 10.2337,
+        "baseline_revenue": 200.07,
+        "baseline_cost": 86.0095,
+        "baseline_qty": 9.0,
+        "comparison_revenue": 1400.49,
+        "comparison_cost": 555.9674,
+        "comparison_qty": 63.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 9.0,
+          "comparison": 63.0,
+          "diff_units": 54.0,
+          "diff_pct": 600.0
+        },
+        "revenue": {
+          "baseline": 200.07,
+          "comparison": 1400.49,
+          "diff_dollars": 1200.42,
+          "diff_pct": 600.0000000000001
+        },
+        "packed_cost": {
+          "baseline": 86.0095,
+          "comparison": 555.9674,
+          "diff_dollars": 469.9579,
+          "diff_pct": 546.4023160232299
+        },
+        "dollars_over_cost": {
+          "baseline": 114.06049999999999,
+          "comparison": 844.5226,
+          "diff_dollars": 730.4621,
+          "diff_pct": 640.4163579854552
+        },
+        "cost_pct_revenue": {
+          "baseline": 42.9897036037387,
+          "comparison": 39.698062820869836,
+          "diff_pp": -3.2916407828688605
+        },
+        "avg_sale": {
+          "baseline": 22.23,
+          "comparison": 22.23,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 9.556611111111112,
+          "comparison": 8.824879365079365,
+          "diff_dollars": -0.7317317460317465,
+          "diff_pct": -7.656811996681434
+        },
+        "avg_cost_pct": {
+          "baseline": 42.9897036037387,
+          "comparison": 39.698062820869836,
+          "diff_pp": -3.2916407828688605
+        },
+        "expected_packed_cost": 10.2337,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 46.03553756185335,
+          "horizon_delta_pp": 6.337474740983517
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15621-82",
+        "description": "UV VINYLCURE LED MIXING ORANGE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 15.469,
+        "baseline_revenue": 229.95,
+        "baseline_cost": 114.3477,
+        "baseline_qty": 9.0,
+        "comparison_revenue": 1609.65,
+        "comparison_cost": 1159.2756,
+        "comparison_qty": 63.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 9.0,
+          "comparison": 63.0,
+          "diff_units": 54.0,
+          "diff_pct": 600.0
+        },
+        "revenue": {
+          "baseline": 229.95,
+          "comparison": 1609.65,
+          "diff_dollars": 1379.7,
+          "diff_pct": 600.0000000000001
+        },
+        "packed_cost": {
+          "baseline": 114.3477,
+          "comparison": 1159.2756,
+          "diff_dollars": 1044.9279,
+          "diff_pct": 913.8162813943786
+        },
+        "dollars_over_cost": {
+          "baseline": 115.60229999999999,
+          "comparison": 450.37440000000015,
+          "diff_dollars": 334.77210000000014,
+          "diff_pct": 289.589480486115
+        },
+        "cost_pct_revenue": {
+          "baseline": 49.727201565557735,
+          "comparison": 72.02035225048922,
+          "diff_pp": 22.29315068493149
+        },
+        "avg_sale": {
+          "baseline": 25.549999999999997,
+          "comparison": 25.55,
+          "diff_dollars": 3.552713678800501E-15,
+          "diff_pct": 1.390494590528572E-14
+        },
+        "avg_cost": {
+          "baseline": 12.705300000000001,
+          "comparison": 18.4012,
+          "diff_dollars": 5.695899999999998,
+          "diff_pct": 44.83089734205408
+        },
+        "avg_cost_pct": {
+          "baseline": 49.727201565557735,
+          "comparison": 72.02035225048922,
+          "diff_pp": 22.29315068493149
+        },
+        "expected_packed_cost": 15.469,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 60.5440313111546,
+          "horizon_delta_pp": -11.476320939334627
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15686-82",
+        "description": "UV VINYLCURE LED CLR TINTBASE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 8.1433,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 5067.36,
+        "comparison_cost": 2049.6731,
+        "comparison_qty": 324.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 324.0,
+          "diff_units": 324.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 5067.36,
+          "diff_dollars": 5067.36,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 2049.6731,
+          "diff_dollars": 2049.6731,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 3017.6868999999997,
+          "diff_dollars": 3017.6868999999997,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 40.44853927883553,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 15.639999999999999,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.3261515432098765,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 40.44853927883553,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 8.1433,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 52.06713554987212,
+          "horizon_delta_pp": 11.618596271036587
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15710-50",
+        "description": "RAPICURE PANTONE 3425 GREEN MONADNOCK",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 5.5962,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 2293.5,
+        "comparison_cost": 772.2051000000001,
+        "comparison_qty": 165.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 165.0,
+          "diff_units": 165.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 2293.5,
+          "diff_dollars": 2293.5,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 772.2051000000001,
+          "diff_dollars": 772.2051000000001,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 1521.2948999999999,
+          "diff_dollars": 1521.2948999999999,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 33.66928711576194,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 13.9,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 4.68003090909091,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 33.66928711576194,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 5.5962,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 40.26043165467625,
+          "horizon_delta_pp": 6.591144538914314
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15868MF-84",
+        "description": "UV M/IQ LAM MORE FLOW 1/D YELLOW",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.6458,
+        "baseline_revenue": 5675.22,
+        "baseline_cost": 2136.8713,
+        "baseline_qty": 369.0,
+        "comparison_revenue": 5637.6928,
+        "comparison_cost": 2375.5991,
+        "comparison_qty": 366.56
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 369.0,
+          "comparison": 366.56,
+          "diff_units": -2.4399999999999977,
+          "diff_pct": -0.661246612466124
+        },
+        "revenue": {
+          "baseline": 5675.22,
+          "comparison": 5637.6928,
+          "diff_dollars": -37.52720000000045,
+          "diff_pct": -0.6612466124661326
+        },
+        "packed_cost": {
+          "baseline": 2136.8713,
+          "comparison": 2375.5991,
+          "diff_dollars": 238.72780000000012,
+          "diff_pct": 11.171838004469437
+        },
+        "dollars_over_cost": {
+          "baseline": 3538.3487000000005,
+          "comparison": 3262.0937,
+          "diff_dollars": -276.25500000000056,
+          "diff_pct": -7.8074554947057795
+        },
+        "cost_pct_revenue": {
+          "baseline": 37.65266016119199,
+          "comparison": 42.13778906151112,
+          "diff_pp": 4.485128900319133
+        },
+        "avg_sale": {
+          "baseline": 15.38,
+          "comparison": 15.379999999999999,
+          "diff_dollars": -1.7763568394002505E-15,
+          "diff_pct": -1.1549784391419052E-14
+        },
+        "avg_cost": {
+          "baseline": 5.790979132791327,
+          "comparison": 6.48079195766041,
+          "diff_dollars": 0.6898128248690822,
+          "diff_pct": 11.911851330339426
+        },
+        "avg_cost_pct": {
+          "baseline": 37.65266016119198,
+          "comparison": 42.137789061511114,
+          "diff_pp": 4.485128900319133
+        },
+        "expected_packed_cost": 7.6458,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 49.71261378413524,
+          "horizon_delta_pp": 7.574824722624129
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15869-84",
+        "description": "UV M/IQ LAM 2/D MAGENTA",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.3131,
+        "baseline_revenue": 5501.79,
+        "baseline_cost": 2442.5393,
+        "baseline_qty": 405.0,
+        "comparison_revenue": 7629.447,
+        "comparison_cost": 3179.1007,
+        "comparison_qty": 511.7
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 405.0,
+          "comparison": 511.7,
+          "diff_units": 106.69999999999999,
+          "diff_pct": 26.345679012345673
+        },
+        "revenue": {
+          "baseline": 5501.79,
+          "comparison": 7629.447,
+          "diff_dollars": 2127.657,
+          "diff_pct": 38.67208672086721
+        },
+        "packed_cost": {
+          "baseline": 2442.5393,
+          "comparison": 3179.1007,
+          "diff_dollars": 736.5614,
+          "diff_pct": 30.1555598307057
+        },
+        "dollars_over_cost": {
+          "baseline": 3059.2507,
+          "comparison": 4450.3463,
+          "diff_dollars": 1391.0956,
+          "diff_pct": 45.471775163768044
+        },
+        "cost_pct_revenue": {
+          "baseline": 44.39535678388306,
+          "comparison": 41.66882213088314,
+          "diff_pp": -2.7265346529999164
+        },
+        "avg_sale": {
+          "baseline": 13.584666666666667,
+          "comparison": 14.91,
+          "diff_dollars": 1.325333333333333,
+          "diff_pct": 9.756097560975608
+        },
+        "avg_cost": {
+          "baseline": 6.030961234567901,
+          "comparison": 6.2128213797146765,
+          "diff_dollars": 0.18186014514677584,
+          "diff_pct": 3.0154421173261867
+        },
+        "avg_cost_pct": {
+          "baseline": 44.39535678388305,
+          "comparison": 41.66882213088314,
+          "diff_pp": -2.7265346529999093
+        },
+        "expected_packed_cost": 7.3131,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 49.04828973843058,
+          "horizon_delta_pp": 7.37946760754744
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15870-84",
+        "description": "UV M/IQ LAM 3/D CYAN",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.3946,
+        "baseline_revenue": 5916.24,
+        "baseline_cost": 2330.6403,
+        "baseline_qty": 396.0,
+        "comparison_revenue": 7791.21,
+        "comparison_cost": 3266.8799999999997,
+        "comparison_qty": 521.5
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 396.0,
+          "comparison": 521.5,
+          "diff_units": 125.5,
+          "diff_pct": 31.691919191919194
+        },
+        "revenue": {
+          "baseline": 5916.24,
+          "comparison": 7791.21,
+          "diff_dollars": 1874.9700000000003,
+          "diff_pct": 31.691919191919197
+        },
+        "packed_cost": {
+          "baseline": 2330.6403,
+          "comparison": 3266.8799999999997,
+          "diff_dollars": 936.2396999999996,
+          "diff_pct": 40.1709221281379
+        },
+        "dollars_over_cost": {
+          "baseline": 3585.5996999999998,
+          "comparison": 4524.33,
+          "diff_dollars": 938.7303000000002,
+          "diff_pct": 26.180566112831844
+        },
+        "cost_pct_revenue": {
+          "baseline": 39.393944464727596,
+          "comparison": 41.93032917865132,
+          "diff_pp": 2.5363847139237237
+        },
+        "avg_sale": {
+          "baseline": 14.94,
+          "comparison": 14.94,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 5.885455303030303,
+          "comparison": 6.264391179290508,
+          "diff_dollars": 0.3789358762602042,
+          "diff_pct": 6.438514214271541
+        },
+        "avg_cost_pct": {
+          "baseline": 39.393944464727596,
+          "comparison": 41.93032917865133,
+          "diff_pp": 2.5363847139237308
+        },
+        "expected_packed_cost": 7.3946,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 49.49531459170014,
+          "horizon_delta_pp": 7.5649854130488094
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15871-84",
+        "description": "UV M/IQ LAM 4/D BLACK",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.8175,
+        "baseline_revenue": 9596.251,
+        "baseline_cost": 4299.0761,
+        "baseline_qty": 673.85,
+        "comparison_revenue": 14283.36,
+        "comparison_cost": 6080.42,
+        "comparison_qty": 936.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 673.85,
+          "comparison": 936.0,
+          "diff_units": 262.15,
+          "diff_pct": 38.90331676189062
+        },
+        "revenue": {
+          "baseline": 9596.251,
+          "comparison": 14283.36,
+          "diff_dollars": 4687.109,
+          "diff_pct": 48.843126341734916
+        },
+        "packed_cost": {
+          "baseline": 4299.0761,
+          "comparison": 6080.42,
+          "diff_dollars": 1781.3438999999998,
+          "diff_pct": 41.435505177496154
+        },
+        "dollars_over_cost": {
+          "baseline": 5297.1749,
+          "comparison": 8202.94,
+          "diff_dollars": 2905.7651000000005,
+          "diff_pct": 54.854996386847645
+        },
+        "cost_pct_revenue": {
+          "baseline": 44.79953786119184,
+          "comparison": 42.56995552867112,
+          "diff_pp": -2.229582332520714
+        },
+        "avg_sale": {
+          "baseline": 14.240930474141129,
+          "comparison": 15.26,
+          "diff_dollars": 1.0190695258588711,
+          "diff_pct": 7.1559195356603365
+        },
+        "avg_cost": {
+          "baseline": 6.379871039548861,
+          "comparison": 6.4961752136752136,
+          "diff_dollars": 0.11630417412635286,
+          "diff_pct": 1.8229862861707162
+        },
+        "avg_cost_pct": {
+          "baseline": 44.79953786119184,
+          "comparison": 42.56995552867113,
+          "diff_pp": -2.2295823325207067
+        },
+        "expected_packed_cost": 6.8175,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 44.675622542595015,
+          "horizon_delta_pp": 2.1056670139238847
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15888-84",
+        "description": "UV M/IQ / VINYLCURE 1/D BLACK",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.8175,
+        "baseline_revenue": 561.6,
+        "baseline_cost": 232.69150000000002,
+        "baseline_qty": 36.0,
+        "comparison_revenue": 11793.6,
+        "comparison_cost": 4909.4352,
+        "comparison_qty": 756.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 36.0,
+          "comparison": 756.0,
+          "diff_units": 720.0,
+          "diff_pct": 2000.0
+        },
+        "revenue": {
+          "baseline": 561.6,
+          "comparison": 11793.6,
+          "diff_dollars": 11232.0,
+          "diff_pct": 2000.0
+        },
+        "packed_cost": {
+          "baseline": 232.69150000000002,
+          "comparison": 4909.4352,
+          "diff_dollars": 4676.7437,
+          "diff_pct": 2009.8472440978717
+        },
+        "dollars_over_cost": {
+          "baseline": 328.9085,
+          "comparison": 6884.1648000000005,
+          "diff_dollars": 6555.256300000001,
+          "diff_pct": 1993.0334120279654
+        },
+        "cost_pct_revenue": {
+          "baseline": 41.43367165242166,
+          "comparison": 41.62796092796093,
+          "diff_pp": 0.1942892755392691
+        },
+        "avg_sale": {
+          "baseline": 15.600000000000001,
+          "comparison": 15.6,
+          "diff_dollars": -1.7763568394002505E-15,
+          "diff_pct": -1.1386902816668271E-14
+        },
+        "avg_cost": {
+          "baseline": 6.463652777777778,
+          "comparison": 6.493961904761905,
+          "diff_dollars": 0.030309126984127133,
+          "diff_pct": 0.4689163856129583
+        },
+        "avg_cost_pct": {
+          "baseline": 41.43367165242165,
+          "comparison": 41.627960927960935,
+          "diff_pp": 0.19428927553928332
+        },
+        "expected_packed_cost": 6.8175,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 43.70192307692308,
+          "horizon_delta_pp": 2.0739621489621456
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15889-84",
+        "description": "UV M/IQ / VINYLCURE 2/D CYAN",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.3946,
+        "baseline_revenue": 2664.0,
+        "baseline_cost": 1074.4169,
+        "baseline_qty": 180.0,
+        "comparison_revenue": 7509.52,
+        "comparison_cost": 3266.4604,
+        "comparison_qty": 507.4
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 180.0,
+          "comparison": 507.4,
+          "diff_units": 327.4,
+          "diff_pct": 181.88888888888889
+        },
+        "revenue": {
+          "baseline": 2664.0,
+          "comparison": 7509.52,
+          "diff_dollars": 4845.52,
+          "diff_pct": 181.8888888888889
+        },
+        "packed_cost": {
+          "baseline": 1074.4169,
+          "comparison": 3266.4604,
+          "diff_dollars": 2192.0434999999998,
+          "diff_pct": 204.02168841536277
+        },
+        "dollars_over_cost": {
+          "baseline": 1589.5831,
+          "comparison": 4243.0596000000005,
+          "diff_dollars": 2653.4765000000007,
+          "diff_pct": 166.92908348107127
+        },
+        "cost_pct_revenue": {
+          "baseline": 40.33096471471471,
+          "comparison": 43.49759238939372,
+          "diff_pp": 3.166627674679013
+        },
+        "avg_sale": {
+          "baseline": 14.8,
+          "comparison": 14.8,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 5.968982777777778,
+          "comparison": 6.437643673630272,
+          "diff_dollars": 0.46866089585249426,
+          "diff_pct": 7.85160408901321
+        },
+        "avg_cost_pct": {
+          "baseline": 40.33096471471471,
+          "comparison": 43.49759238939373,
+          "diff_pp": 3.1666276746790203
+        },
+        "expected_packed_cost": 7.3946,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 49.963513513513504,
+          "horizon_delta_pp": 6.465921124119774
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15890-84",
+        "description": "UV M/IQ / VINYLCURE 3/D MAGENTA",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.3131,
+        "baseline_revenue": 4219.2,
+        "baseline_cost": 1741.7837,
+        "baseline_qty": 288.0,
+        "comparison_revenue": 13275.83,
+        "comparison_cost": 5640.7539,
+        "comparison_qty": 906.2
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 288.0,
+          "comparison": 906.2,
+          "diff_units": 618.2,
+          "diff_pct": 214.6527777777778
+        },
+        "revenue": {
+          "baseline": 4219.2,
+          "comparison": 13275.83,
+          "diff_dollars": 9056.630000000001,
+          "diff_pct": 214.6527777777778
+        },
+        "packed_cost": {
+          "baseline": 1741.7837,
+          "comparison": 5640.7539,
+          "diff_dollars": 3898.9701999999997,
+          "diff_pct": 223.8492758888489
+        },
+        "dollars_over_cost": {
+          "baseline": 2477.4163,
+          "comparison": 7635.0761,
+          "diff_dollars": 5157.6598,
+          "diff_pct": 208.18704551189077
+        },
+        "cost_pct_revenue": {
+          "baseline": 41.28232129313614,
+          "comparison": 42.48889824591004,
+          "diff_pp": 1.2065769527739008
+        },
+        "avg_sale": {
+          "baseline": 14.649999999999999,
+          "comparison": 14.649999999999999,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 6.047860069444444,
+          "comparison": 6.224623593025822,
+          "diff_dollars": 0.1767635235813776,
+          "diff_pct": 2.9227449304662083
+        },
+        "avg_cost_pct": {
+          "baseline": 41.28232129313614,
+          "comparison": 42.48889824591005,
+          "diff_pp": 1.2065769527739079
+        },
+        "expected_packed_cost": 7.3131,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 49.918771331058025,
+          "horizon_delta_pp": 7.429873085147975
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15891-84",
+        "description": "UV M/IQ / VINYLCURE 4/D YELLOW",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.3208,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 5490.0,
+        "comparison_cost": 2253.5951999999997,
+        "comparison_qty": 360.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 360.0,
+          "diff_units": 360.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 5490.0,
+          "diff_dollars": 5490.0,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 2253.5951999999997,
+          "diff_dollars": 2253.5951999999997,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 3236.4048000000003,
+          "diff_dollars": 3236.4048000000003,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 41.04909289617486,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 15.25,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.259986666666666,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 41.04909289617486,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.3208,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 48.00524590163934,
+          "horizon_delta_pp": 6.956153005464479
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV15892-50",
+        "description": "UV M/IQ / VINYLCURE OPAQUE WHITE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 4.1599,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 4981.075,
+        "comparison_cost": 1205.5217,
+        "comparison_qty": 324.5
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 324.5,
+          "diff_units": 324.5,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 4981.075,
+          "diff_dollars": 4981.075,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 1205.5217,
+          "diff_dollars": 1205.5217,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 3775.5532999999996,
+          "diff_dollars": 3775.5532999999996,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 24.202038716542113,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 15.35,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 3.715012942989214,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 24.202038716542113,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 4.1599,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 27.100325732899027,
+          "horizon_delta_pp": 2.898287016356914
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV16025-82",
+        "description": "PLASTECH CLEAR TINT BASE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 8.1433,
+        "baseline_revenue": 1408.5,
+        "baseline_cost": 542.5231,
+        "baseline_qty": 90.0,
+        "comparison_revenue": 0.0,
+        "comparison_cost": 0.0,
+        "comparison_qty": 0.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 90.0,
+          "comparison": 0.0,
+          "diff_units": -90.0,
+          "diff_pct": -100.0
+        },
+        "revenue": {
+          "baseline": 1408.5,
+          "comparison": 0.0,
+          "diff_dollars": -1408.5,
+          "diff_pct": -100.0
+        },
+        "packed_cost": {
+          "baseline": 542.5231,
+          "comparison": 0.0,
+          "diff_dollars": -542.5231,
+          "diff_pct": -100.0
+        },
+        "dollars_over_cost": {
+          "baseline": 865.9769,
+          "comparison": 0.0,
+          "diff_dollars": -865.9769,
+          "diff_pct": -100.0
+        },
+        "cost_pct_revenue": {
+          "baseline": 38.517791977280794,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": 15.65,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": 6.028034444444445,
+          "comparison": null,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": 38.517791977280794,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 8.1433,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV17294-1G",
+        "description": "UNI-PLAS GLOSS OPV FC",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 5.6122,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 9847.2,
+        "comparison_cost": 4602.9301,
+        "comparison_qty": 880.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 880.0,
+          "diff_units": 880.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 9847.2,
+          "diff_dollars": 9847.2,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 4602.9301,
+          "diff_dollars": 4602.9301,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 5244.269900000001,
+          "diff_dollars": 5244.269900000001,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 46.743542326752774,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 11.190000000000001,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 5.2306023863636355,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 46.74354232675277,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 5.6122,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 50.153708668453966,
+          "horizon_delta_pp": 3.410166341701199
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV17905-82",
+        "description": "UV M/IQ / VINYLCURE LED MIXING WARM RED RLC",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.5408,
+        "baseline_revenue": 398.16,
+        "baseline_cost": 109.8226,
+        "baseline_qty": 18.0,
+        "comparison_revenue": 3981.6,
+        "comparison_cost": 1171.7152,
+        "comparison_qty": 180.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 18.0,
+          "comparison": 180.0,
+          "diff_units": 162.0,
+          "diff_pct": 900.0
+        },
+        "revenue": {
+          "baseline": 398.16,
+          "comparison": 3981.6,
+          "diff_dollars": 3583.44,
+          "diff_pct": 900.0
+        },
+        "packed_cost": {
+          "baseline": 109.8226,
+          "comparison": 1171.7152,
+          "diff_dollars": 1061.8926000000001,
+          "diff_pct": 966.9162813482836
+        },
+        "dollars_over_cost": {
+          "baseline": 288.3374,
+          "comparison": 2809.8848,
+          "diff_dollars": 2521.5474,
+          "diff_pct": 874.5127756579618
+        },
+        "cost_pct_revenue": {
+          "baseline": 27.582529636327102,
+          "comparison": 29.428249949768944,
+          "diff_pp": 1.8457203134418414
+        },
+        "avg_sale": {
+          "baseline": 22.12,
+          "comparison": 22.12,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 6.101255555555555,
+          "comparison": 6.509528888888889,
+          "diff_dollars": 0.4082733333333337,
+          "diff_pct": 6.691628134828356
+        },
+        "avg_cost_pct": {
+          "baseline": 27.582529636327102,
+          "comparison": 29.428249949768936,
+          "diff_pp": 1.8457203134418343
+        },
+        "expected_packed_cost": 7.5408,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 34.09041591320072,
+          "horizon_delta_pp": 4.662165963431786
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV19000-50",
+        "description": "UV CYCLOPS 1/D PROCESS BLACK",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 4.7411,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 15589.86,
+        "comparison_cost": 6324.541499999999,
+        "comparison_qty": 1362.75
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 1362.75,
+          "diff_units": 1362.75,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 15589.86,
+          "diff_dollars": 15589.86,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 6324.541499999999,
+          "diff_dollars": 6324.541499999999,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 9265.318500000001,
+          "diff_dollars": 9265.318500000001,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 40.56830208866532,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 11.440000000000001,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 4.641013758943313,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 40.56830208866531,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 4.7411,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 41.44318181818182,
+          "horizon_delta_pp": 0.8748797295165076
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV19001-50",
+        "description": "UV CYCLOPS 2/D PROCESS CYAN",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 4.9436,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 16993.6,
+        "comparison_cost": 7206.956999999999,
+        "comparison_qty": 1520.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 1520.0,
+          "diff_units": 1520.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 16993.6,
+          "diff_dollars": 16993.6,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 7206.956999999999,
+          "diff_dollars": 7206.956999999999,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 9786.643,
+          "diff_dollars": 9786.643,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 42.409830759815456,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 11.18,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 4.741419078947368,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 42.409830759815456,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 4.9436,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 44.21824686940966,
+          "horizon_delta_pp": 1.808416109594205
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV19002-50",
+        "description": "UV CYCLOPS 3/D PROCESS MAGENTA",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 4.8209,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 21507.2,
+        "comparison_cost": 8612.178899999999,
+        "comparison_qty": 1880.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 1880.0,
+          "diff_units": 1880.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 21507.2,
+          "diff_dollars": 21507.2,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 8612.178899999999,
+          "diff_dollars": 8612.178899999999,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 12895.021100000002,
+          "diff_dollars": 12895.021100000002,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 40.04323621856866,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 11.44,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 4.580946223404255,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 40.043236218568666,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 4.8209,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 42.14073426573427,
+          "horizon_delta_pp": 2.097498047165601
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV19003-50",
+        "description": "UV CYCLOPS 4/D PROCESS YELLOW",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 4.8731,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 17768.4,
+        "comparison_cost": 7087.989099999999,
+        "comparison_qty": 1560.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 1560.0,
+          "diff_units": 1560.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 17768.4,
+          "diff_dollars": 17768.4,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 7087.989099999999,
+          "diff_dollars": 7087.989099999999,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 10680.410900000003,
+          "diff_dollars": 10680.410900000003,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 39.89098118007248,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 11.39,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 4.543582756410256,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 39.89098118007248,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 4.8731,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 42.784021071115006,
+          "horizon_delta_pp": 2.893039891042527
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV25583-50",
+        "description": "UV VINYLCURE DENSE BLACK",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 7.861,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 0.0,
+        "comparison_cost": 31.171800000000005,
+        "comparison_qty": 5.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 5.0,
+          "diff_units": 5.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 0.0,
+          "diff_dollars": 0.0,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 31.171800000000005,
+          "diff_dollars": 31.171800000000005,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": -31.171800000000005,
+          "diff_dollars": -31.171800000000005,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 0.0,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.234360000000001,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 7.861,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV25585-82",
+        "description": "PLASTECH SPEC CLEAR TINT BASE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 8.1433,
+        "baseline_revenue": 3380.4,
+        "baseline_cost": 1360.2176,
+        "baseline_qty": 216.0,
+        "comparison_revenue": 6619.95,
+        "comparison_cost": 2697.4352,
+        "comparison_qty": 423.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 216.0,
+          "comparison": 423.0,
+          "diff_units": 207.0,
+          "diff_pct": 95.83333333333334
+        },
+        "revenue": {
+          "baseline": 3380.4,
+          "comparison": 6619.95,
+          "diff_dollars": 3239.5499999999997,
+          "diff_pct": 95.83333333333333
+        },
+        "packed_cost": {
+          "baseline": 1360.2176,
+          "comparison": 2697.4352,
+          "diff_dollars": 1337.2176,
+          "diff_pct": 98.30909407435988
+        },
+        "dollars_over_cost": {
+          "baseline": 2020.1824000000001,
+          "comparison": 3922.5148,
+          "diff_dollars": 1902.3323999999998,
+          "diff_pct": 94.16636834376934
+        },
+        "cost_pct_revenue": {
+          "baseline": 40.23836232398533,
+          "comparison": 40.74706304428281,
+          "diff_pp": 0.5087007202974831
+        },
+        "avg_sale": {
+          "baseline": 15.65,
+          "comparison": 15.65,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 6.297303703703704,
+          "comparison": 6.37691536643026,
+          "diff_dollars": 0.07961166272655618,
+          "diff_pct": 1.2642182507369508
+        },
+        "avg_cost_pct": {
+          "baseline": 40.23836232398533,
+          "comparison": 40.74706304428281,
+          "diff_pp": 0.5087007202974831
+        },
+        "expected_packed_cost": 8.1433,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 52.03386581469649,
+          "horizon_delta_pp": 11.28680277041368
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV25612-1G",
+        "description": "LED GLOSS OPV",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.0122,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 4387.92,
+        "comparison_cost": 2141.9966999999997,
+        "comparison_qty": 392.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 392.0,
+          "diff_units": 392.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 4387.92,
+          "diff_dollars": 4387.92,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 2141.9966999999997,
+          "diff_dollars": 2141.9966999999997,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 2245.9233000000004,
+          "diff_dollars": 2245.9233000000004,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 48.815764644751944,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 11.193673469387756,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 5.464277295918366,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 48.815764644751944,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 6.0122,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 53.71069663986581,
+          "horizon_delta_pp": 4.894931995113865
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV25614-82",
+        "description": "VINYLCURE LED LT MIXING RUBINE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.7213,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 2516.85,
+        "comparison_cost": 955.2340999999999,
+        "comparison_qty": 153.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 153.0,
+          "diff_units": 153.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 2516.85,
+          "diff_dollars": 2516.85,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 955.2340999999999,
+          "diff_dollars": 955.2340999999999,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 1561.6159,
+          "diff_dollars": 1561.6159,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 37.953557025647136,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 16.45,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.243360130718954,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 37.953557025647136,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 6.7213,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 40.85896656534955,
+          "horizon_delta_pp": 2.9054095397024113
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV25616-50",
+        "description": "NEW-GEN HARD DRY SOLVENT REACT BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 14.9737,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 0.0,
+        "comparison_cost": 145.8194,
+        "comparison_qty": 10.2
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 10.2,
+          "diff_units": 10.2,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 0.0,
+          "diff_dollars": 0.0,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 145.8194,
+          "diff_dollars": 145.8194,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": -145.8194,
+          "diff_dollars": -145.8194,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 0.0,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 14.296019607843139,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 14.9737,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UV25628-50",
+        "description": "NEW-GEN SOLVENT REACT BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 16.6819,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 0.0,
+        "comparison_cost": 154.1814,
+        "comparison_qty": 9.3
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 9.3,
+          "diff_units": 9.3,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 0.0,
+          "diff_dollars": 0.0,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 154.1814,
+          "diff_dollars": 154.1814,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": -154.1814,
+          "diff_dollars": -154.1814,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 0.0,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 16.57864516129032,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": null,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 16.6819,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVNG001-82",
+        "description": "NEW-GEN YELLOW",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 5.4992,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 2678.4,
+        "comparison_cost": 843.7274,
+        "comparison_qty": 180.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 180.0,
+          "diff_units": 180.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 2678.4,
+          "diff_dollars": 2678.4,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 843.7274,
+          "diff_dollars": 843.7274,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 1834.6726,
+          "diff_dollars": 1834.6726,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 31.50117234169653,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 14.88,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 4.687374444444444,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 31.50117234169653,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 5.4992,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 36.956989247311824,
+          "horizon_delta_pp": 5.455816905615293
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVNG003-82",
+        "description": "NEW-GEN RUBINE RED",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 5.3838,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 526.68,
+        "comparison_cost": 179.0197,
+        "comparison_qty": 36.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 36.0,
+          "diff_units": 36.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 526.68,
+          "diff_dollars": 526.68,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 179.0197,
+          "diff_dollars": 179.0197,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 347.66029999999995,
+          "diff_dollars": 347.66029999999995,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 33.99022176653756,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 14.629999999999999,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 4.972769444444444,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 33.99022176653756,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 5.3838,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 36.799726589200276,
+          "horizon_delta_pp": 2.809504822662717
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVNG007-82",
+        "description": "NEW-GEN PROC BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 5.1713,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 1118.16,
+        "comparison_cost": 342.5162,
+        "comparison_qty": 72.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 72.0,
+          "diff_units": 72.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 1118.16,
+          "diff_dollars": 1118.16,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 342.5162,
+          "diff_dollars": 342.5162,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 775.6438,
+          "diff_dollars": 775.6438,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 30.632127781355084,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 15.530000000000001,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 4.757169444444445,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 30.632127781355084,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 5.1713,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 33.298776561493874,
+          "horizon_delta_pp": 2.6666487801387895
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVV877P-50",
+        "description": "VINYLCURE P877 PASTE (PART 2 USE 25%)",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": null,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 166.5,
+        "comparison_cost": 17.5492,
+        "comparison_qty": 5.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 5.0,
+          "diff_units": 5.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 166.5,
+          "diff_dollars": 166.5,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 17.5492,
+          "diff_dollars": 17.5492,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 148.95080000000002,
+          "diff_dollars": 148.95080000000002,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 10.540060060060059,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 33.3,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 3.5098399999999996,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 10.540060060060059,
+          "diff_pp": null
+        },
+        "expected_packed_cost": null,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": null,
+          "horizon_delta_pp": null
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVV877V-50",
+        "description": "VINYLCURE P877 VARNISH (PART 1 USE 75%)",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 8.9031,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 395.0,
+        "comparison_cost": 135.7296,
+        "comparison_qty": 20.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 20.0,
+          "diff_units": 20.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 395.0,
+          "diff_dollars": 395.0,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 135.7296,
+          "diff_dollars": 135.7296,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 259.2704,
+          "diff_dollars": 259.2704,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 34.361924050632915,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 19.75,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 6.78648,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 34.361924050632915,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 8.9031,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 45.078987341772155,
+          "horizon_delta_pp": 10.71706329113924
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVVL001-82",
+        "description": "VINYLCURE LED MIXING YELLOW",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 8.2341,
+        "baseline_revenue": 1204.56,
+        "baseline_cost": 459.2887,
+        "baseline_qty": 72.0,
+        "comparison_revenue": 5119.38,
+        "comparison_cost": 2027.6232,
+        "comparison_qty": 306.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 72.0,
+          "comparison": 306.0,
+          "diff_units": 234.0,
+          "diff_pct": 325.0
+        },
+        "revenue": {
+          "baseline": 1204.56,
+          "comparison": 5119.38,
+          "diff_dollars": 3914.82,
+          "diff_pct": 325.00000000000006
+        },
+        "packed_cost": {
+          "baseline": 459.2887,
+          "comparison": 2027.6232,
+          "diff_dollars": 1568.3345,
+          "diff_pct": 341.47029961764787
+        },
+        "dollars_over_cost": {
+          "baseline": 745.2712999999999,
+          "comparison": 3091.7568,
+          "diff_dollars": 2346.4855000000002,
+          "diff_pct": 314.84984058825296
+        },
+        "cost_pct_revenue": {
+          "baseline": 38.12916749684533,
+          "comparison": 39.60681176236185,
+          "diff_pp": 1.477644265516524
+        },
+        "avg_sale": {
+          "baseline": 16.73,
+          "comparison": 16.73,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 6.379009722222222,
+          "comparison": 6.6262196078431375,
+          "diff_dollars": 0.24720988562091506,
+          "diff_pct": 3.8753646159171526
+        },
+        "avg_cost_pct": {
+          "baseline": 38.12916749684533,
+          "comparison": 39.60681176236185,
+          "diff_pp": 1.477644265516524
+        },
+        "expected_packed_cost": 8.2341,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 49.21757322175732,
+          "horizon_delta_pp": 9.61076145939547
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVVL003-82",
+        "description": "VINYLCURE LED MIXING RUBINE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 6.6806,
+        "baseline_revenue": 7489.685,
+        "baseline_cost": 4195.4875,
+        "baseline_qty": 689.3,
+        "comparison_revenue": 9475.2,
+        "comparison_cost": 3512.6223999999997,
+        "comparison_qty": 576.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 689.3,
+          "comparison": 576.0,
+          "diff_units": -113.29999999999995,
+          "diff_pct": -16.436965036994046
+        },
+        "revenue": {
+          "baseline": 7489.685,
+          "comparison": 9475.2,
+          "diff_dollars": 1985.5150000000003,
+          "diff_pct": 26.50999341093785
+        },
+        "packed_cost": {
+          "baseline": 4195.4875,
+          "comparison": 3512.6223999999997,
+          "diff_dollars": -682.8651000000004,
+          "diff_pct": -16.276180062507645
+        },
+        "dollars_over_cost": {
+          "baseline": 3294.1975,
+          "comparison": 5962.5776000000005,
+          "diff_dollars": 2668.3801000000003,
+          "diff_pct": 81.0024323071097
+        },
+        "cost_pct_revenue": {
+          "baseline": 56.0168752090375,
+          "comparison": 37.07174940898344,
+          "diff_pp": -18.945125800054058
+        },
+        "avg_sale": {
+          "baseline": 10.865639054112869,
+          "comparison": 16.450000000000003,
+          "diff_dollars": 5.584360945887134,
+          "diff_pct": 51.394684823193515
+        },
+        "avg_cost": {
+          "baseline": 6.086591469606848,
+          "comparison": 6.098302777777778,
+          "diff_dollars": 0.01171130817092969,
+          "diff_pct": 0.19241160228035087
+        },
+        "avg_cost_pct": {
+          "baseline": 56.0168752090375,
+          "comparison": 37.07174940898344,
+          "diff_pp": -18.945125800054058
+        },
+        "expected_packed_cost": 6.6806,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 40.61155015197568,
+          "horizon_delta_pp": 3.5398007429922345
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVVL007-82",
+        "description": "VINYLCURE LED MIXING BLUE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 8.014,
+        "baseline_revenue": 3978.0,
+        "baseline_cost": 1370.4601,
+        "baseline_qty": 234.0,
+        "comparison_revenue": 7497.0,
+        "comparison_cost": 2781.3962,
+        "comparison_qty": 441.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 234.0,
+          "comparison": 441.0,
+          "diff_units": 207.0,
+          "diff_pct": 88.46153846153845
+        },
+        "revenue": {
+          "baseline": 3978.0,
+          "comparison": 7497.0,
+          "diff_dollars": 3519.0,
+          "diff_pct": 88.46153846153845
+        },
+        "packed_cost": {
+          "baseline": 1370.4601,
+          "comparison": 2781.3962,
+          "diff_dollars": 1410.9361000000001,
+          "diff_pct": 102.95346066623902
+        },
+        "dollars_over_cost": {
+          "baseline": 2607.5398999999998,
+          "comparison": 4715.6038,
+          "diff_dollars": 2108.0639,
+          "diff_pct": 80.84493357129455
+        },
+        "cost_pct_revenue": {
+          "baseline": 34.450982905982904,
+          "comparison": 37.10012271575297,
+          "diff_pp": 2.6491398097700625
+        },
+        "avg_sale": {
+          "baseline": 17.0,
+          "comparison": 17.0,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 5.856667094017094,
+          "comparison": 6.307020861678005,
+          "diff_dollars": 0.4503537676609106,
+          "diff_pct": 7.68959137392275
+        },
+        "avg_cost_pct": {
+          "baseline": 34.450982905982904,
+          "comparison": 37.10012271575297,
+          "diff_pp": 2.6491398097700625
+        },
+        "expected_packed_cost": 8.014,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 47.14117647058823,
+          "horizon_delta_pp": 10.04105375483526
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVVL008-82",
+        "description": "VINYLCURE LED MIXING GREEN",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 8.5226,
+        "baseline_revenue": 596.52,
+        "baseline_cost": 228.00420000000003,
+        "baseline_qty": 36.0,
+        "comparison_revenue": 2236.95,
+        "comparison_cost": 892.1622,
+        "comparison_qty": 135.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 36.0,
+          "comparison": 135.0,
+          "diff_units": 99.0,
+          "diff_pct": 275.0
+        },
+        "revenue": {
+          "baseline": 596.52,
+          "comparison": 2236.95,
+          "diff_dollars": 1640.4299999999998,
+          "diff_pct": 275.0
+        },
+        "packed_cost": {
+          "baseline": 228.00420000000003,
+          "comparison": 892.1622,
+          "diff_dollars": 664.1579999999999,
+          "diff_pct": 291.29200251574304
+        },
+        "dollars_over_cost": {
+          "baseline": 368.51579999999996,
+          "comparison": 1344.7877999999998,
+          "diff_dollars": 976.2719999999999,
+          "diff_pct": 264.91998443486005
+        },
+        "cost_pct_revenue": {
+          "baseline": 38.22238986119494,
+          "comparison": 39.88297458593174,
+          "diff_pp": 1.6605847247368004
+        },
+        "avg_sale": {
+          "baseline": 16.57,
+          "comparison": 16.57,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 6.333450000000001,
+          "comparison": 6.608608888888889,
+          "diff_dollars": 0.27515888888888806,
+          "diff_pct": 4.344534004198155
+        },
+        "avg_cost_pct": {
+          "baseline": 38.222389861194934,
+          "comparison": 39.882974585931734,
+          "diff_pp": 1.6605847247368004
+        },
+        "expected_packed_cost": 8.5226,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 51.433916716958365,
+          "horizon_delta_pp": 11.55094213102663
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVVL010-82",
+        "description": "VINYLCURE LED MIXING BLACK",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 8.1096,
+        "baseline_revenue": 1206.0,
+        "baseline_cost": 453.30449999999996,
+        "baseline_qty": 72.0,
+        "comparison_revenue": 2713.5,
+        "comparison_cost": 1142.6068,
+        "comparison_qty": 162.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 72.0,
+          "comparison": 162.0,
+          "diff_units": 90.0,
+          "diff_pct": 125.0
+        },
+        "revenue": {
+          "baseline": 1206.0,
+          "comparison": 2713.5,
+          "diff_dollars": 1507.5,
+          "diff_pct": 125.0
+        },
+        "packed_cost": {
+          "baseline": 453.30449999999996,
+          "comparison": 1142.6068,
+          "diff_dollars": 689.3023000000001,
+          "diff_pct": 152.06164950932543
+        },
+        "dollars_over_cost": {
+          "baseline": 752.6955,
+          "comparison": 1570.8932,
+          "diff_dollars": 818.1976999999999,
+          "diff_pct": 108.70235041925984
+        },
+        "cost_pct_revenue": {
+          "baseline": 37.58743781094527,
+          "comparison": 42.10822922424913,
+          "diff_pp": 4.520791413303861
+        },
+        "avg_sale": {
+          "baseline": 16.75,
+          "comparison": 16.75,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 6.295895833333333,
+          "comparison": 7.053128395061728,
+          "diff_dollars": 0.7572325617283955,
+          "diff_pct": 12.027399781922412
+        },
+        "avg_cost_pct": {
+          "baseline": 37.58743781094527,
+          "comparison": 42.10822922424912,
+          "diff_pp": 4.520791413303854
+        },
+        "expected_packed_cost": 8.1096,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 48.415522388059706,
+          "horizon_delta_pp": 6.307293163810584
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVVL011-82",
+        "description": "VINYLCURE LED OPAQUE WHITE",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 4.555,
+        "baseline_revenue": 1615.12,
+        "baseline_cost": 459.4878,
+        "baseline_qty": 104.0,
+        "comparison_revenue": 2220.79,
+        "comparison_cost": 630.8022,
+        "comparison_qty": 143.0
+      },
+      "expected_metrics": {
+        "in_both_periods": true,
+        "qty": {
+          "baseline": 104.0,
+          "comparison": 143.0,
+          "diff_units": 39.0,
+          "diff_pct": 37.5
+        },
+        "revenue": {
+          "baseline": 1615.12,
+          "comparison": 2220.79,
+          "diff_dollars": 605.6700000000001,
+          "diff_pct": 37.50000000000001
+        },
+        "packed_cost": {
+          "baseline": 459.4878,
+          "comparison": 630.8022,
+          "diff_dollars": 171.31439999999998,
+          "diff_pct": 37.28377554311561
+        },
+        "dollars_over_cost": {
+          "baseline": 1155.6322,
+          "comparison": 1589.9877999999999,
+          "diff_dollars": 434.35559999999987,
+          "diff_pct": 37.58597242271372
+        },
+        "cost_pct_revenue": {
+          "baseline": 28.449143097726488,
+          "comparison": 28.404405639434614,
+          "diff_pp": -0.04473745829187337
+        },
+        "avg_sale": {
+          "baseline": 15.53,
+          "comparison": 15.53,
+          "diff_dollars": 0.0,
+          "diff_pct": 0.0
+        },
+        "avg_cost": {
+          "baseline": 4.418151923076923,
+          "comparison": 4.411204195804196,
+          "diff_dollars": -0.006947727272727633,
+          "diff_pct": -0.1572541504613776
+        },
+        "avg_cost_pct": {
+          "baseline": 28.449143097726488,
+          "comparison": 28.404405639434614,
+          "diff_pp": -0.04473745829187337
+        },
+        "expected_packed_cost": 4.555,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 29.330328396651637,
+          "horizon_delta_pp": 0.9259227572170232
+        }
+      }
+    },
+    {
+      "raw": {
+        "item_name": "UVVL013-82",
+        "description": "O/S VINYLCURE LED MIXING VIOLET",
+        "unit": "lb",
+        "unit_mixed": false,
+        "replacement_cost": 13.6733,
+        "baseline_revenue": 0.0,
+        "baseline_cost": 0.0,
+        "baseline_qty": 0.0,
+        "comparison_revenue": 3546.45,
+        "comparison_cost": 1679.6111,
+        "comparison_qty": 135.0
+      },
+      "expected_metrics": {
+        "in_both_periods": false,
+        "qty": {
+          "baseline": 0.0,
+          "comparison": 135.0,
+          "diff_units": 135.0,
+          "diff_pct": null
+        },
+        "revenue": {
+          "baseline": 0.0,
+          "comparison": 3546.45,
+          "diff_dollars": 3546.45,
+          "diff_pct": null
+        },
+        "packed_cost": {
+          "baseline": 0.0,
+          "comparison": 1679.6111,
+          "diff_dollars": 1679.6111,
+          "diff_pct": null
+        },
+        "dollars_over_cost": {
+          "baseline": 0.0,
+          "comparison": 1866.8388999999997,
+          "diff_dollars": 1866.8388999999997,
+          "diff_pct": null
+        },
+        "cost_pct_revenue": {
+          "baseline": null,
+          "comparison": 47.360349081475846,
+          "diff_pp": null
+        },
+        "avg_sale": {
+          "baseline": null,
+          "comparison": 26.27,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost": {
+          "baseline": null,
+          "comparison": 12.441563703703704,
+          "diff_dollars": null,
+          "diff_pct": null
+        },
+        "avg_cost_pct": {
+          "baseline": null,
+          "comparison": 47.360349081475846,
+          "diff_pp": null
+        },
+        "expected_packed_cost": 13.6733,
+        "expected_cost_pct_of_comparison_sale": {
+          "value": 52.049105443471646,
+          "horizon_delta_pp": 4.6887563619958
+        }
+      }
+    }
+  ]
+}

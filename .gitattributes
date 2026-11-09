@@ -1,0 +1,32 @@
+# Auto-detect text files and normalize line endings
+* text=auto
+
+# Force LF for shell scripts so they execute on Linux even when committed from Windows
+*.sh text eol=lf
+
+# Force LF for files Apache / PHP / SQL parses
+*.php       text eol=lf
+*.sql       text eol=lf
+*.htaccess  text eol=lf
+.htaccess   text eol=lf
+
+# Source code files — keep consistent
+*.css       text eol=lf
+*.js        text eol=lf
+*.html      text eol=lf
+*.json      text eol=lf
+*.md        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+
+# Binary-ish (don't touch)
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.zip  binary
+*.gz   binary
+*.xlsx binary
+bin/uninstall text eol=lf
