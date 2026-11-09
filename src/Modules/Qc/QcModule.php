@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PII\Modules\Qc;
 
+use PII\Cms\Write\OperationRegistry;
 use PII\Core\Module;
 use PII\Core\Router;
 
@@ -25,7 +26,7 @@ class QcModule extends Module
 
     public function permissions(): array
     {
-        return [
+        return OperationRegistry::permissionsFor('qc') + [
             'qc.view' => 'Browse QC test results (values, pass/fail, lots, tickets)',
             'qc.coa'  => 'Generate Certificates of Analysis (by lot number)',
         ];
@@ -42,6 +43,12 @@ class QcModule extends Module
         $router->group('/qc', function (Router $r) use ($c) {
             $r->get('',     $c . '@index');
             $r->get('/coa', $c . '@coa');
+            $e = QcEntryController::class;
+            $r->get('/queue',                $e . '@queue');
+            $r->get('/sample/{id}',          $e . '@sample');
+            $r->post('/sample/{id}/results', $e . '@saveResults');
+            $r->post('/sample/{id}/approve', $e . '@approve');
+            $r->post('/sample/{id}/reject',  $e . '@reject');
         });
     }
 }

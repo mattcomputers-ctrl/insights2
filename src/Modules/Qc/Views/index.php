@@ -18,6 +18,9 @@ $spec = function (array $r): string {
             <h2 class="card-title">QC Results</h2>
             <div class="card-subtitle">Every test result, live from CMS — newest first.</div>
         </div>
+        <?php if (user_can('write.qc.save_results') || user_can('write.qc.approve_sublot') || user_can('write.qc.reject_sublot')): ?>
+            <a href="/qc/queue" class="btn btn-primary btn-sm">QC queue</a>
+        <?php endif; ?>
         <?php if (user_can('qc.coa')): ?>
             <a href="/qc/coa" class="btn btn-sm">📜 Certificate of Analysis</a>
         <?php endif; ?>
