@@ -861,3 +861,12 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
     the books can take it is a question for accounting.
 188. **Returns to a supplier stay in the client.** Three returns and one
     undo in the whole log are too few to derive rules from.
+189. **Order Readiness has the one-click buttons too.** On the orders list
+    a row that is fully covered by stock shows Release from credit hold…
+    when the order is on credit hold and Complete sale… when it is
+    released, to holders of `write.sales.release_order` and
+    `write.sales.complete_sale`. They post to the sales order actions, so
+    the review page and every check are the same; the list is a snapshot,
+    and the review reads CMS afresh. After confirming, the user lands back
+    on the Ready to ship tab. Complete order (closing without shipping)
+    stays on the sales order page only.

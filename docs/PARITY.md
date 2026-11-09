@@ -159,4 +159,4 @@ Failures seen: duplicate item code, duplicate entity code.
 | QC queue | Enter results, approve, reject | QC flow | **live-ready** |
 | Need to Order | Create PO for a vendor group | PO create | **live-ready** (grouped view: "Start a PO" opens the new-PO form filled in with the group's items in the supplier's ordering units; the user checks it, then confirms) |
 | Scheduling board | Create and release ticket for a run | Ticket create + release | **live-ready** ("Cut ticket…" on each suggested run opens the new-ticket form filled in with the bulk item, pounds, the day as planned start and required date, the run's packaging split in pounds, and release ticked; the user checks it, then confirms) |
-| Order Readiness | Release / complete an order that is fully covered | Sales order edit | flow built (buttons are on the sales order page; not yet on Order Readiness) |
+| Order Readiness | Release / complete an order that is fully covered | Sales order edit | **live-ready**: a ready order on the Order Readiness list has Release from credit hold… (credit hold) or Complete sale… (released), each going to the same review page as on the sales order |

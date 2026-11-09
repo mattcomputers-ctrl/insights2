@@ -3,6 +3,8 @@
  * @var string $tab  @var string $search  @var array $orders
  * @var array $tabCounts  @var array $noteCounts  @var ?string $asOf
  * @var bool $canReorder
+ * @var bool $canRelease  @var bool $canShip  may send a ready order on to CMS from this list
+ * @var string $mode
  */
 require __DIR__ . '/_subnav.php';
 
@@ -44,6 +46,10 @@ if ($canReorder) {
             <a href="/orders/export/orders" class="btn btn-sm" data-export="1">⬇ Excel</a>
         <?php endif; ?>
     </div>
+
+    <?php if (($canRelease || $canShip) && $mode !== 'live' && $tab !== 'priority'): ?>
+        <div class="alert alert-info">Practice mode: releasing or completing an order here is checked and previewed, but nothing is sent to CMS.</div>
+    <?php endif; ?>
 
     <?php if ($tab === 'priority'): ?>
         <p class="text-muted" style="font-size:0.9rem;">
@@ -109,9 +115,27 @@ if ($canReorder) {
                         <?php endif; ?>
                     </td>
                     <td class="text-muted" style="font-size:0.85rem;"><?= e($o['summary']) ?></td>
-                    <td>
+                    <td class="nowrap">
                         <?php if (($noteCounts[$o['ordr']] ?? 0) > 0): ?>
                             <span class="pill" title="This order has notes">🗒 <?= (int) $noteCounts[$o['ordr']] ?></span>
+                        <?php endif; ?>
+                        <?php
+                        // A fully covered order can go straight on: off credit hold, or shipped and invoiced.
+                        $next = null;
+                        if ($tab !== 'priority' && $o['status'] === 'ready') {
+                            if ($o['status_code'] === 'CSH' && $canRelease) {
+                                $next = ['release', 'Release from credit hold…'];
+                            } elseif ($o['status_code'] === 'RTS' && $canShip) {
+                                $next = ['complete-sale', 'Complete sale…'];
+                            }
+                        }
+                        ?>
+                        <?php if ($next !== null): ?>
+                            <form method="POST" action="/sales-orders/<?= (int) $o['ordr'] ?>/<?= $next[0] ?>" style="display:inline;">
+                                <?= csrf_field() ?>
+                                <input type="hidden" name="from" value="readiness">
+                                <button type="submit" class="btn btn-sm"><?= $next[1] ?></button>
+                            </form>
                         <?php endif; ?>
                     </td>
                 </tr>

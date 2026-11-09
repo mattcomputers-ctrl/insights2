@@ -218,7 +218,9 @@ class SalesOrderEntryController
     {
         CSRF::validateRequest();
         $this->require($op);
-        CmsWriteController::propose($op, ['ordr' => (int) $ordr], '/sales-orders/' . (int) $ordr);
+        // The Order Readiness list posts here too and wants to go back there.
+        $back = ($_POST['from'] ?? '') === 'readiness' ? '/orders/list?tab=ready' : '/sales-orders/' . (int) $ordr;
+        CmsWriteController::propose($op, ['ordr' => (int) $ordr], $back);
     }
 
     /** Hidden-page response for anyone without the operation's permission. */

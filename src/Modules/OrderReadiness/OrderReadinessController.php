@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PII\Modules\OrderReadiness;
 
+use PII\Cms\Write\CmsWriter;
 use PII\Core\CSRF;
 use PII\Core\Database;
 use PII\Services\Settings;
@@ -91,7 +92,11 @@ class OrderReadinessController
             if ($o['status'] === 'short_discontinued') $tabCounts['discontinued']++;
         }
 
+        $writer = CmsWriter::forCurrentUser();
         layout('order_readiness::orders', [
+            'canRelease'  => $writer->allowed('sales.release_order'),
+            'canShip'     => $writer->allowed('sales.complete_sale'),
+            'mode'        => $writer->mode(),
             'pageTitle'  => 'Orders',
             'tab'        => $tab,
             'search'     => $search,
