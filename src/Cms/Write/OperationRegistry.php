@@ -7,6 +7,11 @@ namespace PII\Cms\Write;
 use PII\Cms\Write\Ops\Qc\ApproveSublot;
 use PII\Cms\Write\Ops\Qc\RejectSublot;
 use PII\Cms\Write\Ops\Qc\SaveTestResults;
+use PII\Cms\Write\Ops\Sales\CompleteOrder;
+use PII\Cms\Write\Ops\Sales\CompleteSale;
+use PII\Cms\Write\Ops\Sales\CreateOrder;
+use PII\Cms\Write\Ops\Sales\EditOrder;
+use PII\Cms\Write\Ops\Sales\ReleaseOrder;
 
 /**
  * The write allowlist. An operation that is not listed here cannot be
@@ -58,6 +63,16 @@ final class OperationRegistry
                 'write.qc.approve_sublot', ApproveSublot::class, ['ReleaseDataSet.Approve']),
             new OperationDef('qc.reject_sublot', 'qc', 'reject a tested sublot',
                 'write.qc.reject_sublot', RejectSublot::class, ['ReleaseDataSet.Reject']),
+            new OperationDef('sales.create_order', 'sales_orders', 'create a sales order or quote',
+                'write.sales.create_order', CreateOrder::class, ['ShippingOrderDataSet.SaveChanges']),
+            new OperationDef('sales.edit_order', 'sales_orders', 'change an open sales order',
+                'write.sales.edit_order', EditOrder::class, ['ShippingOrderDataSet.SaveChanges']),
+            new OperationDef('sales.release_order', 'sales_orders', 'release a sales order from credit hold',
+                'write.sales.release_order', ReleaseOrder::class, ['ShippingOrderDataSet.SaveChanges']),
+            new OperationDef('sales.complete_order', 'sales_orders', 'complete (close) a sales order',
+                'write.sales.complete_order', CompleteOrder::class, ['ShippingOrderDataSet.SaveChanges']),
+            new OperationDef('sales.complete_sale', 'sales_orders', 'ship and invoice a sales order without a waybill',
+                'write.sales.complete_sale', CompleteSale::class, ['ShippingOrderDataSet.CompleteSale']),
         ];
     }
 }
