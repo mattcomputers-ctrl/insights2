@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace PII\Cms\Write;
 
+use PII\Cms\Write\Ops\Purchasing\CompletePurchaseOrder;
+use PII\Cms\Write\Ops\Purchasing\CreatePurchaseOrder;
+use PII\Cms\Write\Ops\Purchasing\EditPurchaseOrder;
+use PII\Cms\Write\Ops\Purchasing\ReceiveLine;
+use PII\Cms\Write\Ops\Purchasing\ReverseReceipt;
 use PII\Cms\Write\Ops\Qc\ApproveSublot;
 use PII\Cms\Write\Ops\Qc\RejectSublot;
 use PII\Cms\Write\Ops\Qc\SaveTestResults;
@@ -73,6 +78,16 @@ final class OperationRegistry
                 'write.sales.complete_order', CompleteOrder::class, ['ShippingOrderDataSet.SaveChanges']),
             new OperationDef('sales.complete_sale', 'sales_orders', 'ship and invoice a sales order without a waybill',
                 'write.sales.complete_sale', CompleteSale::class, ['ShippingOrderDataSet.CompleteSale']),
+            new OperationDef('po.create_order', 'purchase_orders', 'create a purchase order',
+                'write.po.create_order', CreatePurchaseOrder::class, ['PurchaseOrderDataSet.SaveChanges']),
+            new OperationDef('po.edit_order', 'purchase_orders', 'change an open purchase order',
+                'write.po.edit_order', EditPurchaseOrder::class, ['PurchaseOrderDataSet.SaveChanges']),
+            new OperationDef('po.complete_order', 'purchase_orders', 'complete (close) a purchase order',
+                'write.po.complete_order', CompletePurchaseOrder::class, ['PurchaseOrderDataSet.SaveChanges']),
+            new OperationDef('po.receive', 'purchase_orders', 'receive a purchase order line',
+                'write.po.receive', ReceiveLine::class, ['PurchaseReceiptDataSet.SaveChanges']),
+            new OperationDef('po.reverse_receipt', 'purchase_orders', 'reverse a purchase receipt',
+                'write.po.reverse_receipt', ReverseReceipt::class, ['PurchaseReceiptDataSet.ReverseReceipt']),
         ];
     }
 }
