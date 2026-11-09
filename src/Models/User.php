@@ -12,10 +12,26 @@ use PII\Core\Database;
  */
 class User
 {
+    /**
+     * The CMS identity writes are sent as (e.g. pic\jsmith). Blank = none.
+     * Only the characters a Windows/CMS user name can hold.
+     */
+    public static function cleanCmsUser(mixed $value): ?string
+    {
+        $value = trim((string) ($value ?? ''));
+        if ($value === '') {
+            return null;
+        }
+        if (!preg_match('/^[A-Za-z0-9._\\\\ -]{1,100}$/', $value)) {
+            throw new \InvalidArgumentException('CMS user name may only contain letters, digits, dot, dash, underscore, space and backslash.');
+        }
+        return $value;
+    }
+
     public static function findById(int $id): ?array
     {
         return Database::getInstance()->fetch(
-            "SELECT id, username, email, display_name, is_active,
+            "SELECT id, username, email, display_name, cms_user, is_active,
                     must_change_password, landing_module,
                     last_login, created_at, updated_at
              FROM users WHERE id = ?",
@@ -93,6 +109,7 @@ class User
             'email'                => $email !== '' ? $email : null,
             'password_hash'        => password_hash($password, PASSWORD_ARGON2ID),
             'display_name'         => trim($data['display_name'] ?? ''),
+            'cms_user'             => self::cleanCmsUser($data['cms_user'] ?? null),
             'is_active'            => isset($data['is_active']) ? (int) $data['is_active'] : 1,
             'must_change_password' => isset($data['must_change_password']) ? (int) $data['must_change_password'] : 0,
             'landing_module'       => !empty($data['landing_module']) ? $data['landing_module'] : null,
@@ -128,6 +145,9 @@ class User
 
         if (isset($data['display_name'])) {
             $updateData['display_name'] = trim($data['display_name']);
+        }
+        if (array_key_exists('cms_user', $data)) {
+            $updateData['cms_user'] = self::cleanCmsUser($data['cms_user']);
         }
         if (isset($data['is_active'])) {
             $updateData['is_active'] = (int) $data['is_active'];

@@ -181,6 +181,15 @@ class CMSDatabase
         }
     }
 
+    /**
+     * The raw connection. Only the CMS writer uses this, and only on an
+     * instance built from the separate write connection (WriteConfig).
+     */
+    public function getPdo(): \PDO
+    {
+        return $this->pdo;
+    }
+
     public function fetch(string $sql, array $params = []): ?array
     {
         $stmt = $this->pdo->prepare($sql);

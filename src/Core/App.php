@@ -222,7 +222,20 @@ class App
             $r->post('/cms/kill-switch',    'CmsAdminController@killSwitch');
             $r->post('/cms/sync-settings',  'CmsAdminController@saveSyncSettings');
             $r->post('/cms/blackouts',      'CmsAdminController@saveBlackouts');
+
+            // CMS writing: connection, live switch, allowlist, write log
+            $r->get('/cms/write',                     'CmsWriteAdminController@index');
+            $r->get('/cms/write/log/{id}',            'CmsWriteAdminController@logEntry');
+            $r->post('/cms/write/connection',         'CmsWriteAdminController@saveConnection');
+            $r->post('/cms/write/connection/remove',  'CmsWriteAdminController@removeConnection');
+            $r->post('/cms/write/test',               'CmsWriteAdminController@testConnection');
+            $r->post('/cms/write/settings',           'CmsWriteAdminController@saveSettings');
         });
+
+        // Shared confirm step for every CMS write (permission checked per operation)
+        $router->get('/cms-write/{token}',          'CmsWriteController@show');
+        $router->post('/cms-write/{token}/confirm', 'CmsWriteController@confirm');
+        $router->post('/cms-write/{token}/cancel',  'CmsWriteController@cancel');
 
         // ── Sync status bar endpoints ─────────────────────────────────
         $router->get('/api/sync/status', 'SyncController@status');

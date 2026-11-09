@@ -30,6 +30,11 @@ $action = $isEdit ? '/admin/users/' . $user['id'] : '/admin/users';
                        value="<?= e($user['email'] ?? old('email')) ?>">
             </div>
             <div class="form-group">
+                <label>CMS user name <span class="text-muted">(needed to write to CMS, e.g. pic\jsmith)</span></label>
+                <input type="text" name="cms_user" autocomplete="off" maxlength="100"
+                       value="<?= e($user['cms_user'] ?? old('cms_user')) ?>">
+            </div>
+            <div class="form-group">
                 <label>Password <?= $isEdit ? '(leave blank to keep)' : '(min 8 chars)' ?></label>
                 <input type="password" name="password" autocomplete="new-password" <?= $isEdit ? '' : 'required' ?>>
             </div>

@@ -82,6 +82,7 @@ function t_same(mixed $expected, mixed $actual, string $path, float $delta = 1e-
 
 $files = array_merge(
     glob(PII_TEST_ROOT . '/src/Modules/*/Tests/*Test.php') ?: [],
+    glob(PII_TEST_ROOT . '/src/Cms/Write/Tests/*Test.php') ?: [],
     glob(PII_TEST_ROOT . '/tests/*Test.php') ?: []
 );
 

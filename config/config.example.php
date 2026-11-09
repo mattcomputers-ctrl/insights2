@@ -9,7 +9,7 @@ return [
         'url'       => 'http://localhost',
         'debug'     => false,
         'timezone'  => 'America/New_York',
-        'version'   => '1.0.0',
+        'version'   => '2.0.0',
     ],
 
     // Local MySQL — auth, users, preferences, presets, audit

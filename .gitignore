@@ -12,3 +12,4 @@ composer.lock
 .vscode/
 *.log
 /config/cms.local.php
+/config/cms.write.local.php
