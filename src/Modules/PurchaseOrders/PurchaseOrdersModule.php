@@ -15,7 +15,9 @@ use PII\Core\Router;
  * Shares the purchasing.view permission with Need to Order.
  * Holders of a purchasing write permission also get PO entry: new PO,
  * changes to an open PO, complete, receive a line and reverse a receipt,
- * each through the shared check-then-confirm step.
+ * each through the shared check-then-confirm step. Holders of the price
+ * list write permission get the supplier price lists: change a price or
+ * the supplier's code, and add an item.
  */
 class PurchaseOrdersModule extends Module
 {
@@ -46,6 +48,10 @@ class PurchaseOrdersModule extends Module
             $r->get('/new',                     $e . '@create');   // before /{ordr}
             $r->post('/new',                    $e . '@store');
             $r->post('/from-need-to-order',     $e . '@fromNeed');
+            $p = PriceListsController::class;                     // all before /{ordr}
+            $r->get('/price-lists',             $p . '@index');
+            $r->post('/price-lists/line',       $p . '@line');
+            $r->post('/price-lists/add',        $p . '@add');
             $r->get('/{ordr}',                  $c . '@detail');
             $r->get('/{ordr}/edit',             $e . '@edit');
             $r->post('/{ordr}/edit',            $e . '@update');

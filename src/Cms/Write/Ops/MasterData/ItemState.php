@@ -99,7 +99,7 @@ final class ItemState
     /**
      * An active supplier by its code.
      *
-     * @return array{entity:int,code:string,name:string}
+     * @return array{entity:int,code:string,name:string,currency:string}
      */
     public static function supplier(CmsReader $cms, mixed $code): array
     {
@@ -109,7 +109,7 @@ final class ItemState
         }
         $found = [];
         foreach ($cms->fetchAll("
-            SELECT e.Entity, e.EntityCode, n.EntityName, e.Context, COALESCE(e.Inactive, 0) AS Inactive
+            SELECT e.Entity, e.EntityCode, n.EntityName, e.Context, COALESCE(e.Inactive, 0) AS Inactive, e.Currency
             FROM CMS.dbo.Entity e
             LEFT JOIN CMS.dbo.Entities n ON n.Entity = e.Entity
             WHERE e.EntityCode = ?", [$text]) as $r) {
@@ -124,7 +124,8 @@ final class ItemState
         if (in_array($s['Inactive'], [1, '1', true, 'true', 'True'], true)) {
             throw new WriteRefused("Supplier {$text} is inactive in CMS.");
         }
-        return ['entity' => (int) $s['Entity'], 'code' => trim((string) $s['EntityCode']), 'name' => trim((string) ($s['EntityName'] ?? ''))];
+        return ['entity' => (int) $s['Entity'], 'code' => trim((string) $s['EntityCode']), 'name' => trim((string) ($s['EntityName'] ?? '')),
+            'currency' => trim((string) ($s['Currency'] ?? ''))];
     }
 
     /** An alias by id. */

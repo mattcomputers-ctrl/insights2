@@ -454,7 +454,39 @@ user. The pages are under Sales Orders → Customers.
    reachable by posting by hand), and a customer changed in the client
    between review and confirm (CMS refuses on `Version`; note the message).
 
-### 4.12 onward (not built yet)
+### 4.12 Supplier price lists: change a price or code, add an item (built)
+
+Grant `write.price.edit` to the test user. The pages are under Purchase
+Orders → Price lists.
+
+1. **Price.** Open a supplier, change the price of one line, Change: one
+   request (`UpdateVersion PriceVersion`, `Update PriceDetail` with only
+   `Price1`). Compare with the client changing a price on the same list.
+   Confirm, then start a new purchase order for the item: it takes the new
+   price.
+2. **Supplier's code.** Change the code of a line: the same two steps with
+   only `EntityItemCode`. Change price and code together: `Price1` then
+   `EntityItemCode` in one step. That combination was not seen from the
+   client; check that CMS takes it.
+3. **Add an item in a package.** Our item code, the supplier's code, a
+   package and the quantity in it, a price: one request (`UpdateVersion
+   PriceVersion`, `Insert PriceDetail`). Add an item the same way in the
+   client and compare attribute by attribute. Open the list in the client:
+   the line is there. Order the item on a new purchase order by the
+   package.
+4. **Add an item sold loose.** No package: `PkgType` and `EntityQuantity`
+   are both left out. Leave the supplier's code empty as well and check
+   that CMS takes the line.
+5. **Refusals to try**: an item and package size already on the list (CMS
+   refuses a duplicate itself; ours is refused first), a supplier without a
+   price list, a line with prices by quantity (price change refused, code
+   change allowed), and a list changed in the client between review and
+   confirm (CMS refuses on `Version`; note the message).
+6. **A later list.** For a supplier with a price list dated in the future,
+   the page says so and the change goes to the list in effect today. Check
+   that this is the list the client's purchase order screen uses.
+
+### 4.13 onward (not built yet)
 
 Master data and bills are researched (`docs/research/`) with fixtures stored, but
 have no templates yet. Each gets its section here when it is built, following

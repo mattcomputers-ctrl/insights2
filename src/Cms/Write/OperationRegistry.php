@@ -25,11 +25,13 @@ use PII\Cms\Write\Ops\Manufacturing\EditTicket;
 use PII\Cms\Write\Ops\Manufacturing\PublishRecipe;
 use PII\Cms\Write\Ops\Manufacturing\ReleaseTicket;
 use PII\Cms\Write\Ops\Manufacturing\SetRecipeActive;
+use PII\Cms\Write\Ops\MasterData\AddPriceLine;
 use PII\Cms\Write\Ops\MasterData\CreateAlias;
 use PII\Cms\Write\Ops\MasterData\CreateItem;
 use PII\Cms\Write\Ops\MasterData\CreateShipTo;
 use PII\Cms\Write\Ops\MasterData\EditAlias;
 use PII\Cms\Write\Ops\MasterData\EditCustomerAddress;
+use PII\Cms\Write\Ops\MasterData\EditPriceLine;
 use PII\Cms\Write\Ops\MasterData\SetCustomerShipping;
 use PII\Cms\Write\Ops\MasterData\SetItemSupplier;
 use PII\Cms\Write\Ops\MasterData\SetMinimumStock;
@@ -190,6 +192,10 @@ final class OperationRegistry
                 'write.customer.edit', SetCustomerShipping::class, ['EntityUpdateDataSet.SaveChanges']),
             new OperationDef('customer.address', 'sales_orders', 'change the address, carrier and freight account of customers',
                 'write.customer.edit', EditCustomerAddress::class, ['EntityUpdateDataSet.SaveChanges']),
+            new OperationDef('price.line_edit', 'purchase_orders', 'change a price on a supplier price list',
+                'write.price.edit', EditPriceLine::class, ['PriceVersionUpdateDataSet.SaveChanges']),
+            new OperationDef('price.line_add', 'purchase_orders', 'change prices and add items on supplier price lists',
+                'write.price.edit', AddPriceLine::class, ['PriceVersionUpdateDataSet.SaveChanges']),
             new OperationDef('mf.publish_recipe', 'recipes', 'publish a recipe',
                 'write.mf.publish_recipe', PublishRecipe::class, ['ManufacturingOrderDataSet.PublishRecipe']),
             new OperationDef('mf.recipe_active', 'recipes', 'retire or reactivate a recipe',

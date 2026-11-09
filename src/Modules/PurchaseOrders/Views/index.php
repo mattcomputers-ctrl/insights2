@@ -27,6 +27,9 @@ $tabs = ['open' => 'Open', 'completed' => 'Completed', 'all' => 'All'];
             <?php if (!empty($can['po.create_order'])): ?>
                 <a href="/purchase-orders/new?clear=1" class="btn btn-sm btn-primary">New PO…</a>
             <?php endif; ?>
+            <?php if (\PII\Modules\PurchaseOrders\PriceListsController::canAny()): ?>
+                <a href="/purchase-orders/price-lists" class="btn btn-sm">Price lists…</a>
+            <?php endif; ?>
         </div>
         <form method="GET" action="/purchase-orders" class="flex gap-1">
             <input type="hidden" name="tab" value="<?= e($tab) ?>">

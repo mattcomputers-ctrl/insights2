@@ -771,3 +771,33 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
 161. **A change to a bill-to account is sent as the Bill To screen sends it,
     a change to a ship-to as the Ship To screen does.** The steps are the
     same; only the program name in the client's log differs.
+162. **Two price list changes are built: change a line (price, supplier's
+    code) and add an item at one price.** These are the two everyday shapes
+    in the log (99 single price changes, 113 single added lines). A new
+    dated version of a list copies every line and is a deliberate act, so
+    it stays in the client, as do the first list of a supplier, deleted
+    lines, comments and prices by quantity.
+163. **Changes go to the price list in effect today**: the latest one dated
+    today or earlier, which is the one purchase order entry reads. When a
+    later-dated list exists the page and the review say so; it is not
+    touched.
+164. **Price lists live under Purchase Orders** (`/purchase-orders/price-lists`)
+    behind one permission, `write.price.edit`. There was no price list page
+    before.
+165. **The price is sent as typed** ("37.80" stays "37.80"), as the client
+    does, with at most four decimals because CMS stores four.
+166. **A line with prices by quantity keeps its prices**: only its supplier
+    code can be changed here. Changing the first price alone could leave
+    the breaks out of order.
+167. **The supplier's code of a line cannot be emptied here.** The client
+    was not seen doing it, so the shape is unknown.
+168. **A new line takes the unit of the item, US dollars and a minimum order
+    of 1** unless another minimum is typed. Every recent line has the
+    item's own unit and every line is in US dollars; a supplier paid in
+    another currency is refused. The description defaults to the item's.
+169. **A new line is refused when the list already has the item in the same
+    package and size** (or loose, when added loose). CMS enforces the same
+    rule; refusing first gives a plain message.
+170. **Price and code changed together are sent as `Price1` then
+    `EntityItemCode`**, the order the two have on an insert. The client was
+    only seen changing one column at a time.

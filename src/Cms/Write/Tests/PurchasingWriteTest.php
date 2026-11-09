@@ -159,7 +159,7 @@ $poRefused = static function (callable $fn, string $needle, string $label): void
 $poFake = static fn (): \PII\Cms\Write\FakeTransport => new \PII\Cms\Write\FakeTransport();
 
 t_section('Purchasing registry and number format');
-t_same(5, count($poPerms), 'five purchasing write permissions');
+t_same(5, count(array_filter($poPerms, static fn (string $p): bool => str_starts_with($p, 'write.po.'))), 'five purchasing write permissions');
 foreach (['165' => 165.0, '44.09' => 44.09, '440.90000000000003' => 10 * 44.09, '3.8600000000000003' => 3.86 * 135 / 135,
           '1322.76' => 3 * 440.92, '22.795' => (float) '2.2795000000000002e+001'] as $text => $f) {
     t_same((string) $text, \PII\Cms\Write\Ops\Purchasing\PurchasingState::dbl($f), "floating-point {$text} prints as the client prints it");
