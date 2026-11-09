@@ -141,3 +141,24 @@ $fake = new FakeTransport();
 (new SequenceRunner($fake, null, static fn () => $tick))->run($seq, $env);
 t_check(str_contains($fake->sent[0], 'TransDate="2026-11-09T12:00:00"'), 'first stage keeps the confirmed time');
 t_check(str_contains($fake->sent[1], 'TransDate="2026-11-09T12:00:07"'), 'second stage uses the clock');
+
+t_section('Request: warning notes and start/end stamps');
+$noteEnv = new Envelope('pic\user1', 'WS1', new DateTimeImmutable('2026-11-09T12:00:07'));
+$note    = (new Request('Insights Test', 'X.Y'))->span(true, 3)
+    ->event(['Method' => 'Plain'])
+    ->event(['Method' => 'Empty'], '')
+    ->event(['Method' => 'Text'], 'a < b & c', ['Kind' => 'MFBA']);
+$note->add(Step::execute('Thing')->data(['A' => '1']));
+$noteXml = $note->toXml($noteEnv);
+t_check(str_contains($noteXml, 'TransDate="2026-11-09T12:00:07" StartDate="2026-11-09T12:00:04" EndDate="2026-11-09T12:00:07">'),
+    'start and end follow the transaction date');
+t_check(str_contains($noteXml, '<event Method="Plain"/><event Method="Empty"><Memo/></event>'
+    . '<event Method="Text"><Memo>a &lt; b &amp; c</Memo><properties Kind="MFBA"/></event><action '),
+    'notes render before the steps, with memo and properties');
+$open = (new Request('Insights Test', 'X.Y'))->span(false);
+$open->add(Step::execute('Thing'));
+t_check(str_contains($open->toXml($noteEnv), 'StartDate="2026-11-09T12:00:07">'), 'a request can carry a start with no end');
+t_check(t_throws(\InvalidArgumentException::class, static fn () => (new Request('P', 'A'))->span(true, -1)) !== null,
+    'a start after the transaction date is refused');
+t_check(t_throws(\InvalidArgumentException::class, static fn () => (new Request('P', 'A'))->event(['M' => 'x'], null, ['bad name' => 'y'])) !== null,
+    'a malformed property name is refused');
