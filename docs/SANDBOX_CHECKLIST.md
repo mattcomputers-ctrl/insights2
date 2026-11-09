@@ -10,6 +10,8 @@ sending on anywhere that matters.
    (same build as production). Nothing below is to be run against production.
 2. **A write login** for Insights on that copy, separate from the read login:
    - `EXECUTE` on `dbo.ProcessXMLRequest`
+   - `EXECUTE` on `dbo.GenerateID` (new sales orders take their change number from
+     this CMS counter, as the client does)
    - `SELECT` on `dbo.Log`, `dbo.LogRequest`, `dbo.LogResult`, `dbo.LogCompleted`
    - nothing else (no table writes; the procedure does those itself).
 3. **An Insights test instance** pointed at the copy for reads too
@@ -73,9 +75,46 @@ and program.
    cannot be packed.
 5. Compare each Insights request with a client-made one of the same action.
 
-### 4.2 onward (not built yet)
+### 4.2 Sales orders (built)
 
-Sales orders, purchasing, batch tickets, shipping, batch execution, inventory,
+1. **New order.** `/sales-orders` → New order. Pick a customer with a price list,
+   enter a PO number, a required date, one line with the price left blank and one
+   with a typed price; check; confirm.
+   - Check the new `Ordr` row against a client-made order for the same customer:
+     `BillTo`, `ShipTo`, `Terms`, `Currency`, `Salesman`, tax columns, `ShipVia`
+     and freight columns, `DateRequired` (date chosen + time of entry), `Status`,
+     `CreditHold`, `ReserveAmount`, `ChangeNumber`.
+   - Check `OrdDetail` + `OrdDetailPricing` per line (`Price`, `ManualPrice`, the
+     price-list reference on the blank-price line), the `AddressRef ShipToAddress`
+     copy, the `MemoRef` rows, and the tax rows `UpdateOrderTaxes` created.
+   - `ChangeNumber`: confirm `GenerateID 'ChangeNumber'` returned the next number
+     and that the bounds Insights passes (12750 to 2147483647) are right.
+   - Note what status the order lands in. The client usually sends a release
+     request seconds later; Insights does not. If the order sits on credit hold,
+     use "Release from credit hold" and confirm that is the intended workflow.
+   - Open the order in the CMS client: it loads, edits and saves normally.
+2. **Duplicate PO.** Repeat with the same PO number: refused until "Duplicate PO
+   number is fine" is ticked; then check the request carries the event and saves.
+3. **Quote.** Tick "This is a quote": status `QUO`, nothing committed, no credit check.
+4. **Change order.** On an open order change the quantity of one line, the price
+   of another, add a line, remove a line, change the carrier, the required date
+   and a memo, each as its own save; compare each request with a client-made one.
+   - Required-date change: the client sometimes also issues a new change number;
+     Insights never does. Check nothing downstream (shipping, invoicing) minds.
+   - Try to change the quantity of a part-shipped line: refused by Insights.
+   - Edit the same order in the client while the Insights confirm page is open,
+     then confirm: Insights should refuse because the order changed since the preview.
+5. **Release from credit hold** on an order in `CSH`: status `RTS`, `CreditHold` 0.
+6. **Complete order** on an order with an unshipped line: lines closed,
+   `QtyCommitted` cleared, status `CMP`, `DateCompleted` set, reserve released.
+7. **Complete sale** on an open order for a sundry or fee item: a shipment and an
+   invoice are created and the order completes. Compare with a client-made one.
+   Then try an order for a stocked item with no stock: expect the CMS refusal to
+   come back in plain words.
+
+### 4.3 onward (not built yet)
+
+Purchasing, batch tickets, shipping, batch execution, inventory,
 master data and bills are researched (`docs/research/`) with fixtures stored, but
 have no templates yet. Each gets its section here when it is built, following
 the same pattern: do it in Insights, do it in the client, compare the request

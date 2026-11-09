@@ -464,3 +464,46 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
 66. **No CMS login/session call.** The client logs `Shell.Login`/`Logout` around its
     work; Insights does not, because those only record client sessions. If the sandbox
     shows the server needs one, it becomes a foundation change, not a per-flow one.
+67. **New sales orders take their change number from CMS at send time**
+    (`GenerateID 'ChangeNumber'`), never from Insights. Previews and practice mode
+    show `{next ChangeNumber}`. The bounds passed (12750, 2147483647) are inferred
+    from the numbers in use, not seen in the log: to confirm in the sandbox. Needs
+    `EXECUTE` on `dbo.GenerateID`.
+68. **Edits never issue a new change number.** The client sometimes sends one with
+    a required-date change and sometimes does not, for the same order; no rule can
+    be read from the database. Open question for Matt.
+69. **A new order copies its defaults the way the client does**: terms, currency and
+    tax settings from the bill-to; salesman, incoterms, carrier and freight settings
+    from the ship-to, falling back to the bill-to; the ship-to's address as the
+    order's own address copy; the bill-to's standing internal memo unless changed.
+70. **Item codes on order lines** may be the customer's name for the item or the
+    inventory code. An inventory code sold under exactly one name uses that name;
+    under several names it is refused with the list, so the user picks.
+71. **Price list**: a blank price uses the customer's current price-list row when it
+    has a single price break. Rows with quantity breaks, or no row, need a typed
+    price. A typed price is a manual price.
+72. **Duplicate PO number** for the same bill-to is refused until the user ticks
+    "Duplicate PO number is fine"; the request then carries the same event the
+    client logs after its own warning.
+73. **Required date** is sent as the chosen date plus the time of entry (create) or
+    the order's existing time of day (edit), matching the logged requests. A past
+    date is refused on create and warned about on edit.
+74. **Every non-quote save runs the credit check**, as nearly all logged saves do
+    (a few early-version edits omit it; no rule found). New orders are sent with
+    over-commit allowed, a constant in every logged create.
+75. **Insights does not auto-release a new order.** The client usually follows a
+    create with a release request; whether that is the user or the program is not
+    visible in the log. Release is its own operation with its own permission.
+76. **Edit limits**: quantity cannot be changed on a part-shipped or closed line, a
+    shipped line cannot be removed, zero quantity means "remove the line". Those
+    cases stay in the client.
+77. **Complete sale** sends only the ship-and-invoice request; the client's
+    preceding save carries unsaved edits, which Insights never has. It is offered
+    only for open orders with an open line and warns that it cannot be undone.
+78. **Not built for sales orders** (templates exist, no flow or screen): reopen a
+    completed order, change the ship-to address on an order, copy an order, turn a
+    quote into an order.
+79. **Sales entry screens**: `/sales-orders/new` and `/sales-orders/{order}/edit`
+    are hidden (404) without the matching write permission; action buttons on the
+    order page show per permission and order status. A refused new order returns
+    to the form with what was typed.
