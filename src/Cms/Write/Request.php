@@ -13,6 +13,9 @@ final class Request
     /** @var list<Step> */
     private array $steps = [];
 
+    /** @var list<array<string,string>> */
+    private array $events = [];
+
     /**
      * @param string $program    Insights Program name (one per module)
      * @param string $action     CMS Action name (e.g. "TestsDataSet.SaveChanges")
@@ -25,6 +28,23 @@ final class Request
     ) {}
 
     /** Append a step; returns its 1-based Step number (for subs). */
+    /**
+     * A client-side acknowledgement the CMS client records ahead of the
+     * actions, e.g. "user accepted the duplicate PO number warning".
+     *
+     * @param array<string,string> $attrs
+     */
+    public function event(array $attrs): self
+    {
+        foreach ($attrs as $name => $value) {
+            if (!is_string($name) || !preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $name) || !is_string($value)) {
+                throw new \InvalidArgumentException('Invalid event attribute.');
+            }
+        }
+        $this->events[] = $attrs;
+        return $this;
+    }
+
     public function add(Step $step): int
     {
         $this->steps[] = $step;
@@ -60,6 +80,9 @@ final class Request
                 'TransDate'   => Fmt::dateTime($env->transDate),
             ])
             . '>';
+        foreach ($this->events as $attrs) {
+            $xml .= '<event' . self::attrs($attrs) . '/>';
+        }
         foreach ($this->steps as $i => $step) {
             $xml .= '<action' . self::attrs([
                 'Object'    => $step->object,

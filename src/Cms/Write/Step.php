@@ -64,7 +64,7 @@ final class Step
      * @param string  $section   'keys' or 'data' — where to inject it
      * @param ?string $toName    rename on injection (omitted when null)
      */
-    public function subs(int $fromStep, string $fromTable, string $fromKey, string $section = 'data', ?string $toName = null): self
+    public function subs(int $fromStep, string $fromTable, string $fromKey, string $section = 'data', ?string $toName = null, ?string $fromName = null): self
     {
         if ($section !== 'keys' && $section !== 'data') {
             throw new \InvalidArgumentException("subs Section must be 'keys' or 'data'.");
@@ -77,6 +77,10 @@ final class Step
         ];
         if ($toName !== null) {
             $attrs['ToName'] = $toName;
+        }
+        if ($fromName !== null) {
+            // Some Execute steps carry an (empty) FromName, exactly as the CMS client sends it.
+            $attrs['FromName'] = $fromName;
         }
         return $this->child('subs', $attrs);
     }

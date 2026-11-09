@@ -68,10 +68,10 @@ if (!defined('PII_WRITE_TESTS')) {
         );
         $steps = [];
         foreach ($root->childNodes as $action) {
-            if (!$action instanceof DOMElement) {
+            if (!$action instanceof DOMElement || $action->tagName !== 'action') {
                 continue;
             }
-            $step = ['object' => $action->getAttribute('Object'), 'operation' => $action->getAttribute('Operation'),
+            $step =['object' => $action->getAttribute('Object'), 'operation' => $action->getAttribute('Operation'),
                      'keys' => [], 'data' => [], 'subs' => []];
             foreach ($action->childNodes as $child) {
                 if (!$child instanceof DOMElement) {
