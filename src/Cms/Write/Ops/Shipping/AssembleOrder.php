@@ -22,6 +22,10 @@ use PII\Cms\Write\WriteRefused;
  * assembled for this order; empty or "new" for a new one),
  * qty (order line id => quantity in the item's stock unit; blank lines
  * are left out).
+ *
+ * A line that is already in the chosen container is not picked a second
+ * time: CMS has one row per order line in a container, so the quantity
+ * typed is added to what is there and sent as the line's new total.
  */
 final class AssembleOrder implements Flow
 {
@@ -34,6 +38,15 @@ final class AssembleOrder implements Flow
         $containers = ShippingState::assemblies($cms, $id);
         $target     = self::target($input['container'] ?? '', $containers, $id);
         $assembled  = self::assembled($cms, $containers);
+
+        // What the chosen container holds now, per order line.
+        $inside = [];
+        foreach ($target === null ? [] : ShippingState::contents($cms, $target['location']) as $in) {
+            if (isset($inside[$in['ordDetail']])) {
+                $in['rows'] += $inside[$in['ordDetail']]['rows'];
+            }
+            $inside[$in['ordDetail']] = $in;
+        }
 
         $byLine = array_column($o['lines'], null, 'ordDetail');
         $lines  = [];
@@ -62,8 +75,27 @@ final class AssembleOrder implements Flow
             if ((float) $qty > $onHand + 1e-9) {
                 throw new WriteRefused("{$what}: only " . Fmt::num(round(max(0.0, $onHand), 6)) . " {$l['unit']} of {$l['itemCode']} is in stock.");
             }
-            $lines[]   = ['ordDetail' => $l['ordDetail'], 'item' => $l['item'], 'qty' => $qty];
-            $summary[] = [trim("{$l['code']} {$l['description']}"), "{$qty} {$l['unit']} from stock"
+            $line = ['ordDetail' => $l['ordDetail'], 'item' => $l['item'], 'qty' => $qty];
+            $more = '';
+            $in   = $inside[$l['ordDetail']] ?? null;
+            if ($in !== null) {
+                // Already in this container: CMS takes the line's new total, not a second pick.
+                if ($in['item'] !== (int) $l['item']) {
+                    throw new WriteRefused("Order {$id} has changed in CMS. Open it again.");
+                }
+                if ($in['rows'] !== 1) {
+                    // Several content rows for one line: how the client writes that change is not known.
+                    throw new WriteRefused("{$l['code']} is in container {$target['code']} as more than one lot. Add to it in CMS, or pick into a new container.");
+                }
+                $total = Fmt::num(round($in['qty'] + (float) $qty, 6));
+                if ((float) $total <= $in['qty']) {
+                    throw new WriteRefused("{$what} is too small to add to what the container holds.");
+                }
+                $line = ['qty' => $total, 'held' => $in['qty']] + $line;
+                $more = ", making {$total} {$l['unit']} in the container";
+            }
+            $lines[]   = $line;
+            $summary[] = [trim("{$l['code']} {$l['description']}"), "{$qty} {$l['unit']} from stock{$more}"
                 . ((float) $qty < $left - 1e-9 ? ' (' . Fmt::num(round($left - (float) $qty, 6)) . " {$l['unit']} still to assemble)" : '')];
         }
         if ($lines === []) {
@@ -71,9 +103,16 @@ final class AssembleOrder implements Flow
         }
         $summary[] = ['Result', 'The stock is reserved to the order and waits in the container for a waybill.'];
 
+        $stock = null;
+        if (array_filter($lines, static fn (array $l): bool => isset($l['held'])) !== []) {
+            $stock = ShippingState::locationVersion($cms, (int) ShippingRequests::STOCK);
+            if ($stock === null) {
+                throw new WriteRefused('The stock location was not found in CMS.');
+            }
+        }
         $request = $target === null
             ? ShippingRequests::assembleNew($id, $o['Version'], $ctx->owner, $lines)
-            : ShippingRequests::assembleAdd($id, $o['Version'], $ctx->owner, $target['location'], $target['version'], $lines);
+            : ShippingRequests::assembleAdd($id, $o['Version'], $ctx->owner, $target['location'], $target['version'], $lines, $stock);
         return new Plan(
             Sequence::single("Assemble order {$id}", static fn (): Request => $request),
             $summary,

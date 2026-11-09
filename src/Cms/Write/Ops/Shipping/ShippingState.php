@@ -210,7 +210,10 @@ final class ShippingState
      * What is in a shipping container, per order line, from CMS's own
      * content function.
      *
-     * @return list<array{ordDetail:int,item:int,code:string,unit:string,qty:float}>
+     * rows = how many content rows make the line up (more than one when
+     * it sits there as several lots).
+     *
+     * @return list<array{ordDetail:int,item:int,code:string,unit:string,qty:float,rows:int}>
      */
     public static function contents(CmsReader $cms, int $container): array
     {
@@ -222,8 +225,9 @@ final class ShippingState
             ORDER BY ac.OrdDetail, ac.Item", [$container]) as $r) {
             $key = (int) ($r['OrdDetail'] ?? 0) . ':' . (int) $r['Item'];
             $out[$key] ??= ['ordDetail' => (int) ($r['OrdDetail'] ?? 0), 'item' => (int) $r['Item'],
-                            'code' => trim((string) ($r['ItemCode'] ?? '')), 'unit' => trim((string) ($r['Unit'] ?? '')), 'qty' => 0.0];
+                            'code' => trim((string) ($r['ItemCode'] ?? '')), 'unit' => trim((string) ($r['Unit'] ?? '')), 'qty' => 0.0, 'rows' => 0];
             $out[$key]['qty'] += (float) $r['Qty'];
+            $out[$key]['rows']++;
         }
         return array_values($out);
     }

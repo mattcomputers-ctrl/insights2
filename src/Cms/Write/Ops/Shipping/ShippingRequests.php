@@ -40,8 +40,15 @@ final class ShippingRequests
 
     public const KG_PER_LB = 0.45359237;
 
-    /** Waybill columns copied from the order, in the order the client writes them; empty ones are left out. */
-    private const FROM_ORDER = ['ShipVia', 'FreightService', 'FreightOption', 'FreightAccount', 'PoNumber', 'DeliveryConfirmation'];
+    /**
+     * Waybill columns copied from the order, in the order the client
+     * writes them; empty ones are left out. DeliveryConfirmation comes
+     * before PoNumber in every logged waybill that has it (15, the last
+     * is log 863747). None of those has a FreightAccount or a
+     * FreightService, so where it goes next to those is not known:
+     * CreateWaybill refuses an order that has both.
+     */
+    private const FROM_ORDER = ['ShipVia', 'FreightService', 'FreightOption', 'FreightAccount', 'DeliveryConfirmation', 'PoNumber'];
 
     /** The waybill's ship-to address row, every column, in client order. */
     private const ADDRESS = ['Address', 'Name', 'Department', 'AddrLine1', 'AddrLine2', 'AddrLine3', 'City', 'State',
@@ -210,14 +217,35 @@ final class ShippingRequests
     /**
      * Pick more stock into a container that already exists.
      *
-     * @param list<array{ordDetail:int|string,item:int|string,qty:string}> $lines
+     * A line with 'held' is already in the container (held = how much of
+     * it the container holds now, exactly as CMS stores it) and its qty
+     * is the new total. The client sends such a line as a change: a
+     * check of the stock location's version, then a move of the
+     * difference with the new total as QtyEntered. Changed lines go
+     * first, lines new to the container after them.
+     *
+     * @param list<array{ordDetail:int|string,item:int|string,qty:string,held?:float}> $lines
+     * @param ?int $stockVersion the stock location's version; needed when a line has 'held'
      */
-    public static function assembleAdd(int $ordr, int $version, string $owner, int $container, int $containerVersion, array $lines): Request
+    public static function assembleAdd(int $ordr, int $version, string $owner, int $container, int $containerVersion, array $lines,
+        ?int $stockVersion = null): Request
     {
         $r = self::assembly($ordr, $version, $lines);
         $r->add(Step::updateVersion('Location')->keys(['Location' => $container, 'Version' => $containerVersion]));
         foreach ($lines as $l) {
-            $r->add(Step::execute('MoveInventory')->data(self::pick($owner, $container, $l['qty'], $l['qty'], $l)));
+            if (!isset($l['held'])) {
+                continue;
+            }
+            $held = (float) $l['held'];
+            if ($stockVersion === null || $held <= 0 || (float) $l['qty'] <= $held) {
+                throw new \InvalidArgumentException('Adding to a line already in the container needs the stock version and a total above what is held.');
+            }
+            self::change($r, $owner, $container, $stockVersion, $held, $l);
+        }
+        foreach ($lines as $l) {
+            if (!isset($l['held'])) {
+                $r->add(Step::execute('MoveInventory')->data(self::pick($owner, $container, $l['qty'], $l['qty'], $l)));
+            }
         }
         return $r;
     }
@@ -226,28 +254,62 @@ final class ShippingRequests
      * Put stock from a container back into the stock location. The client
      * checks the stock location's version before each move.
      *
-     * @param list<array{ordDetail:int|string,item:int|string,qty:string}> $lines qty = how much comes out (positive)
+     * Taking a whole line out moves minus what is held, with the held
+     * quantity as QtyEntered. Taking part out is a change like in
+     * assembleAdd: the move is what stays in minus what is held, and
+     * QtyEntered is what stays in.
+     *
+     * @param list<array{ordDetail:int|string,item:int|string,held:float,qty?:string}> $lines held = how much the container
+     *        holds now, exactly as CMS stores it; qty = how much stays in (left out or '0' = the whole line comes out)
      */
     public static function assembleRemove(int $ordr, int $version, string $owner, int $container, int $containerVersion,
         int $stockVersion, array $lines): Request
     {
-        $r = self::assembly($ordr, $version, $lines);
+        foreach ($lines as $n => $l) {
+            $held = $l['held'] ?? null;
+            $qty  = $l['qty'] ?? '0';
+            if ((!is_float($held) && !is_int($held)) || $held <= 0 || !is_numeric($qty) || (float) $qty < 0 || (float) $qty >= $held) {
+                throw new \InvalidArgumentException('A take-out line needs what is held and a remaining quantity below it.');
+            }
+            $lines[$n]['qty'] = (string) $qty;
+        }
+        $r = self::assembly($ordr, $version, $lines, true);
         $r->add(Step::updateVersion('Location')->keys(['Location' => $container, 'Version' => $containerVersion]));
         foreach ($lines as $l) {
-            $r->add(Step::checkVersion('Location')->keys(['Location' => self::STOCK, 'Version' => $stockVersion]));
-            $r->add(Step::execute('MoveInventory')->data(self::pick($owner, $container, '-' . $l['qty'], $l['qty'], $l)));
+            self::change($r, $owner, $container, $stockVersion, (float) $l['held'], $l);
         }
         return $r;
     }
 
-    /** @param list<array<string,mixed>> $lines */
-    private static function assembly(int $ordr, int $version, array $lines): Request
+    /**
+     * Change how much of a line a container holds: the stock location's
+     * version check and the move. The move is the new total minus what is
+     * held, worked out in floating point like the client does, so the last
+     * digits can look odd ("-0.69999999999998863" for 272 less 272.7).
+     *
+     * @param array<string,mixed> $line qty = the new total ('0' = all of it comes out)
+     */
+    private static function change(Request $r, string $owner, int $container, int $stockVersion, float $held, array $line): void
+    {
+        $r->add(Step::checkVersion('Location')->keys(['Location' => self::STOCK, 'Version' => $stockVersion]));
+        $total = (float) $line['qty'];
+        [$quantity, $entered] = $total == 0.0
+            ? ['-' . self::dbl($held), self::g15($held)]
+            : [self::dbl($total - $held), (string) $line['qty']];
+        $r->add(Step::execute('MoveInventory')->data(self::pick($owner, $container, $quantity, $entered, $line)));
+    }
+
+    /**
+     * @param list<array<string,mixed>> $lines
+     * @param bool $zero a quantity of zero is allowed (taking a whole line out)
+     */
+    private static function assembly(int $ordr, int $version, array $lines, bool $zero = false): Request
     {
         if ($lines === []) {
             throw new \InvalidArgumentException('An assembly request needs at least one line.');
         }
         foreach ($lines as $l) {
-            if (!is_numeric($l['qty'] ?? null) || (float) $l['qty'] <= 0) {
+            if (!is_numeric($l['qty'] ?? null) || (float) $l['qty'] < 0 || (!$zero && (float) $l['qty'] <= 0)) {
                 throw new \InvalidArgumentException('An assembly line needs a quantity above zero.');
             }
         }
@@ -303,6 +365,16 @@ final class ShippingRequests
         }
         if (stripos($s, 'e') !== false) {
             $s = rtrim(rtrim(number_format($f, 17, '.', ''), '0'), '.');
+        }
+        return $s;
+    }
+
+    /** A floating-point number to 15 significant digits, the way the client writes a quantity as entered ("69.7"). */
+    public static function g15(float $f): string
+    {
+        $s = sprintf('%.15g', $f);
+        if (stripos($s, 'e') !== false) {
+            $s = rtrim(rtrim(number_format($f, 15, '.', ''), '0'), '.');
         }
         return $s;
     }

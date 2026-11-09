@@ -20,6 +20,10 @@ use PII\Cms\Write\WriteRefused;
  * Input: order (int), container (location id), qty (order line id =>
  * quantity to take out; blank lines stay in). Without qty, everything
  * in the container comes out.
+ *
+ * CMS is told what stays in, not what comes out: a part taken out is
+ * sent as the line's new, lower total. A line that sits in the
+ * container as more than one lot is left to CMS.
  */
 final class UnassembleOrder implements Flow
 {
@@ -35,6 +39,9 @@ final class UnassembleOrder implements Flow
         }
         $inside = [];
         foreach (ShippingState::contents($cms, $target['location']) as $in) {
+            if (isset($inside[$in['ordDetail']])) {
+                $in['rows'] += $inside[$in['ordDetail']]['rows'];
+            }
             $inside[$in['ordDetail']] = $in;
         }
         if ($inside === []) {
@@ -64,9 +71,18 @@ final class UnassembleOrder implements Flow
             if ((float) $qty > $in['qty'] + 1e-9) {
                 throw new WriteRefused("{$what}: the container holds " . Fmt::num(round($in['qty'], 6)) . " {$in['unit']}.");
             }
-            $lines[]   = ['ordDetail' => $in['ordDetail'], 'item' => $in['item'], 'qty' => $qty];
-            $summary[] = [$in['code'], "{$qty} {$in['unit']} back to stock"
-                . ((float) $qty < $in['qty'] - 1e-9 ? ' (' . Fmt::num(round($in['qty'] - (float) $qty, 6)) . " {$in['unit']} stays in)" : '')];
+            if ($in['rows'] !== 1) {
+                // One row per lot: how the client writes that move is not known.
+                throw new WriteRefused("{$in['code']} is in container {$target['code']} as more than one lot. Take it out in CMS.");
+            }
+            // What stays in, as the client sends it; nothing left means the whole line comes out.
+            $stays = (float) $qty < $in['qty'] - 1e-9 ? Fmt::num(round($in['qty'] - (float) $qty, 6)) : '0';
+            if ((float) $stays <= 0 || (float) $stays >= $in['qty']) {
+                $stays = '0';
+            }
+            $lines[]   = ['ordDetail' => $in['ordDetail'], 'item' => $in['item'], 'held' => $in['qty'], 'qty' => $stays];
+            $summary[] = [$in['code'], ($stays === '0' ? Fmt::num(round($in['qty'], 6)) : $qty) . " {$in['unit']} back to stock"
+                . ($stays === '0' ? '' : " ({$stays} {$in['unit']} stays in)")];
         }
         if ($lines === []) {
             throw new WriteRefused('Enter the quantity to take out for at least one line.');

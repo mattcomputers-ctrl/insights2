@@ -78,6 +78,11 @@ final class CreateWaybill implements Flow
             throw new WriteRefused("Order {$ids[0]} has no ship-to address in CMS.");
         }
         $fromOrder = ShippingState::orderFreight($cms, $ids[0]);
+        if ($fromOrder['DeliveryConfirmation'] !== null
+            && ($fromOrder['FreightAccount'] !== null || $fromOrder['FreightService'] !== null)) {
+            // No logged waybill has both, so the request for it is not known.
+            throw new WriteRefused("Order {$ids[0]} has a delivery confirmation and a freight account or service. Ship it in CMS.");
+        }
 
         $where = array_filter([$address['Name'], $address['AddrLine1'], $address['AddrLine2'], $address['AddrLine3'],
             trim("{$address['City']} {$address['State']} {$address['ZipCode']}")], static fn ($v): bool => trim((string) $v) !== '');

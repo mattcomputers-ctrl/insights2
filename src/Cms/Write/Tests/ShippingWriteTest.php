@@ -15,7 +15,7 @@ $shipRebuild = static function (array $f): \PII\Cms\Write\Request {
     if ($s[0]['object'] === 'WaybillInProcess') {
         $todo = $s[2]['object'] ?? ShippingRequests::TODO_COMPLETE;
         return ShippingRequests::todo($todo, $s[0]['keys']['WaybillInProcess'], $s[1]['keys']['Waybill'], $s[1]['keys']['Version'],
-            $s[2]['data']['Ordr'] ?? '', $s[2]['data']['FreightCharge'] ?? '');
+            $s[2]['data']['Ordr'] ?? '', $s[2]['data']['FreightCharge'] ?? '', $f['action'] === ShippingRequests::RESUME);
     }
     $orders = $containers = $weights = $freight = [];
     $head   = $address = null;
@@ -69,8 +69,22 @@ foreach (cms_fixture_ids(ShippingRequests::SAVE) as $log) {
     $firsts += $f['steps'][0]['object'] === 'Ordr' ? 1 : 0;
     $count++;
 }
-t_check($count >= 18, 'all waybill fixtures were exercised');
-t_check($firsts >= 5, 'at least five of them create a waybill');
+t_check($count >= 19, 'all waybill fixtures were exercised');
+t_check($firsts >= 6, 'at least six of them create a waybill');
+t_check(str_contains(cms_fixture(ShippingRequests::SAVE, 863747), 'FreightOption="0" DeliveryConfirmation="1" PoNumber='),
+    'log 863747 has a delivery confirmation, written before the PO number');
+
+// Finishing a waybill left part way: the client's own requests (waybill 3863, logged in 2020 under another owner).
+t_section('Shipping golden: WaybillDataSet.ProcessOutstandingRequests');
+$count = 0;
+foreach (cms_fixture_ids(ShippingRequests::RESUME) as $log) {
+    $xml = cms_fixture(ShippingRequests::RESUME, $log);
+    $f   = cms_fixture_parse($xml);
+    t_same(ShippingRequests::RESUME, $f['action'], "log {$log} is a resume request");
+    t_xml_same($xml, $shipRebuild($f)->toXml($f['env']), "log {$log}");
+    $count++;
+}
+t_check($count >= 3, 'the three resume fixtures were exercised');
 
 t_section('Shipping golden: WaybillDataSet.RejectWaybill');
 $count = 0;
@@ -194,7 +208,7 @@ $shipWorld = static function (int $firstLog, \PII\Cms\Write\FakeTransport $fake,
             'Address' => $addr['Address'], 'Name' => $addr['Name'], 'Department' => null, 'AddrLine1' => $addr['AddrLine1'],
             'AddrLine2' => $addr['AddrLine2'], 'AddrLine3' => $addr['AddrLine3'], 'City' => $addr['City'], 'State' => $addr['State'],
             'ZipCode' => $addr['ZipCode'], 'Country' => null, 'Contact' => $addr['Contact'], 'Email' => $addr['Email'],
-            'Fax' => $addr['Fax'], 'Phone' => $addr['Phone'], 'StateName' => null, 'CountryName' => null, 'URL' => null,
+            'Fax' => $addr['Fax'], 'Phone' => $addr['Phone'], 'StateName' => null, 'CountryName' => $addr['CountryName'] ?: null, 'URL' => null,
             'Residential' => null, 'EmergencyContact' => null]])
         // Once the waybill exists: one to-do row is ticked and the version moves on with every later request.
         ->when('FROM CMS.dbo.WaybillInProcess p WHERE p.Waybill = ?', static function (array $p) use ($fake, $todoRows, $waybill, $firstTodo): array {
@@ -246,6 +260,13 @@ foreach ([855512, 855513, 855514, 855515] as $k => $log) {
     t_xml_same($shipNorm(cms_fixture(ShippingRequests::SAVE, $log)), $shipNorm($fake->sent[$k] ?? ''), "request " . ($k + 1) . " matches log {$log}");
 }
 
+t_section('Shipping flow: an order with a delivery confirmation (log 863747)');
+$fake = $shipFake();
+[$cms, $ids, $locs, $now] = $shipWorld(863747, $fake, 18520, 55950);
+$res  = $shipWriter($cms, $fake)->execute('ship.create_waybill', ['orders' => $ids], $now);
+t_check($res->ok() && count($fake->sent) === 4, 'one order makes four requests');
+t_xml_same($shipNorm(cms_fixture(ShippingRequests::SAVE, 863747)), $shipNorm($fake->sent[0] ?? ''), 'first request matches log 863747');
+
 t_section('Shipping flow: three orders (log 859033) and typed weights');
 $fake = $shipFake();
 [$cms, $ids, $locs, $now] = $shipWorld(859033, $fake, 18412, 55500);
@@ -279,6 +300,10 @@ foreach ([
     'two customers'       => [static fn ($c) => $c->when('FROM CMS.dbo.Ordr o LEFT JOIN', static fn (array $p) => [$orderRow($p[0], ['ShipTo' => $p[0]])]), null, 'different customer'],
     'nothing assembled'   => [static fn ($c) => $c->when('/* assembled */', []), null, 'Nothing is assembled'],
     'no ship-to address'  => [static fn ($c) => $c->when("FROM CMS.dbo.AddressRef a WHERE a.TableName = 'Ordr'", []), null, 'no ship-to address'],
+    'delivery confirmation with a freight account' => [static fn ($c) => $c->when('/* freight */', [['ShipVia' => 100738, 'FreightService' => null,
+        'FreightOption' => null, 'FreightAccount' => 'A-100', 'PoNumber' => 'PO-1', 'DeliveryConfirmation' => 1]]), null, 'delivery confirmation and a freight account'],
+    'delivery confirmation with a freight service' => [static fn ($c) => $c->when('/* freight */', [['ShipVia' => 100738, 'FreightService' => 'GND',
+        'FreightOption' => null, 'FreightAccount' => null, 'PoNumber' => 'PO-1', 'DeliveryConfirmation' => 1]]), null, 'Ship it in CMS'],
     'bad weight'          => [null, ['weights' => [118880 => 'heavy']], 'not a valid number'],
     'bad freight'         => [null, ['freight' => [194349 => '-5']], 'not a valid number'],
 ] as $name => [$tweak, $input, $needle]) {
@@ -322,19 +347,24 @@ $todo476 = static fn (int $done): array => [
     $todoRow(55779, (int) ($done > 0), 'CreateShipmentsByOrder', 194349), $todoRow(55780, (int) ($done > 1), 'CreateShipmentsByOrder', 194277),
     $todoRow(55781, (int) ($done > 2), 'SaveShippedPallets'), $todoRow(55782, (int) ($done > 3), 'MarkCompleted')];
 
-t_section('Shipping flow: finish a waybill');
+t_section('Shipping flow: finish a waybill (logs 299822 to 299824)');
+// Waybill 3863 stopped after its first order shipped; the client finished it with these three requests.
+$todo3863 = static fn (int $done): array => [
+    $todoRow(11548, (int) ($done > 0), 'CreateShipmentsByOrder', 130254), $todoRow(11549, (int) ($done > 1), 'CreateShipmentsByOrder', 130255),
+    $todoRow(11550, (int) ($done > 2), 'SaveShippedPallets'), $todoRow(11551, (int) ($done > 3), 'MarkCompleted')];
 $fake = $shipFake();
-$cms  = $waybillCms(['Status' => null, 'Version' => 2], static fn () => $todo476(1 + count($fake->sent)),
-    static fn () => [['Version' => 2 + count($fake->sent)]]);
+$cms  = $waybillCms(['Waybill' => 3863, 'Status' => null, 'Version' => 1], static fn () => $todo3863(1 + count($fake->sent)),
+    static fn () => [['Version' => 1 + count($fake->sent)]]);
 $w    = $shipWriter($cms, $fake);
 $now  = new DateTimeImmutable('2026-10-30T11:30:00');
-$p    = $w->preview('ship.resume_waybill', ['waybill' => 18476], $now);
+$p    = $w->preview('ship.resume_waybill', ['waybill' => 3863], $now);
 t_same(3, count($p->rendered->stages), 'the three open steps are shown');
-$res  = $w->execute('ship.resume_waybill', ['waybill' => 18476], $now, $p->hash);
+$res  = $w->execute('ship.resume_waybill', ['waybill' => 3863], $now, $p->hash);
 t_check($res->ok() && count($fake->sent) === 3, 'the three open steps were sent');
-$asResume = static fn (string $xml): string => str_replace('Action="WaybillDataSet.SaveChanges"', 'Action="WaybillDataSet.ProcessOutstandingRequests"', $xml);
-foreach ([861917, 861918, 861919] as $k => $log) {
-    t_xml_same($shipNorm($asResume(cms_fixture(ShippingRequests::SAVE, $log))), $shipNorm($fake->sent[$k] ?? ''), "request " . ($k + 1) . " is log {$log} under the resume action");
+// The logged requests were made under another owner; the owner is the writer's, so it is left out of the comparison.
+$noOwner = static fn (string $xml): string => (string) preg_replace('/^(<request [^>]*?) Owner="\d+"/', '$1 Owner="N"', $xml);
+foreach ([299822, 299823, 299824] as $k => $log) {
+    t_xml_same($noOwner($shipNorm(cms_fixture(ShippingRequests::RESUME, $log))), $noOwner($shipNorm($fake->sent[$k] ?? '')), "request " . ($k + 1) . " matches log {$log}");
 }
 
 $fake  = $shipFake();
