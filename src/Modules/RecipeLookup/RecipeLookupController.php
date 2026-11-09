@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace PII\Modules\RecipeLookup;
 
+use PII\Cms\Write\CmsWriter;
+use PII\Cms\Write\LiveCmsReader;
+use PII\Cms\Write\Ops\Manufacturing\ManufacturingState;
+use PII\Controllers\CmsWriteController;
 use PII\Core\CMSDatabase;
 use PII\Core\CMSUnavailableException;
+use PII\Core\CSRF;
 use PII\Core\Database;
 use PII\Services\Sync\SyncSettings;
 
@@ -93,6 +98,65 @@ class RecipeLookupController
         });
     }
 
+    /** POST /recipes/recipe/{id}/publish — hands a proposal to the shared confirm step. */
+    public function publish(string $id): void
+    {
+        CSRF::validateRequest();
+        if (!CmsWriter::forCurrentUser()->allowed('mf.publish_recipe')) {
+            render_not_found();
+        }
+        CmsWriteController::propose('mf.publish_recipe', ['recipe' => (int) $id], self::returnUrl());
+    }
+
+    /** POST /recipes/recipe/{id}/active — retire a recipe or put it back. */
+    public function setActive(string $id): void
+    {
+        CSRF::validateRequest();
+        if (!CmsWriter::forCurrentUser()->allowed('mf.recipe_active')) {
+            render_not_found();
+        }
+        CmsWriteController::propose('mf.recipe_active',
+            ['recipe' => (int) $id, 'active' => ($_POST['active'] ?? '') === '1'], self::returnUrl());
+    }
+
+    /** Back to the search the recipe was opened from. */
+    private static function returnUrl(): string
+    {
+        $q = trim((string) ($_POST['q'] ?? ''));
+        return $q === '' ? '/recipes' : '/recipes?q=' . rawurlencode(mb_substr($q, 0, 100));
+    }
+
+    /**
+     * Which recipe changes to offer on the sheet: publish a drafted bulk
+     * recipe, retire an active one, or put a retired one back.
+     *
+     * @return array{publish:bool,retire:bool,reactivate:bool,mode:string}|null
+     */
+    private static function recipeActions(int $id): ?array
+    {
+        $writer = CmsWriter::forCurrentUser();
+        $pub    = $writer->allowed('mf.publish_recipe');
+        $act    = $writer->allowed('mf.recipe_active');
+        if (!$pub && !$act) {
+            return null;
+        }
+        try {
+            $r = ManufacturingState::recipe(new LiveCmsReader(), $id);
+        } catch (\Throwable) {
+            return null;
+        }
+        if ($r === null) {
+            return null;
+        }
+        $out = [
+            'publish'    => $pub && !$r['IsPublished'] && !$r['Inactive'] && $r['Context'] === 'RMBA',
+            'retire'     => $act && !$r['Inactive'],
+            'reactivate' => $act && $r['Inactive'],
+            'mode'       => $writer->mode(),
+        ];
+        return $out['publish'] || $out['retire'] || $out['reactivate'] ? $out : null;
+    }
+
     /** Shared CMS error handling for modal fragments. */
     private function guarded(callable $fn): void
     {
@@ -146,7 +210,7 @@ class RecipeLookupController
                 'ip_address' => $_SERVER['REMOTE_ADDR'] ?? null,
             ]);
 
-        view('recipes::_recipe', ['head' => $head, 'lines' => $lines]);
+        view('recipes::_recipe', ['head' => $head, 'lines' => $lines, 'actions' => self::recipeActions($id)]);
     }
 
     /**

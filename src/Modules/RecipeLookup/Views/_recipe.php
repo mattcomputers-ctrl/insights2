@@ -2,7 +2,7 @@
 /**
  * Modal fragment: one recipe — 100% formula with the procedure steps in
  * batch-sheet order (ExecOrder interleaves INSTR with ingredients).
- * @var array $head  @var array $lines
+ * @var array $head  @var array $lines  @var ?array $actions (recipe changes the user may propose)
  */
 $pct = function (?float $f): string {
     return rtrim(rtrim(number_format((float) $f * 100, 4, '.', ','), '0'), '.');
@@ -37,6 +37,28 @@ $step = 0;
     </div>
     <?php if (!empty($head['Comment'])): ?>
         <div class="alert alert-info" style="white-space:pre-wrap;"><?= e((string) $head['Comment']) ?></div>
+    <?php endif; ?>
+    <?php if (!empty($actions)): ?>
+        <div class="flex gap-1 items-center no-print" style="flex-wrap:wrap;margin-bottom:0.8rem;">
+            <?php if ($actions['publish']): ?>
+                <form method="POST" action="/recipes/recipe/<?= (int) $head['Recipe'] ?>/publish">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="q" value="<?= e((string) ($_GET['q'] ?? '')) ?>">
+                    <button type="submit" class="btn btn-sm btn-primary">Publish this recipe…</button>
+                </form>
+            <?php endif; ?>
+            <?php if ($actions['retire'] || $actions['reactivate']): ?>
+                <form method="POST" action="/recipes/recipe/<?= (int) $head['Recipe'] ?>/active">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="q" value="<?= e((string) ($_GET['q'] ?? '')) ?>">
+                    <input type="hidden" name="active" value="<?= $actions['reactivate'] ? '1' : '0' ?>">
+                    <button type="submit" class="btn btn-sm"><?= $actions['reactivate'] ? 'Make this recipe active again…' : 'Retire this recipe…' ?></button>
+                </form>
+            <?php endif; ?>
+            <span class="text-muted" style="font-size:0.85rem;">
+                <?= $actions['mode'] !== 'live' ? 'Practice mode: nothing is sent to CMS.' : 'You will see exactly what is sent before anything is saved.' ?>
+            </span>
+        </div>
     <?php endif; ?>
 
     <?php if ($lines === []): ?>

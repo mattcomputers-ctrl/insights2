@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PII\Modules\RecipeLookup;
 
+use PII\Cms\Write\OperationRegistry;
 use PII\Core\Module;
 use PII\Core\Router;
 
@@ -30,7 +31,7 @@ class RecipeLookupModule extends Module
     {
         return [
             'recipes.view' => 'Look up items and view recipes (100% formulas and procedures)',
-        ];
+        ] + OperationRegistry::permissionsFor('recipes');
     }
 
     public function syncJobs(): array
@@ -45,6 +46,8 @@ class RecipeLookupModule extends Module
             $r->get('',              $c . '@index');
             $r->get('/recipe/{id}',  $c . '@recipe');   // modal fragment
             $r->get('/active',       $c . '@active');   // active recipe by ?code= (right-click menu)
+            $r->post('/recipe/{id}/publish', $c . '@publish');
+            $r->post('/recipe/{id}/active',  $c . '@setActive');
         });
     }
 }
