@@ -9,6 +9,7 @@ use PII\Cms\Write\LiveCmsReader;
 use PII\Cms\Write\Ops\Sales\SalesState;
 use PII\Cms\Write\Ops\Shipping\AssembleOrder;
 use PII\Cms\Write\Ops\Shipping\CreateWaybill;
+use PII\Cms\Write\Ops\Shipping\InvoiceState;
 use PII\Cms\Write\Ops\Shipping\ShippingState;
 use PII\Cms\Write\WriteRefused;
 use PII\Controllers\CmsWriteController;
@@ -21,8 +22,8 @@ require_once dirname(__DIR__, 2) . '/Helpers/layout.php';
 /**
  * Shipping entry: assemble orders into containers, ship assembled
  * orders on a new waybill, finish or
- * reject a waybill, record printed labels, and the packing slip and
- * invoice print pages.
+ * reject a waybill, record printed labels, the packing slip and
+ * invoice print pages, and the freight charge of an issued invoice.
  *
  * Nothing here writes to CMS directly. Each POST hands a proposal to the
  * shared confirm step (CmsWriteController), which shows the exact
@@ -272,6 +273,8 @@ class ShippingEntryController
         $lines = [];
         $taxes = [];
         $error = null;
+        $writer = CmsWriter::forCurrentUser();
+        $freight = null;
         try {
             $cms = new LiveCmsReader();
             $head = $cms->fetch("
@@ -299,6 +302,12 @@ class ShippingEntryController
                     FROM CMS.dbo.InvoiceTaxReport t
                     WHERE t.Trans = ? AND t.TaxAmount IS NOT NULL AND t.TaxAmount <> 0
                     ORDER BY t.TaxNumber", [$trans]);
+                if ($writer->allowed('invoice.freight')) {
+                    $state = InvoiceState::invoice($cms, $trans);
+                    if ($state !== null && !$state['reversal'] && !$state['reversed']) {
+                        $freight = ['blocker' => InvoiceState::blocker($state), 'current' => $state['freight']];
+                    }
+                }
             }
         } catch (CMSUnavailableException $e) {
             $error = $e->friendlyMessage();
@@ -315,7 +324,24 @@ class ShippingEntryController
             'taxes'     => $taxes,
             'error'     => $error,
             'logo'      => (string) (Settings::get('coa.logo') ?? ''),
+            'freight'   => $freight,
+            'draft'     => is_string($_GET['freight'] ?? null) ? trim($_GET['freight']) : '',
+            'mode'      => $writer->mode(),
         ], 'shipping');
+    }
+
+    /** POST /shipping/invoice/{trans}/freight: review a new freight charge for an issued invoice. */
+    public function invoiceFreight(string $trans): void
+    {
+        CSRF::validateRequest();
+        require_permission('shipping.invoice');
+        if (!CmsWriter::forCurrentUser()->allowed('invoice.freight')) {
+            render_not_found();
+        }
+        $trans   = (int) $trans;
+        $freight = is_string($_POST['freight'] ?? null) ? trim($_POST['freight']) : '';
+        CmsWriteController::propose('invoice.freight', ['trans' => $trans, 'freight' => $freight],
+            "/shipping/invoice/{$trans}?" . http_build_query(['freight' => $freight]));
     }
 
     /**

@@ -515,10 +515,43 @@ Orders → Supplier bills. Receive two or three purchase order lines first
 6. After each bill, compare the `Bill` and `BillDetail` rows and the
    receipt's stock cost with a bill entered in the client.
 
-### 4.14 onward (not built yet)
+### 4.14 Invoice freight: set or change the freight charge (built)
 
-Invoice corrections and returns to a supplier are researched (`docs/research/`)
-with fixtures stored, but have no templates yet. Each gets its section here when it is built, following
+Grant `write.invoice.freight` (and `shipping.invoice`) to the test user.
+Ship and invoice two or three orders first (4.5). The form is on the
+invoice page, reached from a waybill under Shipping.
+
+1. **Add freight to an invoice that has none.** One request: `UpdateVersion
+   Trans`, the reversal (`Insert Trans` with `ReversedTrans`, its lines with
+   negative quantities), the new invoice with `FreightCharge`, its lines,
+   `Insert MemoRef`, `Execute UpdateInvoiceTax`, `Update ChangeSet`, `Execute
+   CheckInvoiceQty`, `Execute UpdateShipmentPoNumber`. Do the same on a
+   similar invoice in the client and compare attribute by attribute.
+2. **Change the freight on the invoice just corrected.** The reversal now
+   carries the old charge negated with four decimals (`-271.1800`). Check
+   the shipment record's `Version` in the request against CMS.
+3. **An invoice with several lines, one with a part quantity** (98.8 lb):
+   every line appears twice, in line order.
+4. **An invoice whose note has text of its own** (an export declaration):
+   the text is carried over, line breaks included. Compare how the client
+   writes the line breaks.
+5. After each: the old invoice shows as reversed, the new one has the same
+   number, the order's invoiced quantities are unchanged, the shipment
+   points at the new invoice, and the invoice prints from the client with
+   the new total.
+6. **Refusals to try**: a taxed invoice, an invoice with an extra charge
+   line, an invoice already reversed (open the old link), the same amount
+   again, 0 on an invoice with freight, and an invoice corrected in the
+   client between review and confirm (CMS refuses on the version).
+7. Ask accounting whether an invoice from a closed month may still be
+   corrected; the page only warns after 31 days.
+
+Returns to a supplier stay in the client (four requests ever).
+
+### 4.15 onward (not built yet)
+
+Other invoice corrections and returns to a supplier are researched (`docs/research/`)
+but have no templates. Anything built later gets its section here, following
 the same pattern: do it in Insights, do it in the client, compare the request
 and the rows, then try the known failure (listed per action in `docs/PARITY.md`).
 

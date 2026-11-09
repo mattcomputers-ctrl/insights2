@@ -52,6 +52,7 @@ class ShippingModule extends Module
             $r->post('/assemble/remove',         $e . '@assembleRemove');
             $r->get('/packing-slip/{changeSet}', $e . '@packingSlip');
             $r->get('/invoice/{trans}',          $e . '@invoice');
+            $r->post('/invoice/{trans}/freight', $e . '@invoiceFreight');
             $r->get('/{waybill}',                $c . '@detail');
             $r->post('/{waybill}/finish',        $e . '@finish');
             $r->post('/{waybill}/reject',        $e . '@reject');

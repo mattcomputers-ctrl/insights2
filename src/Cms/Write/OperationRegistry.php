@@ -53,6 +53,7 @@ use PII\Cms\Write\Ops\Shipping\AssembleOrder;
 use PII\Cms\Write\Ops\Shipping\CreateWaybill;
 use PII\Cms\Write\Ops\Shipping\RecordLabelAddress;
 use PII\Cms\Write\Ops\Shipping\RejectWaybill;
+use PII\Cms\Write\Ops\Shipping\SetInvoiceFreight;
 use PII\Cms\Write\Ops\Shipping\ResumeWaybill;
 use PII\Cms\Write\Ops\Shipping\UnassembleOrder;
 
@@ -161,6 +162,8 @@ final class OperationRegistry
                 'write.ship.create_waybill', CreateWaybill::class, ['WaybillDataSet.SaveChanges']),
             new OperationDef('ship.reject_waybill', 'shipping', 'reject (reverse) a completed waybill',
                 'write.ship.reject_waybill', RejectWaybill::class, ['WaybillDataSet.RejectWaybill']),
+            new OperationDef('invoice.freight', 'shipping', 'set or change the freight charge on an issued invoice',
+                'write.invoice.freight', SetInvoiceFreight::class, ['InvoiceDataSet.SaveChanges']),
             new OperationDef('ship.label_address', 'shipping', 'record that shipping labels were printed',
                 'write.ship.label_address', RecordLabelAddress::class, ['PrintShippingLabel.UpdateShippingLabelAddress']),
             new OperationDef('inv.count_create', 'inventory', 'save a new inventory count',

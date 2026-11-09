@@ -2,6 +2,8 @@
 /**
  * Invoice as CMS recorded it. The toolbar never prints, only the sheet does.
  * @var ?array $head  @var array $lines  @var array $taxes  @var ?string $error  @var string $logo
+ * @var ?array{blocker:?string,current:?string} $freight  set when the user may change the freight charge of this invoice
+ * @var string $draft  @var string $mode
  */
 $company = $head !== null && trim((string) ($head['DivName'] ?? '')) !== ''
     ? (string) $head['DivName'] : (string) \PII\Core\App::config('company.name', '');
@@ -41,6 +43,31 @@ $from = array_filter([
 ], static fn (string $v): bool => $v !== '');
 $reversed = in_array($head['IsReversed'] ?? 0, [1, '1', true], true);
 ?>
+<?php if ($freight !== null): ?>
+<div class="card no-print">
+    <h2 class="card-title">Freight charge</h2>
+    <?php if ($freight['blocker'] !== null): ?>
+        <div class="card-subtitle"><?= e($freight['blocker']) ?></div>
+    <?php else: ?>
+        <div class="card-subtitle">CMS reverses the invoice and issues it again under the same number with the freight charge you enter. Nothing else on it changes.</div>
+        <?php if ($mode !== 'live'): ?>
+            <div class="alert alert-info">Practice mode: the correction is checked and previewed, but nothing is sent to CMS.</div>
+        <?php endif; ?>
+        <form method="POST" action="/shipping/invoice/<?= (int) $head['Trans'] ?>/freight" class="form-row" style="align-items:flex-end;">
+            <?= csrf_field() ?>
+            <div class="form-group" style="width:14rem;">
+                <label for="invoice-freight">Freight charge (USD)</label>
+                <input type="text" id="invoice-freight" name="freight" inputmode="decimal" required
+                       value="<?= e($draft !== '' ? $draft : '') ?>"
+                       placeholder="<?= $freight['current'] !== null && (float) $freight['current'] != 0.0 ? e(number_format((float) $freight['current'], 2, '.', '')) : '0.00' ?>">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary"><?= $freight['current'] !== null && (float) $freight['current'] != 0.0 ? 'Change freight…' : 'Add freight…' ?></button>
+            </div>
+        </form>
+    <?php endif; ?>
+</div>
+<?php endif; ?>
 <div class="card coa-sheet">
     <div class="coa-head">
         <div>

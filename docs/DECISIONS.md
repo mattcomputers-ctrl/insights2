@@ -832,3 +832,32 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
     that. Memo and tax on a bill (10 requests) stay in the client.
 179. **An inactive supplier can still be billed**, with a note: old
     receipts outlive the supplier.
+180. **One invoice correction is built: the freight charge** (`invoice.freight`,
+    permission `write.invoice.freight`). Of the corrections logged, 433 of
+    591 changed the freight and 3 the PO number; the rest changed something
+    else. Freight is the one with a clear rule.
+181. **The form is on the invoice page under Shipping**
+    (`/shipping/invoice/{trans}`), shown to holders of the write permission
+    and hidden when printing. The page needs `shipping.invoice` as before.
+182. **Only plain invoices**: US dollars at rate 1, no tax group, every line
+    an ordinary shipped order line, one note, one shipment record, a PO
+    number held (blank is fine). That is about 2,800 of the 2,892 current
+    invoices; taxed ones (85) and those with no PO number value (7) stay in
+    the client, which recalculates tax there.
+183. **Everything but the freight is carried over from what CMS holds**:
+    invoice number, invoice date, document date, sales rep, bill-to, PO
+    number, lines, note. The corrected invoice keeps the original dates,
+    as all 591 logged corrections do.
+184. **The reversal carries the old freight negated with four decimals**
+    (`-338.2600`) and the new invoice carries the typed amount without
+    spare zeros (`510.69`), as the client writes them.
+185. **Taking freight off (0) is refused.** No logged request shows whether
+    the client then omits the charge or sends 0. The same amount again is
+    refused too, and anything above 50,000.
+186. **An invoice already reversed, or itself a reversal, shows no form.**
+    The current invoice is the one no reversal points at.
+187. **An invoice more than 31 days old gets a note, not a refusal.**
+    Nothing in the data marks an invoice as closed to correction; whether
+    the books can take it is a question for accounting.
+188. **Returns to a supplier stay in the client.** Three returns and one
+    undo in the whole log are too few to derive rules from.
