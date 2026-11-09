@@ -18,6 +18,9 @@ use PII\Cms\Write\WriteRefused;
  */
 final class AddIngredient implements Flow
 {
+    /** The kinds of item (Item.Context) the floor has ever added as an ingredient. */
+    private const KINDS = ['SUNDRY', 'PP'];
+
     public function plan(array $input, FlowContext $ctx): Plan
     {
         $t = ExecutionState::bulk($ctx->cms, $input);
@@ -30,12 +33,30 @@ final class AddIngredient implements Flow
             throw new WriteRefused('Enter the item to add.');
         }
         $item = $ctx->cms->fetch(
-            'SELECT i.Item, i.ItemCode, i.Description, i.Unit, i.Status FROM CMS.dbo.Item i WHERE i.ItemCode = ?', [$code]);
+            'SELECT i.Item, i.ItemCode, i.Description, i.Unit, i.Status, i.Context, i.ReplacedBy,
+                    (SELECT r.ItemCode FROM CMS.dbo.Item r WHERE r.Item = i.ReplacedBy) AS StandsFor
+             FROM CMS.dbo.Item i WHERE i.ItemCode = ?', [$code]);
         if ($item === null) {
             throw new WriteRefused("Item {$code} was not found in CMS.");
         }
         if (strtoupper(trim((string) ($item['Status'] ?? ''))) === 'OBS') {
             throw new WriteRefused("Item {$item['ItemCode']} is obsolete in CMS.");
+        }
+        // Every ingredient the floor has added is a stock item or a packaged product; the client sends nothing else.
+        $kind = strtoupper(trim((string) ($item['Context'] ?? '')));
+        if ($kind === 'NAME' || ($item['ReplacedBy'] ?? null) !== null) {
+            $real = trim((string) ($item['StandsFor'] ?? ''));
+            throw new WriteRefused("{$item['ItemCode']} is another name for "
+                . ($real !== '' ? "{$real}. Enter {$real}." : 'an item. Enter the item itself.'));
+        }
+        if ($kind === 'PACKAGE') {
+            throw new WriteRefused("{$item['ItemCode']} is a package, not an ingredient.");
+        }
+        if ($kind === 'PROTOTYPE') {
+            throw new WriteRefused("{$item['ItemCode']} is a prototype item. Add it to the ticket in CMS.");
+        }
+        if (!in_array($kind, self::KINDS, true)) {
+            throw new WriteRefused("{$item['ItemCode']} is not an item that can be added as an ingredient here. Add it in CMS.");
         }
         if ((int) $item['Item'] === $t['product']['item']) {
             throw new WriteRefused("Item {$item['ItemCode']} is what this ticket makes.");

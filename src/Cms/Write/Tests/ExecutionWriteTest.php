@@ -167,12 +167,19 @@ foreach ($exEach(ManufacturingRequests::RELEASE) as [$xml, $f, $s, $log]) {
 t_same(['865557', '866320'], $exDone, 'release with and without a new lot is reproduced');
 
 t_section('Execution golden: ' . X::PACKAGING);
-$exFirst = $exLater = 0;
+$exFirst = $exLater = $exDirect = $exPicked = $exBulkFirst = 0;
 foreach ($exEach(X::PACKAGING) as [$xml, $f, $s, $log]) {
     $extras = $exExtras($xml);
     $obj    = array_column($s, 'object');
     $csAt   = array_search('CreateChangeSet', $obj, true);
     $pack   = ['ordr' => $s[$csAt]['data']['Ordr']];
+    if ($pack['ordr'] === $s[0]['keys']['Ordr']) {
+        // Packed on the bulk ticket itself: a longer request the flows do not build (they refuse it).
+        t_check(in_array('UpdateManufacturingOrdDetailExecStatus', $obj, true) && in_array('Location', $obj, true),
+            "log {$log} is a direct packout, with the steps only that kind has");
+        $exDirect++;
+        continue;
+    }
     $owner  = $s[$csAt]['data']['Owner'];
     $into   = null;
     $comps  = [];
@@ -195,7 +202,13 @@ foreach ($exEach(X::PACKAGING) as [$xml, $f, $s, $log]) {
             }
         } elseif (!isset($d['SrcOrdDetail'])) {
             $packages = $d['Quantity'];
+            t_check(ctype_digit($packages), "log {$log} counts whole packages");
+            if ($d['Item'] !== X::PACKAGE_ITEM) {
+                $pack['package'] = $d['Item'];
+                $exPicked++;
+            }
         } elseif (isset($d['Sublot'])) {
+            $exBulkFirst += $comps === [] ? 1 : 0;
             $bulk = ['line' => $d['SrcOrdDetail'], 'item' => $d['Item'], 'sublot' => $d['Sublot'], 'vessel' => $d['SrcLocation'], 'qty' => $d['Quantity']];
         } else {
             $comps[] = ['line' => $d['SrcOrdDetail'], 'item' => $d['Item'], 'qty' => $d['Quantity']];
@@ -205,8 +218,21 @@ foreach ($exEach(X::PACKAGING) as [$xml, $f, $s, $log]) {
     $exSame($xml, $f, X::packaging($s[0]['keys']['Ordr'], $s[0]['keys']['Version'], $owner, $pack, $packages, $comps, $bulk, $made, $into,
         $extras['open']), "log {$log}");
 }
-t_check($exFirst >= 2, 'first packouts were exercised');
+t_check($exFirst >= 4, 'first packouts were exercised');
 t_check($exLater >= 1, 'a later packout into the existing container was exercised');
+t_check($exPicked >= 1, 'a packout that takes a real package from stock was exercised (log 814606)');
+t_check($exBulkFirst >= 2, 'packouts whose bulk item sorts before a component were exercised (logs 814606, 866288)');
+t_check($exDirect >= 1, 'the direct packout of log 864910 is on file and left alone');
+$exReq = X::packaging(1, 1, '4', ['ordr' => 2, 'line' => 3, 'item' => 4], '1',
+    [['line' => 11, 'item' => 900, 'qty' => '1'], ['line' => 12, 'item' => 500, 'qty' => '1']],
+    ['line' => 10, 'item' => 700, 'sublot' => 7, 'vessel' => 8, 'qty' => '1'], '1', ['container' => 9, 'inventoryCost' => 10]);
+$exMoved = [];
+foreach (cms_fixture_parse($exReq->toXml(cms_fixture_parse(cms_fixture(X::PACKAGING, 866271))['env']))['steps'] as $step) {
+    if ($step['object'] === 'MoveInventory') {
+        $exMoved[] = $step['data']['Item'];
+    }
+}
+t_same(['1', '500', '700', '900', '4'], $exMoved, 'what is used goes in item order, the bulk among the components');
 t_check(t_throws(\InvalidArgumentException::class, static fn () => X::packaging(1, 1, '4', ['ordr' => 2, 'line' => 3, 'item' => 4], '1', [],
     ['line' => 5, 'item' => 6, 'sublot' => 7, 'vessel' => 8, 'qty' => '1'], '1', ['container' => 9])) !== null,
     'a later packout needs its cost record');

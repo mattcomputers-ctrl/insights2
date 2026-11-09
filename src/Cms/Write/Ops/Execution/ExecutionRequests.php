@@ -39,7 +39,10 @@ final class ExecutionRequests
     public const STOCK = '10669';
     /** The plant location the logged requests name for sampling, the packaging phase and completion. */
     public const PLANT = '2';
-    /** The item the client moves once per package filled. */
+    /**
+     * The package item the client moves once per package filled unless
+     * the user picks a real one at the packout: NA, which holds no stock.
+     */
     public const PACKAGE_ITEM = '1';
 
     /** Steps whose new ids later steps or requests need. */
@@ -184,9 +187,12 @@ final class ExecutionRequests
 
     /**
      * One packout: fill packages from the vessel into the packaging
-     * ticket's container and make the packaged item into stock.
+     * ticket's container and make the packaged item into stock. What is
+     * used (the components and the bulk together) goes in item order, as
+     * the client sends it.
      *
-     * @param array{ordr:int|string,line:int|string,item:int|string} $pack the packaging ticket, its product line and item
+     * @param array{ordr:int|string,line:int|string,item:int|string,package?:int|string} $pack the packaging ticket, its
+     *        product line and item, and the package item filled when it is not NA
      * @param list<array{line:int|string,item:int|string,qty:string}> $components packaging components used
      * @param array{line:int|string,item:int|string,sublot:int|string,vessel:int|string,qty:string} $bulk the draw from the vessel
      * @param array{changeSet:int|string,unitCost:string}|array{container:int|string,inventoryCost:int|string} $into
@@ -224,17 +230,19 @@ final class ExecutionRequests
             }
             $r->add($step->data($head + $data));
         };
-        $fill(['TrgOrdDetail' => $pack['line'], 'Item' => self::PACKAGE_ITEM, 'MakeContext' => 'MKB', 'UseUnreservedInventory' => true,
-               'SrcLocation' => self::STOCK, 'Quantity' => $packages, 'UseContext' => 'US']);
-        foreach ($components as $c) {
-            $fill(['SrcOrdDetail' => $c['line'], 'TrgOrdDetail' => $pack['line'], 'Item' => $c['item'], 'MakeContext' => 'MKB',
-                   'UseUnreservedInventory' => true, 'SrcLocation' => self::STOCK, 'Quantity' => $c['qty'], 'UseContext' => 'US']);
-            $r->add(self::qtyUsed($c['line']));
+        $fill(['TrgOrdDetail' => $pack['line'], 'Item' => $pack['package'] ?? self::PACKAGE_ITEM, 'MakeContext' => 'MKB',
+               'UseUnreservedInventory' => true, 'SrcLocation' => self::STOCK, 'Quantity' => $packages, 'UseContext' => 'US']);
+        $used   = $components;
+        $used[] = $bulk;
+        usort($used, static fn (array $a, array $b): int => [(int) $a['item'], (int) $a['line']] <=> [(int) $b['item'], (int) $b['line']]);
+        foreach ($used as $u) {
+            $data = ['SrcOrdDetail' => $u['line'], 'TrgOrdDetail' => $pack['line'], 'Item' => $u['item'], 'MakeContext' => 'MKB',
+                     'UseUnreservedInventory' => true];
+            $fill($data + (isset($u['sublot'])
+                ? ['Sublot' => $u['sublot'], 'TareEntered' => '0', 'SrcLocation' => $u['vessel'], 'Quantity' => $u['qty'], 'UseContext' => 'USB']
+                : ['SrcLocation' => self::STOCK, 'Quantity' => $u['qty'], 'UseContext' => 'US']));
+            $r->add(self::qtyUsed($u['line']));
         }
-        $fill(['SrcOrdDetail' => $bulk['line'], 'TrgOrdDetail' => $pack['line'], 'Item' => $bulk['item'], 'MakeContext' => 'MKB',
-               'UseUnreservedInventory' => true, 'Sublot' => $bulk['sublot'], 'TareEntered' => '0', 'SrcLocation' => $bulk['vessel'],
-               'Quantity' => $bulk['qty'], 'UseContext' => 'USB']);
-        $r->add(self::qtyUsed($bulk['line']));
 
         $make = Step::execute('MoveInventory')->subs($cs, 'ChangeSet', 'ChangeSet', 'data');
         $data = ['Owner' => $owner, 'Context' => 'PCKAGE'];

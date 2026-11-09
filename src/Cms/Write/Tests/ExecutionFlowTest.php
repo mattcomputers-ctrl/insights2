@@ -73,6 +73,11 @@ $xfCms = static function (\ArrayObject $w): FakeCmsReader {
         ->when('FROM CMS.dbo.Location v', static fn (array $p) => isset($w['vessels'][(int) $p[0]]) ? [$w['vessels'][(int) $p[0]]] : [])
         ->when('FROM CMS.dbo.Lot lt', static fn (array $p) => isset($w['sublots'][(int) $p[0]]) ? [['Sublot' => $w['sublots'][(int) $p[0]]]] : []);
 };
+/** One item as the flows look it up by code. */
+$xfItem = static fn (int $id, string $code, string $name, string $kind, array $over = []): array => $over + [
+    'Item' => $id, 'ItemCode' => $code, 'Description' => $name, 'Unit' => 'lb', 'Status' => null, 'Context' => $kind,
+    'ReplacedBy' => null, 'StandsFor' => null,
+];
 $xfSet = static fn (int $id, string $ctx, ?int $reversedBy = null): array => ['ChangeSet' => $id, 'Context' => $ctx, 'ReverseChangeSet' => $reversedBy];
 /** Change one line of the world. */
 $xfTouch = static function (\ArrayObject $w, int $ordr, int $line, array $over): void {
@@ -97,7 +102,7 @@ foreach (['mfx.add_ingredient', 'mfx.make_batch', 'mfx.send_to_qc', 'mfx.packout
 }
 
 /* Ticket 194761 (10 lb of B123117) and its packaging ticket 194762, as CMS held them before log 866313. */
-$xfWorld = static function () use ($xfHead, $xfLine, $xfUi): \ArrayObject {
+$xfWorld = static function () use ($xfHead, $xfLine, $xfUi, $xfItem): \ArrayObject {
     return new \ArrayObject([
         'heads' => [
             194761 => $xfHead(194761, 3),
@@ -132,10 +137,18 @@ $xfWorld = static function () use ($xfHead, $xfLine, $xfUi): \ArrayObject {
         'vessels'  => [],
         'sublots'  => [566188 => 61576, 566197 => 61577],
         'items'    => [
-            'R100849' => ['Item' => 100849, 'ItemCode' => 'R100849', 'Description' => 'RAW 100849', 'Unit' => 'lb', 'Status' => null],
-            'R101268' => ['Item' => 101268, 'ItemCode' => 'R101268', 'Description' => 'RAW 101268', 'Unit' => 'lb', 'Status' => null],
-            'B123117' => ['Item' => 123117, 'ItemCode' => 'B123117', 'Description' => 'TEST RED', 'Unit' => 'lb', 'Status' => null],
-            'OLD1'    => ['Item' => 7, 'ItemCode' => 'OLD1', 'Description' => 'OLD', 'Unit' => 'lb', 'Status' => 'OBS'],
+            'R100849' => $xfItem(100849, 'R100849', 'RAW 100849', 'SUNDRY'),
+            'R101268' => $xfItem(101268, 'R101268', 'RAW 101268', 'SUNDRY'),
+            'B123117' => $xfItem(123117, 'B123117', 'TEST RED', 'PP'),
+            'P555001' => $xfItem(555001, 'P555001', 'TEST BLUE 5LB', 'PP', ['Unit' => 'ea']),
+            'OLD1'    => $xfItem(7, 'OLD1', 'OLD', 'SUNDRY', ['Status' => 'OBS']),
+            'ALT1'    => $xfItem(555002, 'ALT1', 'OTHER NAME', 'NAME', ['Unit' => null, 'ReplacedBy' => 100849, 'StandsFor' => 'R100849']),
+            'ALT2'    => $xfItem(555003, 'ALT2', 'OTHER NAME', 'NAME', ['Unit' => null, 'ReplacedBy' => 999999]),
+            'PROTO1'  => $xfItem(555004, 'PROTO1', 'TRIAL', 'PROTOTYPE'),
+            'ODD1'    => $xfItem(555005, 'ODD1', 'ODD', 'SERVICE'),
+            'NA'      => $xfItem(1, 'NA', 'NA', 'PACKAGE', ['Unit' => 'ea']),
+            'PAIL35'  => $xfItem(101075, 'PAIL35', 'TEST PAIL', 'PACKAGE', ['Unit' => 'ea']),
+            'OLDPAIL' => $xfItem(555006, 'OLDPAIL', 'OLD PAIL', 'PACKAGE', ['Unit' => 'ea', 'Status' => 'OBS']),
         ],
     ]);
 };
@@ -158,6 +171,12 @@ foreach ([
     'no item'          => [['item' => ''], 'Enter the item'],
     'unknown item'     => [['item' => 'NOPE'], 'was not found'],
     'obsolete item'    => [['item' => 'OLD1'], 'obsolete'],
+    'another name'     => [['item' => 'ALT1'], 'ALT1 is another name for R100849. Enter R100849.'],
+    'a name whose item is not found' => [['item' => 'ALT2'], 'ALT2 is another name for an item'],
+    'a package'        => [['item' => 'PAIL35'], 'is a package, not an ingredient'],
+    'the NA package'   => [['item' => 'NA'], 'is a package, not an ingredient'],
+    'a prototype'      => [['item' => 'PROTO1'], 'is a prototype item'],
+    'any other kind'   => [['item' => 'ODD1'], 'not an item that can be added as an ingredient here'],
     'the product'      => [['item' => 'B123117'], 'what this ticket makes'],
     'zero quantity'    => [['qty' => '0'], 'more than zero'],
     'packaging ticket' => [['ordr' => '194762'], 'packaging ticket'],
@@ -165,6 +184,9 @@ foreach ([
 ] as $label => [$over, $needle]) {
     $xfRefused(static fn () => $wr->preview('mfx.add_ingredient', $over + $in, $now), $needle, $label);
 }
+$p = $wr->preview('mfx.add_ingredient', ['item' => 'P555001', 'qty' => '2'] + $in, $now);
+t_check(str_contains($p->rendered->stages[0]['xml'], 'Item="555001"') && str_contains(json_encode($p->plan->summary), '2 ea of P555001'),
+    'a packaged product is accepted as an ingredient, as a stock item is');
 
 t_section('Execution flow: make the batch');
 $xfBump($w, 194761);
@@ -289,6 +311,29 @@ foreach ([
 ] as $label => [$over, $needle]) {
     $xfRefused(static fn () => $wr->preview('mfx.packout', $over + $in, $now), $needle, $label);
 }
+foreach ([
+    'a package that is not in CMS'   => ['NOPE', 'Package NOPE was not found'],
+    'an item that is not a package'  => ['R100849', 'R100849 is not a package'],
+    'an obsolete package'            => ['OLDPAIL', 'Package OLDPAIL is obsolete'],
+] as $label => [$code, $needle]) {
+    $xfRefused(static fn () => $wr->preview('mfx.packout', ['package' => $code] + $in, $now), $needle, $label);
+}
+$xfPackage = static function (string $xml): array {
+    foreach (cms_fixture_parse($xml)['steps'] as $s) {
+        if ($s['object'] === 'MoveInventory' && !isset($s['data']['SrcOrdDetail']) && ($s['data']['MakeContext'] ?? '') === 'MKB') {
+            return [$s['data']['Item'], $s['data']['Quantity']];
+        }
+    }
+    return [];
+};
+$p = $wr->preview('mfx.packout', ['qty' => '12', 'packages' => '3', 'package' => 'PAIL35'] + $in, $now);
+t_same(['101075', '3'], $xfPackage($p->rendered->stages[1]['xml']), 'a package picked at the packout is the item moved, once per package');
+t_check(str_contains(json_encode($p->plan->summary), '3 ea of PAIL35'), 'the summary says which package comes out of stock: ' . json_encode($p->plan->summary));
+foreach (['', 'NA'] as $code) {
+    $p = $wr->preview('mfx.packout', ['qty' => '12', 'packages' => '3', 'package' => $code] + $in, $now);
+    t_same(['1', '3'], $xfPackage($p->rendered->stages[1]['xml']), 'no package picked' . ($code === '' ? '' : ' (NA picked)') . ' moves NA');
+    t_check(!str_contains(json_encode($p->plan->summary), 'taken from stock'), 'and the summary names no package');
+}
 $xfRefused(static fn () => $wr->preview('mfx.undo_make', ['ordr' => '194761'], $now), 'Undo its packouts first', 'undoing the make of a packed batch');
 
 t_section('Execution flow: complete the ticket');
@@ -367,6 +412,47 @@ t_check(str_contains($p->rendered->stages[1]['xml'], 'CreateContainer') && str_c
 $w['vessels'] = [];
 $xfRefused(static fn () => $wr->preview('mfx.packout', $in, $now), 'vessel or the lot', 'a batch whose vessel is not found');
 $xfRefused(static fn () => $wr->preview('mfx.send_to_qc', $in, $now), 'vessel or the lot', 'testing a batch whose vessel is not found');
+
+t_section('Execution flow: a first packout that takes a real package, bulk before its components');
+/* Ticket 188368 (21 lb) and its packaging ticket 188369 as CMS held them before log 814606. */
+$w = new \ArrayObject([
+    'heads' => [188368 => $xfHead(188368, 5), 188369 => $xfHead(188369, 3, ['Context' => 'MFPP', 'Recipe' => 20003])],
+    'lines' => [
+        188368 => [
+            $xfLine(521993, 'BA', ['ExecOrder' => 1]),
+            $xfLine(521994, 'PK', ['Item' => 104472, 'ItemCode' => 'B104472', 'Description' => 'TEST BLUE', 'Unit' => 'lb', 'QtyReqd' => '21',
+                                   'Status' => 'STD', 'Parent' => 521993]),
+            $xfLine(521995, 'UB'),
+            $xfUi(521996, 1, 117273, '21', '2', 3, 'lb', ['ExecStatus' => 'CMP']),
+        ],
+        188369 => [
+            $xfLine(522003, 'PK', ['Item' => 104473, 'ItemCode' => 'P104473', 'Description' => 'TEST BLUE 10LB', 'Unit' => 'lb', 'QtyReqd' => '21']),
+            $xfUi(522004, 1, 119117, '21.315', '0.5', null, 'ea'),
+            $xfUi(522005, 2, 104472, '21', '5', null, 'lb', ['ItemCode' => 'B104472']),
+            $xfUi(522006, 3, 119118, '21.315', '0.2', null, 'ea'),
+        ],
+    ],
+    'packs'    => [188368 => [['Ordr' => 188369, 'Status' => 'RLS', 'ItemCode' => 'P104473', 'Qty' => '21']]],
+    'sets'     => [188368 => [$xfSet(129180, 'MF')], 188369 => [$xfSet(129185, 'MF')]],
+    'receipts' => [129180 => 30100],
+    'costs'    => [129180 => ['InventoryCost' => 76000, 'UnitCostMK' => '5']],
+    'vessels'  => [521993 => ['Location' => 111203, 'Version' => 3, 'LocationCode' => 'VO188368']],
+    'sublots'  => [521994 => 56628, 522003 => 56629],
+    'items'    => ['GAL1' => $xfItem(101073, 'GAL1', 'TEST GALLON', 'PACKAGE', ['Unit' => 'ea'])],
+]);
+$fake = new FakeTransport();
+$wr   = $xfWriter($xfCms($w), $fake);
+$in   = ['ordr' => '188368', 'pack' => '188369', 'qty' => '22', 'packages' => '1', 'package' => 'GAL1'];
+$now  = new DateTimeImmutable('2026-06-04T12:16:28');
+$p    = $wr->preview('mfx.packout', $in, $now);
+$res  = $wr->execute('mfx.packout', $in, $now, $p->hash);
+t_check($res->ok() && count($fake->sent) === 2, 'two requests committed: ' . $res->describe());
+t_xml_same($xfNorm(cms_fixture(X::PACKAGING, 814606)), $xfNorm($fake->sent[1] ?? ''),
+    'the packout matches log 814606: the package picked, and what is used in item order');
+$lines = $w['lines'];
+$lines[188369][] = $xfUi(522007, 4, 119117, '1', '0.5', null, 'ea');
+$w['lines'] = $lines;
+$xfRefused(static fn () => $wr->preview('mfx.packout', $in, $now), 'has R119117 on more than one line', 'a packaging ticket with an item on two lines');
 
 t_section('Execution flow: undo a packout');
 $w = new \ArrayObject([

@@ -170,7 +170,7 @@ $done = in_array($head['Status'] ?? '', ['CMP', 'CLS', 'BAT'], true);
         <?= csrf_field() ?>
         <div class="form-row">
             <div class="form-group">
-                <label for="fl-item">Add an ingredient: item</label>
+                <label for="fl-item">Add an ingredient: item code (a stock item or a packaged product)</label>
                 <input id="fl-item" type="text" name="item" style="width:16rem;" autocomplete="off" required>
             </div>
             <div class="form-group">
@@ -203,6 +203,17 @@ $done = in_array($head['Status'] ?? '', ['CMP', 'CLS', 'BAT'], true);
                 <label for="fl-pack-count">Packages filled</label>
                 <input id="fl-pack-count" type="text" name="packages" inputmode="numeric" style="width:6rem;" autocomplete="off" required>
             </div>
+            <?php if (!empty($floor['packageItems'])): ?>
+            <div class="form-group">
+                <label for="fl-pack-item">Package taken from stock</label>
+                <select id="fl-pack-item" name="package">
+                    <option value="">NA (none)</option>
+                    <?php foreach ($floor['packageItems'] as $pi): ?>
+                        <option value="<?= e((string) $pi['code']) ?>"><?= e((string) $pi['code']) ?>: <?= e((string) $pi['description']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <?php endif; ?>
         </div>
         <button type="submit" class="btn btn-sm btn-primary">Check packout…</button>
     </form>

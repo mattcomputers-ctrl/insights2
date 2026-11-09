@@ -34,7 +34,8 @@ class BatchFloorController
      * finished, hand-built, a repack), or CMS cannot be read.
      *
      * @return null|array{can:array<string,bool>,mode:string,made:bool,direct:bool,vessel:string,
-     *                    ingredients:list<array<string,mixed>>,packs:list<array<string,mixed>>,packouts:list<array<string,mixed>>}
+     *                    ingredients:list<array<string,mixed>>,packs:list<array<string,mixed>>,packouts:list<array<string,mixed>>,
+     *                    packageItems:list<array{code:string,description:string}>}
      */
     public static function floor(int $ordr): ?array
     {
@@ -82,7 +83,22 @@ class BatchFloorController
             'ingredients' => ExecutionState::ingredients($t),
             'packs'       => $packs,
             'packouts'    => $packouts,
+            'packageItems' => $can['mfx.packout'] ? self::packageItems($cms) : [],
         ];
+    }
+
+    /**
+     * The packages a packout can take from stock; none when CMS cannot list them (the packout is then NA).
+     *
+     * @return list<array{code:string,description:string}>
+     */
+    private static function packageItems(LiveCmsReader $cms): array
+    {
+        try {
+            return ExecutionState::packageItems($cms);
+        } catch (\Throwable) {
+            return [];
+        }
     }
 
     /** POST /batch-tickets/{ordr}/floor/ingredient */
@@ -119,6 +135,7 @@ class BatchFloorController
             'pack'     => (int) ($_POST['pack'] ?? 0),
             'qty'      => trim((string) ($_POST['qty'] ?? '')),
             'packages' => trim((string) ($_POST['packages'] ?? '')),
+            'package'  => trim((string) ($_POST['package'] ?? '')),
         ]);
     }
 

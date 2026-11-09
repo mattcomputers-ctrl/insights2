@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PII\Cms\Write\Ops\Execution;
 
+use PII\Cms\Write\CmsReader;
 use PII\Cms\Write\Flow;
 use PII\Cms\Write\FlowContext;
 use PII\Cms\Write\Fmt;
@@ -23,7 +24,8 @@ use PII\Cms\Write\WriteRefused;
  * them; the ones CMS already shows as done are left out.
  * Input: ordr (int, the bulk ticket), pack (int, its packaging ticket),
  * qty (number made, in the packaged item's unit), packages (whole number
- * of packages filled).
+ * of packages filled), package (optional item code of the package filled;
+ * blank for NA, which takes no package from stock).
  */
 final class Packout implements Flow
 {
@@ -47,7 +49,8 @@ final class Packout implements Flow
         if (!ctype_digit($count) || (int) $count < 1 || (int) $count > 100000) {
             throw new WriteRefused('Enter the number of packages filled, as a whole number.');
         }
-        $count = (string) (int) $count;
+        $count   = (string) (int) $count;
+        $package = self::package($cms, trim((string) ($input['package'] ?? '')));
 
         // What one unit of the packaged item takes, from the packaging ticket's own lines.
         $per        = $made / (float) $p['product']['qty'];
@@ -57,7 +60,13 @@ final class Packout implements Flow
         $noCost     = [];
         $bulkCost   = $t['cost']['unitCost'] ?? $p['bulkLine']['cost'] ?? 0.0;
         $value      = $draw * $bulkCost;
+        $seen       = [(int) $t['product']['item'] => true];
         foreach ($p['components'] as $c) {
+            // The client sends what is used in item order; no logged packout has the same item on two lines.
+            if (isset($seen[$c['item']])) {
+                throw new WriteRefused("Packaging ticket {$p['Ordr']} has {$c['code']} on more than one line. Pack it in CMS.");
+            }
+            $seen[$c['item']] = true;
             $q = (float) ManufacturingState::qty(($c['qty'] ?? 0.0) * $per);
             if ($q <= 0.0) {
                 continue;
@@ -71,6 +80,9 @@ final class Packout implements Flow
         }
         $madeText = ManufacturingState::qty($made);
         $pack     = ['ordr' => $p['Ordr'], 'line' => $p['product']['id'], 'item' => (int) $p['product']['item']];
+        if ($package !== null) {
+            $pack['package'] = $package['item'];
+        }
         $bulk     = ['line' => $p['bulkLine']['id'], 'item' => (int) $t['product']['item'], 'sublot' => $t['sublot'],
                      'vessel' => $t['vessel']['id'], 'qty' => ManufacturingState::qty($draw)];
 
@@ -132,6 +144,9 @@ final class Packout implements Flow
             ['Made into stock', "{$madeText} {$unit} in {$count} package" . ($count === '1' ? '' : 's')],
             ['Drawn from vessel ' . $t['vessel']['code'], "{$bulk['qty']} lb of {$t['product']['code']}"],
         ];
+        if ($package !== null) {
+            $summary[] = ['Packages taken from stock', trim("{$count} {$package['unit']}") . " of {$package['code']} {$package['description']}"];
+        }
         if ($list !== []) {
             $summary[] = ['Components used', implode(', ', $list)];
         }
@@ -151,5 +166,35 @@ final class Packout implements Flow
         }
 
         return new Plan($seq, $summary, $warnings, 'Ordr', (string) $t['Ordr']);
+    }
+
+    /**
+     * The package item picked for this packout, or null for NA. In the
+     * client it is the user's choice at each packout, not something the
+     * ticket holds.
+     *
+     * @return null|array{item:int,code:string,description:string,unit:string}
+     */
+    private static function package(CmsReader $cms, string $code): ?array
+    {
+        if ($code === '') {
+            return null;
+        }
+        $i = $cms->fetch(
+            'SELECT i.Item, i.ItemCode, i.Description, i.Unit, i.Status, i.Context FROM CMS.dbo.Item i WHERE i.ItemCode = ?', [$code]);
+        if ($i === null) {
+            throw new WriteRefused("Package {$code} was not found in CMS.");
+        }
+        if (strtoupper(trim((string) ($i['Context'] ?? ''))) !== 'PACKAGE') {
+            throw new WriteRefused("{$i['ItemCode']} is not a package.");
+        }
+        if (strtoupper(trim((string) ($i['Status'] ?? ''))) === 'OBS') {
+            throw new WriteRefused("Package {$i['ItemCode']} is obsolete in CMS.");
+        }
+        if ((string) (int) $i['Item'] === ExecutionRequests::PACKAGE_ITEM) {
+            return null;
+        }
+        return ['item' => (int) $i['Item'], 'code' => (string) $i['ItemCode'], 'description' => (string) ($i['Description'] ?? ''),
+                'unit' => trim((string) ($i['Unit'] ?? ''))];
     }
 }

@@ -235,6 +235,25 @@ final class ExecutionState
     }
 
     /**
+     * The package items a packout can take from stock, by code. NA, the
+     * usual choice, takes nothing and is left out.
+     *
+     * @return list<array{code:string,description:string}>
+     */
+    public static function packageItems(CmsReader $cms): array
+    {
+        $out = [];
+        foreach ($cms->fetchAll("
+            SELECT TOP 200 i.ItemCode, i.Description
+            FROM CMS.dbo.Item i
+            WHERE i.Context = 'PACKAGE' AND i.Item <> ? AND (i.Status IS NULL OR i.Status <> 'OBS')
+            ORDER BY i.ItemCode", [(int) ExecutionRequests::PACKAGE_ITEM]) as $i) {
+            $out[] = ['code' => (string) $i['ItemCode'], 'description' => (string) ($i['Description'] ?? '')];
+        }
+        return $out;
+    }
+
+    /**
      * The ingredient lines of a bulk ticket, in the order the floor works them.
      *
      * @param array<string,mixed> $t
