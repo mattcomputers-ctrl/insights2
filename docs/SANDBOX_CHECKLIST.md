@@ -201,9 +201,52 @@ packaged items.
    the client and compare with a client publish (the old version retires, the
    item's costing recipe moves). Retire a recipe and make it active again.
 
-### 4.5 onward (not built yet)
+### 4.5 Shipping (built)
 
-Shipping, batch execution, inventory,
+Grant `write.ship.*` and `shipping.invoice` to the test user. Assemble two
+orders for the same ship-to in the client (one container each is enough), and
+a third with two containers.
+
+1. **Ready list** (`/shipping/new`): the three orders show with the right
+   container counts. This list comes from CMS's shipping-label view; if an
+   assembled order is missing or a shipped one shows, note it (the view is the
+   one unverified source in this flow).
+2. **One order, one container.** Tick it, Continue: the container, its contents
+   and the weight CMS worked out are shown. Type a freight charge. Review:
+   four requests are listed (waybill, ship and invoice, pallets, complete).
+   - Compare request 1 with a client waybill for a similar order: the `Waybill`
+     row (ship via, freight service and option, PO, date shipped), one
+     `WaybillTrackingNumber` per container (`ActWeightLb`, `ActWeightKg`), the
+     `AddressRef` copy of the order's ship-to (its `TableID` is sent as `0`;
+     check CMS fills in the waybill), and the to-do rows.
+   - Confirm. The result names the new waybill; the order is shipped and
+     invoiced, the freight charge is on the invoice, the waybill is `CMP`.
+   - Open the waybill in the client: it loads and prints normally.
+3. **Two orders on one waybill**, then the order with two containers: five
+   requests for the first. Check the container order across orders against a
+   client waybill of two orders.
+4. **Different ship-to**: tick two orders for different customers: refused.
+5. **Stop part way.** Start a waybill and, between requests, break the
+   connection (or open the order in the client so its version moves). Insights
+   stops and says which steps are saved. `/shipping/new` now lists the waybill
+   under "did not finish"; Finish sends the remaining steps. Compare with the
+   client's own prompt to finish outstanding waybills.
+6. **Labels.** On the completed waybill, "Mark labels printed": one request per
+   container. Print the same labels from the client for another waybill and
+   compare the `AddressReference` rows. Press it again: refused, already
+   recorded.
+7. **Reject.** Reject the waybill from step 2: status `REJ`, the invoice is
+   reversed, the stock is back in its container and the order is ready to ship
+   again (it reappears on `/shipping/new`). Reject it again: refused.
+8. **Print pages.** From a waybill, open Packing slip and Invoice for an order
+   and compare with the client's printouts: addresses, quantities ordered and
+   shipped, prices, freight, taxes and totals. Open the invoice of the rejected
+   waybill: it is marked reversed. A user without `shipping.invoice` sees no
+   Invoice button and gets the usual not-found page on the address.
+
+### 4.6 onward (not built yet)
+
+Batch execution, inventory,
 master data and bills are researched (`docs/research/`) with fixtures stored, but
 have no templates yet. Each gets its section here when it is built, following
 the same pattern: do it in Insights, do it in the client, compare the request

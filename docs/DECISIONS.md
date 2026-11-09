@@ -583,3 +583,31 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
     split are filled in with release ticked, and the user goes on from there.
 103. **Ticket and recipe actions** show only to holders of the matching write
     permission and only when the ticket's state allows them.
+104. **Shipping ships what is assembled.** Assembling an order into containers
+    stays in the client for now (it belongs with the inventory moves, flow 7).
+    The containers and their weights are read from CMS's shipping-label view;
+    the weight can be overtyped on the form.
+105. **One waybill is one ship-to, up to 6 orders.** Ship via, freight service,
+    freight account, PO number and delivery confirmation are copied from the
+    first order, as the client does. Tracking numbers and freight cost per
+    container are not entered here.
+106. **The date shipped is the moment of confirming**, not the moment the form
+    was opened (the client uses the latter).
+107. **A waybill is several requests**, as the client sends them. After the
+    first, Insights reads the to-do rows back from CMS for their ids and the
+    waybill's version, and skips a row CMS already shows as done. A waybill
+    that stopped part way is listed on `/shipping/new` and on its own page with
+    a Finish button; finishing uses the create permission.
+108. **Reject is offered only for a completed waybill**, with its own
+    permission. An unfinished waybill is finished, not rejected, here.
+109. **"Mark labels printed"** records the label address per container the way
+    the client's label printer does, but with Insights' normal request header
+    (which names the user). Insights does not print the label itself yet.
+110. **Kilograms are pounds × 0.45359237.** For a container holding several
+    lines the client adds up kilograms line by line, so its last digits can
+    differ from ours; the tests compare to 9 decimals.
+111. **Packing slip and invoice are read-only print pages** built from CMS's
+    own report views, one per order on a waybill. The packing slip comes with
+    `shipping.view`; the invoice shows prices and has its own permission,
+    `shipping.invoice`. Both use the logo set for the certificate of analysis.
+    Lots are not listed on either yet.

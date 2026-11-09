@@ -102,15 +102,19 @@ for every ticket today. Client-rendered output to rebuild: container labels.
 
 | CMS action (program) | Count / failed | What the user is doing | Request sequence | Insights today | Status |
 |---|---|---|---|---|---|
-| `WaybillDataSet.SaveChanges` (Waybill) | 9,435 / 15 | Shipping one or more assembled orders | **3 + N requests** for N orders: (1) `Insert Waybill`, tracking numbers, address, document, and a to-do row in `WaybillInProcess` per later request; (2) per order: tick its to-do row, `UpdateVersion Waybill`, `Execute CreateShipmentsByOrder`; (3) tick, save shipped pallets; (4) tick, `Update Waybill Status=CMP`. To-do row ids are read back after request 1. An interrupted waybill is finished from the to-do rows | `/shipping` waybills, assemblies, tracking | researched |
-| `WaybillDataSet.RejectWaybill` | 31 / 0 | Cancelling a waybill | 1 request: `Update Waybill Status=REJ` → `Execute RejectWaybill` | same | researched |
-| `PrintShippingLabel.UpdateShippingLabelAddress` | 2,457 / 0 | Saving the address printed on a shipping label | 1 request: one `Insert AddressReference` (envelope carries no user, workstation or owner) | — | researched |
+| `WaybillDataSet.SaveChanges` (Waybill) | 9,435 / 15 | Shipping one or more assembled orders | **3 + N requests** for N orders: (1) `Insert Waybill`, tracking numbers, address, document, and a to-do row in `WaybillInProcess` per later request; (2) per order: tick its to-do row, `UpdateVersion Waybill`, `Execute CreateShipmentsByOrder`; (3) tick, save shipped pallets; (4) tick, `Update Waybill Status=CMP`. To-do row ids are read back after request 1. An interrupted waybill is finished from the to-do rows (`ProcessOutstandingRequests`) | `/shipping` waybills, assemblies, tracking; **new** `/shipping/new` (ready orders, containers, weights, freight charge), Finish button on an unfinished waybill | **live-ready** (`ship.create_waybill`, `ship.resume_waybill`) |
+| `WaybillDataSet.RejectWaybill` | 31 / 0 | Cancelling a waybill | 1 request: `Update Waybill Status=REJ` → `Execute RejectWaybill` | Reject button on a completed waybill | **live-ready** (`ship.reject_waybill`) |
+| `PrintShippingLabel.UpdateShippingLabelAddress` | 2,457 / 0 | Saving the address printed on a shipping label | 1 request per container: one `Insert AddressReference` (or `Update` on a reprint; the client's envelope carries no user, workstation or owner, Insights sends its normal one) | "Mark labels printed" on a completed waybill | **live-ready** (`ship.label_address`) |
 | `LocationTools.ResetLabelRequired` (PrintContainerLabel) | 4,060 / 0 | Marking a container label as printed | 1 request: `Execute ResetLabelReqd` | — | researched |
 
-Client-rendered outputs to rebuild as print pages: packing slip (header from
-the `PackingSlipReport` view; its detail views are empty here, so lines come
-from shipment movements), invoice (`InvoiceReport` and its detail, lot, tax and
-memo views), shipping label.
+Print pages (read-only, linked per order from the waybill page): packing slip
+`/shipping/packing-slip/{change set}` (header from the `PackingSlipReport`
+view; its detail views are empty here, so lines come from `ShipmentDetails`
+with the container of each line) and invoice `/shipping/invoice/{trans}`
+(`InvoiceReport`, `InvoiceDetailReport`, `InvoiceTaxReport`; needs the
+`shipping.invoice` permission because it shows prices). Still client-only:
+the shipping label itself, assembling an order into containers (flow 7), and
+tracking numbers and freight cost per container.
 
 ## 7. Inventory (Inventory)
 
