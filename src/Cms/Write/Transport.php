@@ -23,4 +23,13 @@ interface Transport
      *        when the call errors before returning its id
      */
     public function send(string $xml, array $meta): TransportResult;
+
+    /**
+     * Next number from one of CMS's own counters (the same procedure the
+     * CMS client calls, e.g. the sales order change number). Null when this
+     * transport sends nothing, in which case the request shows a placeholder.
+     *
+     * @throws WriteRefused when CMS could not hand out a number
+     */
+    public function generateId(string $kind, int $min, int $max): ?string;
 }

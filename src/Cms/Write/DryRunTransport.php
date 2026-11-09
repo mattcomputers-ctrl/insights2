@@ -19,4 +19,9 @@ final class DryRunTransport implements Transport
             message: 'Dry run — nothing was sent to CMS.',
         );
     }
+
+    public function generateId(string $kind, int $min, int $max): ?string
+    {
+        return null;
+    }
 }

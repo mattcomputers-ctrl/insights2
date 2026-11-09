@@ -55,7 +55,10 @@ final class SequenceRunner
     public function run(Sequence $sequence, Envelope $env, ?string $runId = null): RunResult
     {
         $runId  = $runId ?? self::newRunId();
-        $state  = new SequenceState($this->transport->mode() === 'dry-run');
+        $state  = new SequenceState(
+            $this->transport->mode() === 'dry-run',
+            fn (string $kind, int $min, int $max): ?string => $this->transport->generateId($kind, $min, $max),
+        );
         $stages = [];
         $halted = false;
         $first  = true;

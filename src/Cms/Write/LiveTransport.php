@@ -64,6 +64,34 @@ final class LiveTransport implements Transport
         return $this->readOutcome($logId, $callError);
     }
 
+    public function generateId(string $kind, int $min, int $max): ?string
+    {
+        try {
+            $stmt = $this->pdo->prepare(
+                'SET NOCOUNT ON; DECLARE @Result int; '
+                . 'EXEC dbo.GenerateID @IDKind = ?, @Min = ?, @Max = ?, @Result = @Result OUTPUT; '
+                . 'SELECT @Result AS Result;'
+            );
+            $stmt->execute([$kind, $min, $max]);
+            $value = null;
+            do {
+                if ($stmt->columnCount() > 0) {
+                    foreach ($stmt->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+                        if (array_key_exists('Result', $row) && $row['Result'] !== null) {
+                            $value = (int) $row['Result'];
+                        }
+                    }
+                }
+            } while ($stmt->nextRowset());
+        } catch (\PDOException $e) {
+            throw new WriteRefused("CMS could not hand out the next {$kind} ({$e->getMessage()}). Nothing was sent.");
+        }
+        if ($value === null || $value < $min || $value > $max) {
+            throw new WriteRefused("CMS did not hand out a usable {$kind}. Nothing was sent.");
+        }
+        return (string) $value;
+    }
+
     private function readOutcome(int $logId, ?string $callError): TransportResult
     {
         $stmt = $this->pdo->prepare(

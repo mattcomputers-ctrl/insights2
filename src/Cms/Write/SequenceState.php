@@ -16,7 +16,19 @@ final class SequenceState
     /** @var array<int,TransportResult> stage number (1-based) => result */
     private array $results = [];
 
-    public function __construct(public readonly bool $preview) {}
+    /** @param null|\Closure(string,int,int):?string $idSource asks CMS for the next number of a counter */
+    public function __construct(public readonly bool $preview, private readonly ?\Closure $idSource = null) {}
+
+    /**
+     * Next number from a CMS counter, taken at the moment the request is
+     * built for sending. A preview or dry run takes nothing and shows a
+     * placeholder, so looking at a preview never uses up a number.
+     */
+    public function newId(string $kind, int $min, int $max): string
+    {
+        $value = ($this->preview || $this->idSource === null) ? null : ($this->idSource)($kind, $min, $max);
+        return $value ?? "{next {$kind}}";
+    }
 
     public function record(int $stageNo, TransportResult $result): void
     {

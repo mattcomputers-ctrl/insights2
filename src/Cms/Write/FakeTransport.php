@@ -19,6 +19,10 @@ final class FakeTransport implements Transport
 
     private int $nextLog = 900001;
     private int $nextId  = 5000001;
+    private int $nextGenerated = 7000001;
+
+    /** @var list<string> every counter asked for, in order */
+    public array $generated = [];
 
     public function mode(): string
     {
@@ -58,6 +62,12 @@ final class FakeTransport implements Transport
             'Committed (fake).',
             $this->inventOutputs($xml),
         );
+    }
+
+    public function generateId(string $kind, int $min, int $max): ?string
+    {
+        $this->generated[] = $kind;
+        return (string) $this->nextGenerated++;
     }
 
     /** @return list<array{step:int,table:string,field:string,value:string}> */
