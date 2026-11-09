@@ -24,6 +24,10 @@ use PII\Cms\Write\Ops\Sales\CompleteSale;
 use PII\Cms\Write\Ops\Sales\CreateOrder;
 use PII\Cms\Write\Ops\Sales\EditOrder;
 use PII\Cms\Write\Ops\Sales\ReleaseOrder;
+use PII\Cms\Write\Ops\Shipping\CreateWaybill;
+use PII\Cms\Write\Ops\Shipping\RecordLabelAddress;
+use PII\Cms\Write\Ops\Shipping\RejectWaybill;
+use PII\Cms\Write\Ops\Shipping\ResumeWaybill;
 
 /**
  * The write allowlist. An operation that is not listed here cannot be
@@ -105,6 +109,14 @@ final class OperationRegistry
                 'write.mf.release_ticket', ReleaseTicket::class, ['ManufacturingOrderDataSet.ReleaseOrder']),
             new OperationDef('mf.close_ticket', 'batch_tickets', 'close a completed or unreleased batch ticket',
                 'write.mf.close_ticket', CloseTicket::class, ['ManufacturingOrderDataSet.CloseOrder']),
+            new OperationDef('ship.resume_waybill', 'shipping', 'finish a waybill that stopped part way',
+                'write.ship.create_waybill', ResumeWaybill::class, ['WaybillDataSet.ProcessOutstandingRequests']),
+            new OperationDef('ship.create_waybill', 'shipping', 'ship assembled sales orders on a new waybill',
+                'write.ship.create_waybill', CreateWaybill::class, ['WaybillDataSet.SaveChanges']),
+            new OperationDef('ship.reject_waybill', 'shipping', 'reject (reverse) a completed waybill',
+                'write.ship.reject_waybill', RejectWaybill::class, ['WaybillDataSet.RejectWaybill']),
+            new OperationDef('ship.label_address', 'shipping', 'record that shipping labels were printed',
+                'write.ship.label_address', RecordLabelAddress::class, ['PrintShippingLabel.UpdateShippingLabelAddress']),
             new OperationDef('mf.publish_recipe', 'recipes', 'publish a recipe',
                 'write.mf.publish_recipe', PublishRecipe::class, ['ManufacturingOrderDataSet.PublishRecipe']),
             new OperationDef('mf.recipe_active', 'recipes', 'retire or reactivate a recipe',
