@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace PII\Cms\Write;
 
+use PII\Cms\Write\Ops\Manufacturing\AddPackTicket;
+use PII\Cms\Write\Ops\Manufacturing\CloseTicket;
+use PII\Cms\Write\Ops\Manufacturing\CreateTicket;
+use PII\Cms\Write\Ops\Manufacturing\EditTicket;
+use PII\Cms\Write\Ops\Manufacturing\PublishRecipe;
+use PII\Cms\Write\Ops\Manufacturing\ReleaseTicket;
+use PII\Cms\Write\Ops\Manufacturing\SetRecipeActive;
 use PII\Cms\Write\Ops\Purchasing\CompletePurchaseOrder;
 use PII\Cms\Write\Ops\Purchasing\CreatePurchaseOrder;
 use PII\Cms\Write\Ops\Purchasing\EditPurchaseOrder;
@@ -88,6 +95,20 @@ final class OperationRegistry
                 'write.po.receive', ReceiveLine::class, ['PurchaseReceiptDataSet.SaveChanges']),
             new OperationDef('po.reverse_receipt', 'purchase_orders', 'reverse a purchase receipt',
                 'write.po.reverse_receipt', ReverseReceipt::class, ['PurchaseReceiptDataSet.ReverseReceipt']),
+            new OperationDef('mf.create_ticket', 'batch_tickets', 'cut a batch ticket (with packaging tickets and release)',
+                'write.mf.create_ticket', CreateTicket::class, ['ManufacturingOrderDataSet.SaveChanges', 'ManufacturingOrderDataSet.ReleaseOrder']),
+            new OperationDef('mf.add_pack_ticket', 'batch_tickets', 'add a packaging ticket to a batch ticket',
+                'write.mf.add_pack_ticket', AddPackTicket::class, ['ManufacturingOrderDataSet.SaveChanges']),
+            new OperationDef('mf.edit_ticket', 'batch_tickets', 'change the dates, overcommit or customer of a batch ticket',
+                'write.mf.edit_ticket', EditTicket::class, ['ManufacturingOrderDataSet.SaveChanges']),
+            new OperationDef('mf.release_ticket', 'batch_tickets', 'release a batch ticket to the floor',
+                'write.mf.release_ticket', ReleaseTicket::class, ['ManufacturingOrderDataSet.ReleaseOrder']),
+            new OperationDef('mf.close_ticket', 'batch_tickets', 'close a completed or unreleased batch ticket',
+                'write.mf.close_ticket', CloseTicket::class, ['ManufacturingOrderDataSet.CloseOrder']),
+            new OperationDef('mf.publish_recipe', 'recipes', 'publish a recipe',
+                'write.mf.publish_recipe', PublishRecipe::class, ['ManufacturingOrderDataSet.PublishRecipe']),
+            new OperationDef('mf.recipe_active', 'recipes', 'retire or reactivate a recipe',
+                'write.mf.recipe_active', SetRecipeActive::class, ['ManufacturingOrderDataSet.ChangeActiveState']),
         ];
     }
 }
