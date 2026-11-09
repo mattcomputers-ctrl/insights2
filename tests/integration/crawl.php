@@ -136,6 +136,8 @@ $routes = [
     ['/purchase-orders/new',                   200, 404, 404, 404, 404, 404, 404],
     ['/purchase-orders/price-lists',           200, 404, 404, 404, 404, 404, 404],
     ['/purchase-orders/price-lists?supplier=ZZZ-NOPE', 200, 404, 404, 404, 404, 404, 404],
+    ['/purchase-orders/bills',                 200, 404, 404, 404, 404, 404, 404],
+    ['/purchase-orders/bills?supplier=999999', 200, 404, 404, 404, 404, 404, 404],
     ['/purchase-orders/999999/edit',           200, 404, 404, 404, 404, 404, 404],
     ['/purchase-orders/999999/receive',        200, 404, 404, 404, 404, 404, 404],
     ['/batch-tickets',                         200, 200, 200, 200, 404, 404, 404],

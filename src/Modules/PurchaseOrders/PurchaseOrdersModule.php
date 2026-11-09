@@ -17,7 +17,9 @@ use PII\Core\Router;
  * changes to an open PO, complete, receive a line and reverse a receipt,
  * each through the shared check-then-confirm step. Holders of the price
  * list write permission get the supplier price lists: change a price or
- * the supplier's code, and add an item.
+ * the supplier's code, and add an item. Holders of the bill write
+ * permission get the received lines waiting for a supplier bill and can
+ * enter the invoice against them.
  */
 class PurchaseOrdersModule extends Module
 {
@@ -52,6 +54,9 @@ class PurchaseOrdersModule extends Module
             $r->get('/price-lists',             $p . '@index');
             $r->post('/price-lists/line',       $p . '@line');
             $r->post('/price-lists/add',        $p . '@add');
+            $b = BillsController::class;
+            $r->get('/bills',                   $b . '@index');
+            $r->post('/bills/create',           $b . '@create');
             $r->get('/{ordr}',                  $c . '@detail');
             $r->get('/{ordr}/edit',             $e . '@edit');
             $r->post('/{ordr}/edit',            $e . '@update');

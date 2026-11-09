@@ -36,6 +36,7 @@ use PII\Cms\Write\Ops\MasterData\SetCustomerShipping;
 use PII\Cms\Write\Ops\MasterData\SetItemSupplier;
 use PII\Cms\Write\Ops\MasterData\SetMinimumStock;
 use PII\Cms\Write\Ops\Purchasing\CompletePurchaseOrder;
+use PII\Cms\Write\Ops\Purchasing\CreateBill;
 use PII\Cms\Write\Ops\Purchasing\CreatePurchaseOrder;
 use PII\Cms\Write\Ops\Purchasing\EditPurchaseOrder;
 use PII\Cms\Write\Ops\Purchasing\ReceiveLine;
@@ -192,6 +193,8 @@ final class OperationRegistry
                 'write.customer.edit', SetCustomerShipping::class, ['EntityUpdateDataSet.SaveChanges']),
             new OperationDef('customer.address', 'sales_orders', 'change the address, carrier and freight account of customers',
                 'write.customer.edit', EditCustomerAddress::class, ['EntityUpdateDataSet.SaveChanges']),
+            new OperationDef('bill.create', 'purchase_orders', 'enter supplier bills for received lines',
+                'write.bill.create', CreateBill::class, ['BillUpdateDataSet.SaveChanges']),
             new OperationDef('price.line_edit', 'purchase_orders', 'change a price on a supplier price list',
                 'write.price.edit', EditPriceLine::class, ['PriceVersionUpdateDataSet.SaveChanges']),
             new OperationDef('price.line_add', 'purchase_orders', 'change prices and add items on supplier price lists',

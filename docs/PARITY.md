@@ -55,7 +55,7 @@ order acknowledgement.
 | same — correct a receipt | (33 all-time) | Fixing a received quantity | 1 request: `UpdateVersion Ordr`, `UpdateVersion ChangeSet`, `Update ChangeSetReceipt`, `MoveInventory` (difference), cost and bill updates | same | researched (not built: reverse the receipt and receive again) |
 | `PurchaseReceiptDataSet.ReverseReceipt` | 3 / 0 | Undoing a receipt | 1 request: receipt skeleton with zero quantity, negative movement, line reopened | "Reverse" beside each receipt on `/purchase-orders/{po}/receive` (single-line receipts not yet on a supplier bill) | **live-ready** (`po.reverse_receipt`) |
 | `ReturnToSupplierDataSet.SaveChanges` / `.ReverseReturn` | 3 / 0, 1 / 0 | Returning stock to a supplier; undoing that | 1 request each | — | researched |
-| `BillUpdateDataSet.SaveChanges` (Bill Entry) | 490 / 1 | Entering, editing, deleting a supplier bill | 1 request: `Insert Bill` → `Update BillDetail` per receipt line → `Execute UpdateBillCost` | — | researched |
+| `BillUpdateDataSet.SaveChanges` (Bill Entry) | 490 / 1 | Entering, editing, deleting a supplier bill | 1 request: `Insert Bill` → `Update BillDetail` per receipt line → `Execute UpdateBillCost` | **new**: supplier bills under `/purchase-orders/bills`: received lines waiting for a bill by supplier, and entering an invoice against them | **live-ready** for a new bill (`bill.create`); changing and deleting a bill, bills dated more than 21 days back (signed in the client), memo and tax stay in the client |
 
 Failures seen: stale `Ordr` version on receipts, "ChangeSet N already billed" on
 reversal, duplicate supplier + invoice number on bills.

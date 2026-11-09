@@ -486,10 +486,39 @@ Orders → Price lists.
    the page says so and the change goes to the list in effect today. Check
    that this is the list the client's purchase order screen uses.
 
-### 4.13 onward (not built yet)
+### 4.13 Supplier bills: enter an invoice against received lines (built)
 
-Master data and bills are researched (`docs/research/`) with fixtures stored, but
-have no templates yet. Each gets its section here when it is built, following
+Grant `write.bill.create` to the test user. The page is under Purchase
+Orders → Supplier bills. Receive two or three purchase order lines first
+(4.3) so that something is waiting.
+
+1. **A plain bill.** Open the supplier, tick one received line, type the
+   invoice number, a date and the total shown for the line: one request
+   (`Insert Bill`, `Update BillDetail` with no values, `Execute
+   UpdateBillCost`). Enter a bill for a similar line in the client and
+   compare attribute by attribute, `Terms` and `Amount` above all. Confirm;
+   the line leaves the waiting list and the bill shows in the client.
+2. **Freight.** Tick a line and give it an extra cost: the line carries
+   `AddCost`, and `Amount` first when the received value has part cents.
+   Check afterwards that the stock cost of the receipt in CMS went up by
+   the extra cost.
+3. **Several lines**, one of them with a small negative extra cost to
+   match the invoice to the cent. The header `Amount` is each line rounded
+   to cents plus its extra cost.
+4. **Lines from two purchase orders with different terms**: the review
+   says which terms the bill takes. Check what the client does.
+5. **Refusals to try**: a total that is off by a cent (the message says by
+   how much), an invoice number the supplier already has (CMS refuses it
+   too, on its unique index), an invoice dated 22 days back (left to the
+   client, which asks for a signature), a future date, and a line billed
+   in the client between review and confirm.
+6. After each bill, compare the `Bill` and `BillDetail` rows and the
+   receipt's stock cost with a bill entered in the client.
+
+### 4.14 onward (not built yet)
+
+Invoice corrections and returns to a supplier are researched (`docs/research/`)
+with fixtures stored, but have no templates yet. Each gets its section here when it is built, following
 the same pattern: do it in Insights, do it in the client, compare the request
 and the rows, then try the known failure (listed per action in `docs/PARITY.md`).
 

@@ -801,3 +801,34 @@ Format: date, decision, why. Spec references are to `docs/SPEC-order-readiness.m
 170. **Price and code changed together are sent as `Price1` then
     `EntityItemCode`**, the order the two have on an insert. The client was
     only seen changing one column at a time.
+171. **One supplier bill operation is built: a new bill against received
+    lines** (`bill.create`, permission `write.bill.create`). It is 1541 of
+    the 1573 bill requests since log 600000. Changing a bill (28) and
+    deleting one (4) stay in the client.
+172. **Bills live under Purchase Orders** (`/purchase-orders/bills`): the
+    received lines waiting for a bill by supplier, then one supplier's
+    lines with the invoice form. There was no such page before.
+173. **The user types the invoice total and it must equal the ticked lines
+    plus their extra costs.** The client computes the header amount; asking
+    for the total as well catches a wrong line or a missed freight charge
+    before anything is sent. A difference is refused with the amount.
+174. **The header amount is each line rounded to cents plus its extra
+    cost.** This reproduces all 1249 bills checked; rounding the sum
+    instead fits only 1223.
+175. **A line is sent with no values unless an extra cost is typed.** Then
+    it carries `AddCost`, preceded by `Amount` rounded to cents when the
+    received value has part cents, as the client does (no billed line with
+    an extra cost keeps part cents; 351 without one do). An extra cost of
+    0 counts as none.
+176. **Payment terms come from the purchase order of the first ticked
+    line** (643 of 644 recent bill lines match the order; 632 match the
+    supplier), falling back to the supplier. Mixed terms are pointed out.
+177. **An invoice dated more than 21 days back is refused here.** The
+    client records a signed acknowledgement with the user's full name for
+    those; they are about 2% of bills and stay in the client. A future
+    invoice date is refused.
+178. **Only US dollar suppliers, ordinary stock receipts and lines not
+    marked pending.** Every bill and every waiting line today is like
+    that. Memo and tax on a bill (10 requests) stay in the client.
+179. **An inactive supplier can still be billed**, with a note: old
+    receipts outlive the supplier.

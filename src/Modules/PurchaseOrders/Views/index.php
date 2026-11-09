@@ -30,6 +30,9 @@ $tabs = ['open' => 'Open', 'completed' => 'Completed', 'all' => 'All'];
             <?php if (\PII\Modules\PurchaseOrders\PriceListsController::canAny()): ?>
                 <a href="/purchase-orders/price-lists" class="btn btn-sm">Price lists…</a>
             <?php endif; ?>
+            <?php if (\PII\Modules\PurchaseOrders\BillsController::canAny()): ?>
+                <a href="/purchase-orders/bills" class="btn btn-sm">Supplier bills…</a>
+            <?php endif; ?>
         </div>
         <form method="GET" action="/purchase-orders" class="flex gap-1">
             <input type="hidden" name="tab" value="<?= e($tab) ?>">
