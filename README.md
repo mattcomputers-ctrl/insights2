@@ -32,7 +32,7 @@ by the script below.
 On a brand-new Ubuntu Server, as a user who can `sudo`:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/mattcomputers-ctrl/precisionink-insights/main/install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/mattcomputers-ctrl/insights2/main/install.sh | sudo bash
 ```
 
 The installer asks for an admin username/password and (optionally) the CMS

@@ -4,7 +4,7 @@
 # Apache + mod_php kept; pdo_sqlsrv attempted with dblib fallback).
 #
 # Fresh Ubuntu Server (22.04/24.04 LTS):
-#   curl -fsSL https://raw.githubusercontent.com/mattcomputers-ctrl/precisionink-insights/main/install.sh | sudo bash
+#   curl -fsSL https://raw.githubusercontent.com/mattcomputers-ctrl/insights2/main/install.sh | sudo bash
 #
 # Update (re-run = update):
 #   sudo insights-update          (wrapper installed by this script)
@@ -18,7 +18,7 @@
 set -u
 
 INSTALL_DIR="/var/www/precision-ink-insights"
-REPO_URL="${INSIGHTS_REPO_URL:-https://github.com/mattcomputers-ctrl/precisionink-insights.git}"
+REPO_URL="${INSIGHTS_REPO_URL:-https://github.com/mattcomputers-ctrl/insights2.git}"
 BRANCH="${INSIGHTS_BRANCH:-main}"
 BACKUP_DIR="/var/backups/insights"
 HELPER="/usr/local/sbin/insights-helper"
