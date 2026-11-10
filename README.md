@@ -1,8 +1,8 @@
 # Precision Ink Insights
 
 In-house analytics and operations platform for Precision Ink Corporation.
-A **read-only companion** to the Mar-Kov CMS system — Insights never writes
-to CMS.
+A **read-only companion** to the existing ERP — Insights never writes
+to it.
 
 ## The tools
 
@@ -14,15 +14,15 @@ to CMS.
 
 Platform features: users/groups with named permissions (anything you can't
 use is invisible, not greyed out), per-group module visibility and landing
-pages, a background CMS sync engine with an always-visible status bar,
-blackout windows for backups, a CMS kill switch, light/dark themes, and a
+pages, a background existing-ERP sync engine with an always-visible status bar,
+blackout windows for backups, an existing-ERP kill switch, light/dark themes, and a
 one-script installer/updater with automatic rollback.
 
 ## Requirements
 
-- Ubuntu Server 22.04 or 24.04 LTS, with network access to the CMS SQL
+- Ubuntu Server 22.04 or 24.04 LTS, with network access to the existing ERP's SQL
   Server (default `10.10.10.11:1433`) and to GitHub.
-- A read-only CMS SQL login (the shared `sds_readonly` login is fine).
+- A read-only SQL login for the existing ERP (the shared `sds_readonly` login is fine).
 
 Everything else (Apache, MariaDB, PHP, the SQL Server driver) is installed
 by the script below.
@@ -35,8 +35,8 @@ On a brand-new Ubuntu Server, as a user who can `sudo`:
 curl -fsSL https://raw.githubusercontent.com/mattcomputers-ctrl/insights2/main/install.sh | sudo bash
 ```
 
-The installer asks for an admin username/password and (optionally) the CMS
-connection — you can skip CMS and set it later in **Admin → CMS & Sync**.
+The installer asks for an admin username/password and (optionally) the existing ERP
+connection — you can skip it and set it later in the admin area.
 It then installs packages, creates the database, migrates, configures
 Apache, starts the sync worker service, sets up nightly backups
 (03:30, 30 days kept) and log rotation, and prints the URL to open.
@@ -85,7 +85,7 @@ After that, `sudo insights-update` is the only command you need.
 | What | Where |
 |---|---|
 | Application | `/var/www/precision-ink-insights` |
-| Configuration (DB + CMS credentials) | `config/config.php`, `config/cms.local.php` (both gitignored) |
+| Configuration (DB + existing ERP credentials) | `config/config.php`, `config/cms.local.php` (both gitignored) |
 | App logs | `storage/logs/` (rotated daily, 14 days) |
 | Apache logs | `/var/log/apache2/precision-ink-insights-*.log` |
 | Sync worker | `insights-sync-worker.service` → `journalctl -u insights-sync-worker` or `storage/logs/sync-worker.log` |
@@ -106,8 +106,8 @@ docker run --rm -v "$PWD":/app -w /app php:8.3-cli php tests/run.php
 sh tests/integration/run-local.sh
 ```
 
-Key docs: [SCHEMA_NOTES.md](SCHEMA_NOTES.md) (CMS data sources and traps),
-[docs/CMS_DATA_MAP.md](docs/CMS_DATA_MAP.md) (Order Readiness queries,
+Key docs: [SCHEMA_NOTES.md](SCHEMA_NOTES.md) (existing ERP data sources and traps),
+[the data map](docs/CMS_DATA_MAP.md) (Order Readiness queries,
 verified live), [docs/DECISIONS.md](docs/DECISIONS.md) (why things are the
 way they are), [docs/SPEC-order-readiness.md](docs/SPEC-order-readiness.md)
 (the build spec). The Margin Watchdog regression fixtures under
